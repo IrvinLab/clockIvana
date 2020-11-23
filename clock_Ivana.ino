@@ -88,7 +88,7 @@ void setup()
     tft.fillScreen(ST77XX_BLACK);
 
   
-  compilator('start.txt');  // Загружаем Операционную Систему
+  compilator("start.txt");  // Загружаем Операционную Систему
 
   // Подключаемся к WiFi
   WiFi.begin(ssid, password); 
@@ -103,7 +103,7 @@ void loop()
 {
 }
 
-void compilator(char cFile) { // My Fucking SAS compilator
+void compilator(const char * cFile) { // My Fucking SAS compilator
   delay(1);
   readFile(SD, cFile);
 }
