@@ -39,8 +39,8 @@ float myFloat[511]; // 4 Bytes
 double myDouble[511]; // 4 Bytes
 long myLong[511]; // 4 Bytes
   
-char *look, *tmp1, *tmp2, *stemp[65536]; // 64 KBytes for the current user program
-
+char *tmp1, *tmp2, *stemp[65536]; // 64 KBytes for the current user program
+char look = 'a';
 char code[] = {"ldo((Hello, World!)); \nint var = 256; \nvar = var + 1;\nwhl var < 300; \nldo(var); \nlp; \nnop; \nrdln var; \nldo (var);"};
 char toCompile = 'start.ttg';
 
@@ -111,8 +111,8 @@ void setup()
 //  Serial.printf("WiFi connection established");
 
 
-//initPrg();
-//Expression();
+initPrg();
+Expression();
 
 
 }
@@ -121,22 +121,25 @@ void loop()
 {
 }
 
+char initPrg(){
+  GetChar();
+}
 
 char GetNum(char * x){ // Get an Number
   delay(1);
   if (!isDigit(look)){
-    Expected('Integer');
-    GetNum(look); 
-    GetChar(x); 
+    Expected("Integer");
+    //GetNum(look); 
+    GetChar(); 
   }
 }
 
 char GetName(char * x){ // Get an Identifier 
   delay(1);
   if (!isAlpha(look)){
-    Expected('Name');
-    GetName(toUpperCase(look)); 
-    GetChar(x); 
+    Expected("Name");
+    //GetName(toUpperCase(*look)); 
+    GetChar(); 
   }
 }
 
@@ -147,7 +150,7 @@ void Error(char *s) { // Report an Error
 
 void Match(char * x){ // Match a Specific Input Character
   delay(1);
-  if (look = x){
+  if (look = *x){
     GetChar();
   }
   else {
@@ -168,13 +171,20 @@ void Abort(char *s){ // Report Error and Halt
 
 char GetChar() { // Read New Character From Input Stream
   delay(1);
-  return *look;
+  return look;
 }
 
 void Expression() { // Parse and Translate a Math Expression 
   delay(1);
-  EmitLn('MOVE #' + GetNum() + ',D0');
+  //Serial.println("MOVE #" + GetNum("") + ",D0");
 }
+
+
+
+
+
+
+
 
 void listDir(fs::FS &fs, const char * dirname, uint8_t levels){
     Serial.printf("Listing directory: %s\n", dirname);
