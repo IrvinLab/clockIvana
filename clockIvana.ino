@@ -133,9 +133,9 @@ pinMode(2, OUTPUT);
 
 void loop()
 {
-  delay(400);
+  delay(1000);
   digitalWrite(2, HIGH);
-  delay(400);
+  delay(50);
   digitalWrite(2, LOW);
 }
 
