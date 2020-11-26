@@ -48,7 +48,7 @@ char toCompile = 'start.ttg';
 void setup()
 {
    Serial.begin(115200);
-   
+   Serial.printf("Starting OS\n\t");
 // Раскомментировать для теста на реальном железе
 //    if(!SD.begin()){
 //        Serial.println("Card Mount Failed");
@@ -101,7 +101,7 @@ void setup()
 //    tft.fillScreen(ST77XX_BLACK);
 
 
-  Serial.printf("Starting OS\n\t");
+  
 
   // Подключаемся к WiFi
 //  WiFi.begin(ssid, password); 
@@ -114,31 +114,35 @@ void setup()
 initPrg();
 Expression();
 
-
+pinMode(2, OUTPUT);
 }
 
 void loop()
 {
+  delay(400);
+  digitalWrite(2, HIGH);
+  delay(400);
+  digitalWrite(2, LOW);
 }
 
 char initPrg(){
   GetChar();
 }
 
-char GetNum(char * x){ // Get an Number
+char GetNum(char x){ // Get an Number
   delay(1);
   if (!isDigit(look)){
     Expected("Integer");
-    //GetNum(look); 
+    GetNum(look); 
     GetChar(); 
   }
 }
 
-char GetName(char * x){ // Get an Identifier 
+char GetName(char x){ // Get an Identifier 
   delay(1);
   if (!isAlpha(look)){
     Expected("Name");
-    //GetName(toUpperCase(*look)); 
+    GetName(toUpperCase(look)); 
     GetChar(); 
   }
 }
@@ -171,12 +175,15 @@ void Abort(char *s){ // Report Error and Halt
 
 char GetChar() { // Read New Character From Input Stream
   delay(1);
-  return look;
+  while (!Serial.available()){
+    delay(1);
+  }
+  look = Serial.read();
 }
 
 void Expression() { // Parse and Translate a Math Expression 
   delay(1);
-  //Serial.println("MOVE #" + GetNum("") + ",D0");
+  Serial.printf("MOVE #" + GetNum(look));
 }
 
 
