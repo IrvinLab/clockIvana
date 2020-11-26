@@ -5,6 +5,7 @@
 #include "FS.h"
 #include <SPI.h>
 #include <SD.h>
+#include <string.h>
 
 #if defined(ARDUINO_FEATHER_ESP32) // Feather Huzzah32
   #define TFT_CS         14
@@ -30,71 +31,88 @@ const char* ssid     = "npoMGI";
 const char* password = "173841173841";
 float p = 3.1415926;
 
-char code[] = {'ldo((Hello, World!))', 'int var = 256', 'var = var + 1', 'whl var < 300', 'ldo(var)', 'lp', 'nop', 'rdln var', 'ldo (var)'};
+// Generous 8 KB for custom variables
+char myChar[511]; // 1 Bytes
+bool myBool[511]; // 1 Byte 
+int myInt[511]; // 2 Bytes
+float myFloat[511]; // 4 Bytes
+double myDouble[511]; // 4 Bytes
+long myLong[511]; // 4 Bytes
+  
+char *look, *tmp1, *tmp2, *stemp[65536]; // 64 KBytes for the current user program
+
+char code[] = {"ldo((Hello, World!)); \nint var = 256; \nvar = var + 1;\nwhl var < 300; \nldo(var); \nlp; \nnop; \nrdln var; \nldo (var);"};
 char toCompile = 'start.ttg';
+
 
 void setup()
 {
    Serial.begin(115200);
    
-    if(!SD.begin()){
-        Serial.println("Card Mount Failed");
-        return;
-    }
-    uint8_t cardType = SD.cardType();
+// Раскомментировать для теста на реальном железе
+//    if(!SD.begin()){
+//        Serial.println("Card Mount Failed");
+//        return;
+//    }
+//    uint8_t cardType = SD.cardType();
+//
+//    if(cardType == CARD_NONE){
+//        Serial.println("No SD card attached");
+//        return;
+//    }
+//
+//    Serial.print("SD Card Type: ");
+//    if(cardType == CARD_MMC){
+//        Serial.println("MMC");
+//    } else if(cardType == CARD_SD){
+//        Serial.println("SDSC");
+//    } else if(cardType == CARD_SDHC){
+//        Serial.println("SDHC");
+//    } else {
+//        Serial.println("UNKNOWN");
+//    }
+//
+//    uint64_t cardSize = SD.cardSize() / (1024 * 1024);
+//    Serial.printf("SD Card Size: %lluMB\n", cardSize);
+//
+//    listDir(SD, "/", 0);
+//    createDir(SD, "/mydir");
+//    listDir(SD, "/", 0);
+//    removeDir(SD, "/mydir");
+//    listDir(SD, "/", 2);
+//    writeFile(SD, "/hello.txt", "Hello ");
+//    appendFile(SD, "/hello.txt", "World!\n");
+//    readFile(SD, "/hello.txt");
+//    deleteFile(SD, "/foo.txt");
+//    renameFile(SD, "/hello.txt", "/foo.txt");
+//    readFile(SD, "/foo.txt");
+//    testFileIO(SD, "/test.txt");
+//    Serial.printf("Total space: %lluMB\n", SD.totalBytes() / (1024 * 1024));
+//    Serial.printf("Used space: %lluMB\n", SD.usedBytes() / (1024 * 1024));
+//
+//
+//    tft.init(240, 240); // Display initialization
+//    uint16_t time = millis();
+//    tft.fillScreen(ST77XX_BLACK);
+//    time = millis() - time;
+//    Serial.println(time, DEC);
+//    delay(500);
+//    // large block of text
+//    tft.fillScreen(ST77XX_BLACK);
 
-    if(cardType == CARD_NONE){
-        Serial.println("No SD card attached");
-        return;
-    }
 
-    Serial.print("SD Card Type: ");
-    if(cardType == CARD_MMC){
-        Serial.println("MMC");
-    } else if(cardType == CARD_SD){
-        Serial.println("SDSC");
-    } else if(cardType == CARD_SDHC){
-        Serial.println("SDHC");
-    } else {
-        Serial.println("UNKNOWN");
-    }
-
-    uint64_t cardSize = SD.cardSize() / (1024 * 1024);
-    Serial.printf("SD Card Size: %lluMB\n", cardSize);
-
-    listDir(SD, "/", 0);
-    createDir(SD, "/mydir");
-    listDir(SD, "/", 0);
-    removeDir(SD, "/mydir");
-    listDir(SD, "/", 2);
-    writeFile(SD, "/hello.txt", "Hello ");
-    appendFile(SD, "/hello.txt", "World!\n");
-    readFile(SD, "/hello.txt");
-    deleteFile(SD, "/foo.txt");
-    renameFile(SD, "/hello.txt", "/foo.txt");
-    readFile(SD, "/foo.txt");
-    testFileIO(SD, "/test.txt");
-    Serial.printf("Total space: %lluMB\n", SD.totalBytes() / (1024 * 1024));
-    Serial.printf("Used space: %lluMB\n", SD.usedBytes() / (1024 * 1024));
-
-
-    tft.init(240, 240); // Display initialization
-    uint16_t time = millis();
-    tft.fillScreen(ST77XX_BLACK);
-    time = millis() - time;
-    Serial.println(time, DEC);
-    delay(500);
-    // large block of text
-    tft.fillScreen(ST77XX_BLACK);
-
-  
-  compilator("start.txt");  // Загружаем Операционную Систему
+  Serial.printf("Starting OS\n\t");
 
   // Подключаемся к WiFi
-  WiFi.begin(ssid, password); 
-  while (WiFi.status() != WL_CONNECTED) {
-      delay(500);
-  }
+//  WiFi.begin(ssid, password); 
+//  while (WiFi.status() != WL_CONNECTED) {
+//      delay(500);
+//  }
+//  Serial.printf("WiFi connection established");
+
+
+//initPrg();
+//Expression();
 
 
 }
@@ -103,11 +121,60 @@ void loop()
 {
 }
 
-void compilator(const char * cFile) { // My Fucking SAS compilator
+
+char GetNum(char * x){ // Get an Number
   delay(1);
-  readFile(SD, cFile);
+  if (!isDigit(look)){
+    Expected('Integer');
+    GetNum(look); 
+    GetChar(x); 
+  }
 }
 
+char GetName(char * x){ // Get an Identifier 
+  delay(1);
+  if (!isAlpha(look)){
+    Expected('Name');
+    GetName(toUpperCase(look)); 
+    GetChar(x); 
+  }
+}
+
+void Error(char *s) { // Report an Error 
+  delay(1);
+  Serial.printf("Error: ", s,'.');
+}
+
+void Match(char * x){ // Match a Specific Input Character
+  delay(1);
+  if (look = x){
+    GetChar();
+  }
+  else {
+    Expected(x);
+  }
+}
+
+void Expected(char *s){ // Report What Was Expected 
+  delay(1);
+  Abort(s + ' Expected');
+}
+
+void Abort(char *s){ // Report Error and Halt
+  delay(1);
+  Error(s);
+  return;
+}
+
+char GetChar() { // Read New Character From Input Stream
+  delay(1);
+  return *look;
+}
+
+void Expression() { // Parse and Translate a Math Expression 
+  delay(1);
+  EmitLn('MOVE #' + GetNum() + ',D0');
+}
 
 void listDir(fs::FS &fs, const char * dirname, uint8_t levels){
     Serial.printf("Listing directory: %s\n", dirname);
