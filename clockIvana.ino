@@ -43,7 +43,11 @@ String varName[4096] = {};
 int varNumber[6] = {0,0,0,0,0,0};
   
 char *tmp1, *tmp2, *stemp[65536]; // 64 KBytes for the current user program
-char code[] = {"int abc=1234;"};
+const char *list[] = {
+  "int a=256;",
+  "out(\"SAS\");"
+  };
+char code[] = {};
 char toCompile = 'start.ttg';
 
 
@@ -139,11 +143,6 @@ void loop()
   digitalWrite(2, LOW);
 }
 
-void Error(char *s) { // Report an Error 
-  delay(1);
-  Serial.printf("Error: ", s,'.');
-}
-
 //void Match(char *x){ // Match a Specific Input Character
 //  delay(1);
 //  if (look = *x){
@@ -154,27 +153,13 @@ void Error(char *s) { // Report an Error
 //  }
 //}
 
-void Expected(char *s){ // Report What Was Expected 
-  delay(1);
-  Abort(s + ' Expected');
-}
-
-void Abort(char *s){ // Report Error and Halt
-  delay(1);
-  Error(s);
-  return;
-}
-
-
-//isDigit
-//isAlpha
 
 void thisIntVar(){
   int n = 4;
   while (code[n] != '='){     // Определили длинну имени переменной
     if (isAlpha(code[n])){
-      n++;
       Serial.println(n);
+      n++;
     }
   }
   int m = 4;
@@ -209,9 +194,6 @@ void thisIntVar(){
   Serial.println(myInt[varNumber[0]]);
   varNumber[0]++;
   Serial.println(code);
-  
-  
-  
 }
 
 void thisCharVar(){
@@ -234,27 +216,79 @@ void thisLongVar(){
   delay(1);
 }
 
+void printLed(){   // Печать строки или переменной
+  int n = 4;
+  int m = 5;
+  String tempName = "";
+  Serial.println(code[n]);
+  if (code[n] = '\"'){
+    n++;
+    while (code[n] != '\"'){     // Определили длинну строки
+      Serial.println(n);
+      n++; 
+    }
+    while(m != n){              // Определили саму строку
+      tempName = tempName + code[m];
+      m++;
+    }
+    Serial.println(tempName);
+    while (code[n] != ';'){
+      if (isDigit(code[n])){
+        Serial.println("Error: incorrect syntax.");
+        return;
+      }
+      if (isAlpha(code[n])){
+        while (code[n] != '\"'){     // Определили длинну имени переменной
+          Serial.println(n);
+          n++; 
+        }
+        while (m != n) {             // Определили имя переменной
+          tempName = tempName + code[m];
+          m++;
+        }
+      }
+      n++;
+      if (n >= strlen(code)){
+        Serial.println("Error: ; expected.");
+        return;
+      }
+    }
+  }
+  
+}
+
 void lexer(char * x) {
   delay(1);
-  
-  if (code[0] == 'i' and code[1] == 'n' and code[2] == 't' and code[3] == ' '){ // int = Integer
-    thisIntVar();
+  size_t numLines = sizeof(list)/sizeof(list[0]);
+  int n = 0;
+  Serial.println("Num lines = " + numLines);
+  while (n != numLines){
+    Serial.println(n); 
+    code = list[n];
+    if (code[0] == 'i' and code[1] == 'n' and code[2] == 't' and code[3] == ' '){ // int = Integer
+      thisIntVar();
+    }
+    else if (code[0] == 'c' and code[1] == 'h' and code[2] == 'r' and code[3] == ' '){ // chr = Char
+      delay(1);
+    }
+    else if (code[0] == 'f' and code[1] == 'l' and code[2] == 'o' and code[3] == ' '){ // flo = Float
+      delay(1);
+    }
+    else if (code[0] == 'd' and code[1] == 'o' and code[2] == 'b' and code[3] == ' '){ // dob = Double
+      delay(1);
+    }
+    else if (code[0] == 'l' and code[1] == 'o' and code[2] == 'n' and code[3] == 'g' and code[4] == ' '){ // long = Long
+      delay(1);
+    }
+    else if (code[0] == 'b' and code[1] == 'y' and code[2] == 't' and code[3] == 'e' and code[4] == ' '){ // byte = Byte
+      delay(1);
+    }
+    else if (code[0] == 'o' and code[1] == 'u' and code[2] == 't' and code[3] == '('){ // byte = Byte
+      printLed();
+    }
+    n++;
   }
-  else if (code[0] == 'c' and code[1] == 'h' and code[2] == 'r' and code[3] == ' '){ // chr = Char
-    delay(1);
-  }
-  else if (code[0] == 'f' and code[1] == 'l' and code[2] == 'o' and code[3] == ' '){ // flo = Float
-    delay(1);
-  }
-  else if (code[0] == 'd' and code[1] == 'o' and code[2] == 'b' and code[3] == ' '){ // dob = Double
-    delay(1);
-  }
-  else if (code[0] == 'l' and code[1] == 'o' and code[2] == 'n' and code[3] == 'g' and code[4] == ' '){ // long = Long
-    delay(1);
-  }
-  else if (code[0] == 'b' and code[1] == 'y' and code[2] == 't' and code[3] == 'e' and code[4] == ' '){ // byte = Byte
-    delay(1);
-  }
+  Serial.println("OK");
 }
 
 
