@@ -43,11 +43,8 @@ String varName[4096] = {};
 int varNumber[6] = {0,0,0,0,0,0};
   
 char *tmp1, *tmp2, *stemp[65536]; // 64 KBytes for the current user program
-const char *list[] = {
-  "int a=256;",
-  "out(\"SAS\");"
-  };
-char code[] = {};
+
+char code[] = {"out(\"SAS\")"};
 char toCompile = 'start.ttg';
 
 
@@ -259,12 +256,7 @@ void printLed(){   // Печать строки или переменной
 
 void lexer(char * x) {
   delay(1);
-  size_t numLines = sizeof(list)/sizeof(list[0]);
-  int n = 0;
-  Serial.println("Num lines = " + numLines);
-  while (n != numLines){
-    Serial.println(n); 
-    code = list[n];
+  
     if (code[0] == 'i' and code[1] == 'n' and code[2] == 't' and code[3] == ' '){ // int = Integer
       thisIntVar();
     }
@@ -286,8 +278,6 @@ void lexer(char * x) {
     else if (code[0] == 'o' and code[1] == 'u' and code[2] == 't' and code[3] == '('){ // byte = Byte
       printLed();
     }
-    n++;
-  }
   Serial.println("OK");
 }
 
