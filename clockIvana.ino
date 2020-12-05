@@ -66,6 +66,7 @@ int varNumber[6] = {0,0,0,0,0,0};
 char *tmp1, *tmp2, *stemp[65536]; // 64 KBytes for the current user program
 char code[] = {"int abc=1234;"};
 char toCompile = 'start.ttg';
+char cmd[] = {" "};
 // ESP.restart();
 TFT_eSPI tft = TFT_eSPI();
 
@@ -183,6 +184,7 @@ myBool[1] = 0;
 void loop()
 {
   const int keyCount = keyboard.keyCount();
+  int n = 0;
   if (keyCount == 0)
     return;
 
@@ -195,15 +197,29 @@ void loop()
 
   // pressing 'b' turns off the backlight and pressing Shift+b turns it on
   if (key.state == BBQ10Keyboard::StatePress) {
-    tft.print(key.key);
-//    if (key.key == 'b') {
+    if (key.key == '\n') {
+    exe(cmd);
 //      keyboard.setBacklight(0);
 //    } else if (key.key == 'B') {
 //      keyboard.setBacklight(1.0);
-//    }
+    }
+    tft.print(key.key);
+    cmd = cmd + char(key.key);
+
+    n++;
   }
 }
 
+void exe(char * s) {
+   delay(1);
+   Serial.println(s);
+   if (s[0] == 'c' and s[1] == 'l' and s[2] == 's'){
+     Serial.println(s[0]);
+     Serial.println(s[1]);
+     Serial.println(s[2]);
+     tft.printf("SAS");
+   }  
+}
 
 void Error(char *s) { // Report an Error 
   delay(1);
