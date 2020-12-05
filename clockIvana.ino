@@ -1,34 +1,55 @@
 #include <WiFi.h>
-#include <Adafruit_GFX.h>    // Core graphics library
-#include <Adafruit_ST7735.h> // Hardware-specific library for ST7735
-#include <Adafruit_ST7789.h> // Hardware-specific library for ST7789
 #include "FS.h"
 #include <SPI.h>
 #include <SD.h>
 #include <string.h>
+#include <TFT_eSPI.h>
+#include <JPEGDecoder.h>
+#include <Wire.h>
+#include <BBQ10Keyboard.h>
 
-#if defined(ARDUINO_FEATHER_ESP32) // Feather Huzzah32
-  #define TFT_CS         14
-  #define TFT_RST        15
-  #define TFT_DC         32
-#else
-  // For the breakout board, you can use any 2 or 3 pins.
-  // These pins will also work for the 1.8" TFT shield.
-  #define TFT_CS        10
-  #define TFT_RST        9 // Or set to -1 and connect to Arduino RESET pin
-  #define TFT_DC         8
-#endif
+//#define TWATCH_TFT_MISO             0
+//#define TWATCH_TFT_MOSI             19
+//#define TWATCH_TFT_SCLK             18
+//#define TWATCH_TFT_CS               5
+//#define TWATCH_TFT_DC               19 //27
+//#define TWATCH_TFT_RST              32 // -1 
+//#define TWATCH_TFT_BL               12
+//#define TFT_HEIGHT 240 // ST7789 240 x 240
+//#define TFT_WIDTH  240
+//#define TFT_CS   5  // Chip select control pin D8
+//#define TFT_DC   27  // Data Command control pin
+//#define TFT_RST  -1  // Reset pin (could connect to NodeMCU RST, see next line)
 
-// OPTION 1 (recommended) is to use the HARDWARE SPI pins, which are unique
-// to each board and not reassignable. For Arduino Uno: MOSI = pin 11 and
-// SCLK = pin 13. This is the fastest mode of operation and is required if
-// using the breakout board's microSD card.
+//#define TOUCH_SDA                   23
+//#define TOUCH_SCL                   32
+//#define TOUCH_INT                   38
+//// #define TOUCH_RST                Use AXP202 EXTEN Pin control
+//
+#define I2C_SDA                     21  // Клавиатура
+#define I2C_SCL                     22
+#define I2C_INT                      4
+//#define RTC_INT_PIN                 37
+//#define AXP202_INT                  35
+//#define BMA423_INT1                 39
+//
+//#define TWATCH_2020_IR_PIN          4
+//
+////GPS power domain is AXP202 LDO4
+//#define GPS_1PPS                    34
+//#define GPS_RX                      25
+//#define GPS_TX                      26
+//#define GPS_WAKE                    33
+//#define GPS_BAUD_RATE               9600
 
-// For 1.14", 1.3", 1.54", and 2.0" TFT with ST7789:
-Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
+BBQ10Keyboard keyboard;
+volatile bool dataReady = false;
 
-const char* ssid     = "npoMGI";
-const char* password = "173841173841";
+const int interruptPin = 4;
+
+
+const char* ssid     = "Nadejda";
+const char* password = "adadad11";
 float p = 3.1415926;
 
 // for custom variables
@@ -43,41 +64,74 @@ String varName[4096] = {};
 int varNumber[6] = {0,0,0,0,0,0};
   
 char *tmp1, *tmp2, *stemp[65536]; // 64 KBytes for the current user program
-
-char code[] = {"out(\"SAS\")"};
+char code[] = {"int abc=1234;"};
 char toCompile = 'start.ttg';
+// ESP.restart();
+TFT_eSPI tft = TFT_eSPI();
 
+void KeyIsr(void)
+{
+  dataReady = true;
+}
 
 void setup()
 {
+   pinMode(12, OUTPUT);
+   digitalWrite(12, HIGH); // Подсветка
+   pinMode(25, OUTPUT); //объявляем пин как выход. Этим пином издаём звуки
+
+   Wire.begin();
+   keyboard.begin();
+   keyboard.attachInterrupt(interruptPin, KeyIsr);
+   keyboard.setBacklight(0.5f);
+   
    Serial.begin(115200);
    Serial.printf("Starting OS\n\t");
-// Раскомментировать для теста на реальном железе
-//    if(!SD.begin()){
-//        Serial.println("Card Mount Failed");
-//        return;
-//    }
-//    uint8_t cardType = SD.cardType();
-//
-//    if(cardType == CARD_NONE){
-//        Serial.println("No SD card attached");
-//        return;
-//    }
-//
-//    Serial.print("SD Card Type: ");
-//    if(cardType == CARD_MMC){
-//        Serial.println("MMC");
-//    } else if(cardType == CARD_SD){
-//        Serial.println("SDSC");
-//    } else if(cardType == CARD_SDHC){
-//        Serial.println("SDHC");
-//    } else {
-//        Serial.println("UNKNOWN");
-//    }
-//
-//    uint64_t cardSize = SD.cardSize() / (1024 * 1024);
-//    Serial.printf("SD Card Size: %lluMB\n", cardSize);
-//
+   tft.init();
+   tft.setRotation(1);
+   tft.fillScreen(TFT_BLACK);
+   tft.setCursor(0, 0, 1);
+   tft.setTextColor(TFT_BLUE, TFT_BLACK);
+   tft.setTextSize(2);
+   tft.println("Irvin Lab");
+   tft.setTextColor(TFT_GREEN, TFT_BLACK);
+   tft.setTextSize(1);
+   tft.println("");
+   tft.println("");
+   tft.println("MicroSD Card Initialization...");
+   
+    if(!SD.begin()){
+        Serial.println("Card Mount Failed");
+        tft.println("Card Mount Failed");
+        return;
+    }
+    uint8_t cardType = SD.cardType();
+
+    if(cardType == CARD_NONE){
+        Serial.println("No SD card attached");
+        tft.println("No SD card attached");
+        return;
+    }
+
+    Serial.print("SD Card Type: ");
+    tft.print("SD Card Type: ");
+    if(cardType == CARD_MMC){
+        Serial.println("MMC");
+        tft.println("MMC");
+    } else if(cardType == CARD_SD){
+        Serial.println("SDSC");
+        tft.println("SDSC");
+    } else if(cardType == CARD_SDHC){
+        Serial.println("SDHC");
+        tft.println("SDHC");
+    } else {
+        Serial.println("UNKNOWN");
+        tft.println("UNKNOWN");
+    }
+
+    uint64_t cardSize = SD.cardSize() / (1024 * 1024);
+    Serial.printf("SD Card Size: %lluMB\n", cardSize);
+    tft.printf("SD Card Size: %lluMB\n", cardSize);
 //    listDir(SD, "/", 0);
 //    createDir(SD, "/mydir");
 //    listDir(SD, "/", 0);
@@ -90,18 +144,12 @@ void setup()
 //    renameFile(SD, "/hello.txt", "/foo.txt");
 //    readFile(SD, "/foo.txt");
 //    testFileIO(SD, "/test.txt");
-//    Serial.printf("Total space: %lluMB\n", SD.totalBytes() / (1024 * 1024));
-//    Serial.printf("Used space: %lluMB\n", SD.usedBytes() / (1024 * 1024));
-//
-//
-//    tft.init(240, 240); // Display initialization
-//    uint16_t time = millis();
-//    tft.fillScreen(ST77XX_BLACK);
-//    time = millis() - time;
-//    Serial.println(time, DEC);
-//    delay(500);
-//    // large block of text
-//    tft.fillScreen(ST77XX_BLACK);
+    Serial.printf("Total space: %lluMB\n", SD.totalBytes() / (1024 * 1024));
+    Serial.printf("Used space: %lluMB\n", SD.usedBytes() / (1024 * 1024));
+    tft.printf("Total space: %lluMB\n", SD.totalBytes() / (1024 * 1024));
+    tft.printf("Used space: %lluMB\n", SD.usedBytes() / (1024 * 1024));
+
+
 
 
   
@@ -127,17 +175,39 @@ myChar[1] = 'b';
 myBool[0] = 1;
 myBool[1] = 0;
 
-lexer(code);
+//lexer(code);
 
-pinMode(2, OUTPUT);
+
 }
 
 void loop()
 {
-  delay(1000);
-  digitalWrite(2, HIGH);
-  delay(50);
-  digitalWrite(2, LOW);
+  const int keyCount = keyboard.keyCount();
+  if (keyCount == 0)
+    return;
+
+  const BBQ10Keyboard::KeyEvent key = keyboard.keyEvent();
+  String state = "pressed";
+  if (key.state == BBQ10Keyboard::StateLongPress)
+    state = "held down";
+  else if (key.state == BBQ10Keyboard::StateRelease)
+    state = "released";
+
+  // pressing 'b' turns off the backlight and pressing Shift+b turns it on
+  if (key.state == BBQ10Keyboard::StatePress) {
+    tft.print(key.key);
+//    if (key.key == 'b') {
+//      keyboard.setBacklight(0);
+//    } else if (key.key == 'B') {
+//      keyboard.setBacklight(1.0);
+//    }
+  }
+}
+
+
+void Error(char *s) { // Report an Error 
+  delay(1);
+  Serial.printf("Error: ", s,'.');
 }
 
 //void Match(char *x){ // Match a Specific Input Character
@@ -150,13 +220,27 @@ void loop()
 //  }
 //}
 
+void Expected(char *s){ // Report What Was Expected 
+  delay(1);
+  Abort(s + ' Expected');
+}
+
+void Abort(char *s){ // Report Error and Halt
+  delay(1);
+  Error(s);
+  return;
+}
+
+
+//isDigit
+//isAlpha
 
 void thisIntVar(){
   int n = 4;
   while (code[n] != '='){     // Определили длинну имени переменной
     if (isAlpha(code[n])){
-      Serial.println(n);
       n++;
+      Serial.println(n);
     }
   }
   int m = 4;
@@ -191,6 +275,9 @@ void thisIntVar(){
   Serial.println(myInt[varNumber[0]]);
   varNumber[0]++;
   Serial.println(code);
+  
+  
+  
 }
 
 void thisCharVar(){
@@ -213,72 +300,27 @@ void thisLongVar(){
   delay(1);
 }
 
-void printLed(){   // Печать строки или переменной
-  int n = 4;
-  int m = 5;
-  String tempName = "";
-  Serial.println(code[n]);
-  if (code[n] = '\"'){
-    n++;
-    while (code[n] != '\"'){     // Определили длинну строки
-      Serial.println(n);
-      n++; 
-    }
-    while(m != n){              // Определили саму строку
-      tempName = tempName + code[m];
-      m++;
-    }
-    Serial.println(tempName);
-    while (code[n] != ';'){
-      if (isDigit(code[n])){
-        Serial.println("Error: incorrect syntax.");
-        return;
-      }
-      if (isAlpha(code[n])){
-        while (code[n] != '\"'){     // Определили длинну имени переменной
-          Serial.println(n);
-          n++; 
-        }
-        while (m != n) {             // Определили имя переменной
-          tempName = tempName + code[m];
-          m++;
-        }
-      }
-      n++;
-      if (n >= strlen(code)){
-        Serial.println("Error: ; expected.");
-        return;
-      }
-    }
-  }
-  
-}
-
 void lexer(char * x) {
   delay(1);
   
-    if (code[0] == 'i' and code[1] == 'n' and code[2] == 't' and code[3] == ' '){ // int = Integer
-      thisIntVar();
-    }
-    else if (code[0] == 'c' and code[1] == 'h' and code[2] == 'r' and code[3] == ' '){ // chr = Char
-      delay(1);
-    }
-    else if (code[0] == 'f' and code[1] == 'l' and code[2] == 'o' and code[3] == ' '){ // flo = Float
-      delay(1);
-    }
-    else if (code[0] == 'd' and code[1] == 'o' and code[2] == 'b' and code[3] == ' '){ // dob = Double
-      delay(1);
-    }
-    else if (code[0] == 'l' and code[1] == 'o' and code[2] == 'n' and code[3] == 'g' and code[4] == ' '){ // long = Long
-      delay(1);
-    }
-    else if (code[0] == 'b' and code[1] == 'y' and code[2] == 't' and code[3] == 'e' and code[4] == ' '){ // byte = Byte
-      delay(1);
-    }
-    else if (code[0] == 'o' and code[1] == 'u' and code[2] == 't' and code[3] == '('){ // byte = Byte
-      printLed();
-    }
-  Serial.println("OK");
+  if (code[0] == 'i' and code[1] == 'n' and code[2] == 't' and code[3] == ' '){ // int = Integer
+    thisIntVar();
+  }
+  else if (code[0] == 'c' and code[1] == 'h' and code[2] == 'r' and code[3] == ' '){ // chr = Char
+    delay(1);
+  }
+  else if (code[0] == 'f' and code[1] == 'l' and code[2] == 'o' and code[3] == ' '){ // flo = Float
+    delay(1);
+  }
+  else if (code[0] == 'd' and code[1] == 'o' and code[2] == 'b' and code[3] == ' '){ // dob = Double
+    delay(1);
+  }
+  else if (code[0] == 'l' and code[1] == 'o' and code[2] == 'n' and code[3] == 'g' and code[4] == ' '){ // long = Long
+    delay(1);
+  }
+  else if (code[0] == 'b' and code[1] == 'y' and code[2] == 't' and code[3] == 'e' and code[4] == ' '){ // byte = Byte
+    delay(1);
+  }
 }
 
 
