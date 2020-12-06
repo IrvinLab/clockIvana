@@ -42,6 +42,8 @@
 //#define GPS_WAKE                    33
 //#define GPS_BAUD_RATE               9600
 
+#define PCF8563address 0x51  // I2C адрес RTC
+
 BBQ10Keyboard keyboard;
 volatile bool dataReady = false;
 
@@ -66,7 +68,14 @@ int varNumber[6] = {0,0,0,0,0,0};
 char *tmp1, *tmp2, *stemp[65536]; // 64 KBytes for the current user program
 char code[] = {"int abc=1234;"};
 char toCompile = 'start.ttg';
-char cmd[] = {" "};
+String cmd = "";
+String pwd = "/";
+
+byte second, minute, hour, dayOfWeek, dayOfMonth, month, year;
+String days[] = {"VOS", "PON", "VTO", "SRE", "CHE", "PTN", "SUB" };
+
+File myFile;  
+
 // ESP.restart();
 TFT_eSPI tft = TFT_eSPI();
 
@@ -75,18 +84,66 @@ void KeyIsr(void)
   dataReady = true;
 }
 
+byte bcdToDec(byte value)
+{
+ return ((value / 16) * 10 + value % 16);
+}
+// И обратно
+byte decToBcd(byte value){
+ return (value / 10 * 16 + value % 10);
+}
+
+// функция установки времени и даты в PCF8563
+void setPCF8563()
+{
+ Wire.beginTransmission(PCF8563address);
+ Wire.write(0x02);
+ Wire.write(decToBcd(second)); 
+ Wire.write(decToBcd(minute));
+ Wire.write(decToBcd(hour));   
+ Wire.write(decToBcd(dayOfMonth));
+ Wire.write(decToBcd(dayOfWeek)); 
+ Wire.write(decToBcd(month));
+ Wire.write(decToBcd(year));
+ Wire.endTransmission();
+}
+
+// функция считывания времени и даты из PCF8563
+void readPCF8563()
+{
+ Wire.beginTransmission(PCF8563address);
+ Wire.write(0x02);
+ Wire.endTransmission();
+ Wire.requestFrom(PCF8563address, 7);
+ second   = bcdToDec(Wire.read() & B01111111); // удаление ненужных бит из данных 
+ minute   = bcdToDec(Wire.read() & B01111111); 
+ hour    = bcdToDec(Wire.read() & B00111111); 
+ dayOfMonth = bcdToDec(Wire.read() & B00111111);
+ dayOfWeek = bcdToDec(Wire.read() & B00000111); 
+ month   = bcdToDec(Wire.read() & B00011111); 
+ year    = bcdToDec(Wire.read());
+}
+
 void setup()
 {
    pinMode(12, OUTPUT);
    digitalWrite(12, HIGH); // Подсветка
    pinMode(25, OUTPUT); //объявляем пин как выход. Этим пином издаём звуки
-
+   Serial.begin(115200);
    Wire.begin();
    keyboard.begin();
    keyboard.attachInterrupt(interruptPin, KeyIsr);
    keyboard.setBacklight(0.5f);
-   
-   Serial.begin(115200);
+
+//   second = 0;  установка даты и времени
+//   minute = 10;
+//   hour = 13;
+//   dayOfWeek = 0;
+//   dayOfMonth = 6;
+//   month = 12;
+//   year = 20;
+//   setPCF8563();
+
    Serial.printf("Starting OS\n\t");
    tft.init();
    tft.setRotation(1);
@@ -178,7 +235,7 @@ myBool[1] = 0;
 
 //lexer(code);
 
-
+tft.println("");
 }
 
 void loop()
@@ -190,35 +247,281 @@ void loop()
 
   const BBQ10Keyboard::KeyEvent key = keyboard.keyEvent();
   String state = "pressed";
-  if (key.state == BBQ10Keyboard::StateLongPress)
+  if (key.state == BBQ10Keyboard::StateLongPress){
     state = "held down";
+    tft.print('=');
+    cmd = cmd + '=';
+  }
   else if (key.state == BBQ10Keyboard::StateRelease)
     state = "released";
 
   // pressing 'b' turns off the backlight and pressing Shift+b turns it on
   if (key.state == BBQ10Keyboard::StatePress) {
     if (key.key == '\n') {
-    exe(cmd);
+    unsigned char* buf = new unsigned char[100];  // О чудо!!!! Преобразование String в const char*
+    cmd.getBytes(buf, 100, 0);
+    const char *str2 = (const char*)buf;
+    Serial.println(str2);
+    exe(str2);
+    str2 = "";
+    
+    delay(1);
 //      keyboard.setBacklight(0);
 //    } else if (key.key == 'B') {
 //      keyboard.setBacklight(1.0);
     }
     tft.print(key.key);
-    cmd = cmd + char(key.key);
-
+    if (key.key != '\n'){
+      cmd = cmd + key.key;
+    }
+    
     n++;
   }
 }
 
-void exe(char * s) {
-   delay(1);
-   Serial.println(s);
+void exe(const char * s) {
    if (s[0] == 'c' and s[1] == 'l' and s[2] == 's'){
-     Serial.println(s[0]);
-     Serial.println(s[1]);
-     Serial.println(s[2]);
-     tft.printf("SAS");
-   }  
+     tft.fillScreen(TFT_BLACK);
+     tft.setCursor(0, 0, 1);
+     tft.setTextColor(TFT_GREEN, TFT_BLACK);
+     tft.setTextSize(1);
+   } 
+   else if (s[0] == 'l' and s[1] == 's'){  // Просмотр текущей директории
+     int tmp = 0;
+     int n = 0;
+     if (pwd != "/"){
+       n = pwd.lastIndexOf('/');
+       Serial.println(n);
+       if (n > 1){
+         pwd.remove(n);
+         Serial.println(pwd);
+         tmp = 1;
+       }
+     }
+     unsigned char* buf = new unsigned char[255]; 
+     Serial.println(pwd);
+     pwd.getBytes(buf, 100, 0);
+     const char *str2 = (const char*)buf;
+     listDir(SD, str2, 2); 
+     if(pwd.endsWith("/") and tmp == 1){
+       pwd.setCharAt(n, '/');
+       Serial.println("CharAt");
+       Serial.println(pwd);
+     }
+   }
+   else if (s[0] == 'r' and s[1] == 'e' and s[2] == 'a' and s[3] == 'd'){
+     if (s[4] == ' ' and s[5] == '\"'){
+       int n = 6;
+       int m = 6;
+       unsigned char* buf = new unsigned char[100]; 
+       String tempName = "";
+       while (s[n] != '\"'){
+         if (s[n] != '\"'){
+           n++;   
+         }
+       while(m != n){         
+         tempName = tempName + s[m];
+         m++;
+       } 
+       }
+       tempName = pwd + tempName;
+       tempName.getBytes(buf, 100, 0);
+       const char *str2 = (const char*)buf;  
+       Serial.println(str2);
+       readFile(SD, str2);
+     }
+     else{tft.println("\nSyntax Error");}
+   }
+   else if (s[0] == 't' and s[1] == 'o' and s[2] == 'u' and s[3] == 'c' and s[4] == 'h'){
+    if (s[5] == ' ' and s[6] == '\"'){
+       int n = 7;
+       int m = 7;
+       unsigned char* buf = new unsigned char[100]; 
+       String tempName = "";
+       while (s[n] != '\"'){
+         if (s[n] != '\"'){
+           n++;   
+         }
+       while(m != n){         
+         tempName = tempName + s[m];
+         m++;
+       } 
+       }
+       tempName = pwd + tempName;
+       tempName.getBytes(buf, 100, 0);
+       const char *str2 = (const char*)buf;  
+       Serial.println(str2);
+       tft.println("");
+       myFile = SD.open(str2, FILE_WRITE);
+       myFile.close(); 
+       tft.println("File Created");
+     }
+     else{tft.println("\nSyntax Error");}
+       
+   }
+   else if (s[0] == 'r' and s[1] == 'm'){
+    if (s[2] == ' ' and s[3] == '\"'){
+       int n = 4;
+       int m = 4;
+       unsigned char* buf = new unsigned char[100]; 
+       String tempName = "";
+       while (s[n] != '\"'){
+         if (s[n] != '\"'){
+           n++;   
+         }
+       while(m != n){         
+         tempName = tempName + s[m];
+         m++;
+       } 
+       }
+       tempName = pwd + tempName;
+       tempName.getBytes(buf, 100, 0);
+       const char *str2 = (const char*)buf;  
+       Serial.println(str2);
+       tft.println("");
+       deleteFile(SD, str2);
+     }
+     else{tft.println("\nSyntax Error");}
+       
+   }
+   else if (s[0] == 'm' and s[1] == 'k' and s[2] == 'd' and s[3] == 'i' and s[4] == 'r'){
+    if (s[5] == ' ' and s[6] == '\"'){
+       int n = 7;
+       int m = 7;
+       unsigned char* buf = new unsigned char[100]; 
+       String tempName = "";
+       while (s[n] != '\"'){
+         if (s[n] != '\"'){
+           n++;   
+         }
+       while(m != n){         
+         tempName = tempName + s[m];
+         m++;
+       } 
+       }
+       tempName = pwd + tempName;
+       tempName.getBytes(buf, 100, 0);
+       const char *str2 = (const char*)buf;  
+       Serial.println(str2);
+       tft.println("");
+       createDir(SD, str2);
+     }
+     else{tft.println("\nSyntax Error");}
+       
+   }
+   else if (s[0] == 'r' and s[1] == 'm' and s[2] == 'd' and s[3] == 'i' and s[4] == 'r'){
+    if (s[5] == ' ' and s[6] == '\"'){
+       int n = 7;
+       int m = 7;
+       unsigned char* buf = new unsigned char[100]; 
+       String tempName = "";
+       while (s[n] != '\"'){
+         if (s[n] != '\"'){
+           n++;   
+         }
+       while(m != n){         
+         tempName = tempName + s[m];
+         m++;
+       } 
+       }
+       tempName = pwd + tempName;
+       tempName.getBytes(buf, 100, 0);
+       const char *str2 = (const char*)buf;  
+       Serial.println(str2);
+       tft.println("");
+       removeDir(SD, str2);
+     }
+     else{tft.println("\nSyntax Error");}
+       
+   }
+   else if (s[0] == 'c' and s[1] == 'd'){
+    if (s[2] == ' ' and s[3] == '\"'){
+       int n = 4;
+       int m = 4;
+       unsigned char* buf = new unsigned char[100]; 
+       String tempName = "";
+       while (s[n] != '\"'){
+         if (s[n] != '\"'){
+           n++;   
+         }
+       while(m != n){         
+         tempName = tempName + s[m];
+         m++;
+       } 
+       }
+       tempName = pwd + tempName;
+       if(SD.exists(tempName)){
+         pwd = tempName;
+         tempName.getBytes(buf, 100, 0);
+         const char *str2 = (const char*)buf;
+         tft.println("");
+         tft.println(str2);
+         pwd = tempName + '/';
+       }  
+       else {tft.println("Directory not found");}
+       
+     }
+     else if (s[2] == ' ' and s[3] == '/'){
+       pwd = "/";
+       tft.println("");
+       tft.println("/");      
+     }
+     else{tft.println("\nSyntax Error");}
+   }
+   else if (s[0] == 'p' and s[1] == 'w' and s[2] == 'd'){
+    tft.println("");
+    tft.println(pwd);
+   }
+   else if (s[0] == 'd' and s[1] == 'a' and s[2] == 't' and s[3] == 'e'){
+     readPCF8563();
+     tft.println("");
+     tft.print(days[dayOfWeek]); 
+     tft.print(" "); 
+     tft.print(dayOfMonth, DEC);
+     tft.print("/");
+     tft.print(month, DEC);
+     tft.print("/20");
+     tft.print(year, DEC);
+     tft.print(" - ");
+     tft.print(hour, DEC);
+     tft.print(":");
+     if (minute < 10)
+     {
+      tft.print("0");
+     }
+     tft.print(minute, DEC);
+     tft.print(":"); 
+     if (second < 10)
+     {
+      tft.print("0");
+     } 
+     tft.println(second, DEC); 
+    
+   }
+   else if (s[0] == 'r' and s[1] == 'e' and s[2] == 'b' and s[3] == 'o' and s[4] == 'o' and s[5] == 't'){
+     tft.println("\nRestarting system...");
+     ESP.restart();
+   }
+   else if (s[0] == 'p' and s[1] == 'r' and s[2] == 'i' and s[3] == 'n' and s[4] == 't'){
+    delay(1);
+   }
+   else if (s[0] == 'h' and s[1] == 'e' and s[2] == 'l' and s[3] == 'p'){
+    tft.println("\nCD - change directory. Ex. cd \"myDir\" or cd /");
+    tft.println("DATE - print current date and time ");
+    tft.println("PWD - print current directory");
+    tft.println("READ - print file. Ex. read \"myFile.txt\"");
+    tft.println("LS - list directory");
+    tft.println("CLS - clear screen");
+    tft.println("TOUCH - create empty file");
+    tft.println("RM - remove file");
+    tft.println("MKDIR - create directory");
+    tft.println("RMDIR - remove directory");
+    tft.println("REBOOT - restart computer");
+   }
+   else {
+     tft.println("\nUnknown command. Abort");
+   }
+   cmd = "";
 }
 
 void Error(char *s) { // Report an Error 
@@ -352,15 +655,19 @@ void lexer(char * x) {
 
 
 void listDir(fs::FS &fs, const char * dirname, uint8_t levels){
+    tft.println("");
     Serial.printf("Listing directory: %s\n", dirname);
+    tft.printf("Listing directory: %s\n", dirname);
 
     File root = fs.open(dirname);
     if(!root){
         Serial.println("Failed to open directory");
+        tft.printf("Failed to open directory");
         return;
     }
     if(!root.isDirectory()){
         Serial.println("Not a directory");
+        tft.printf("Not a directory");
         return;
     }
 
@@ -369,14 +676,20 @@ void listDir(fs::FS &fs, const char * dirname, uint8_t levels){
         if(file.isDirectory()){
             Serial.print("  DIR : ");
             Serial.println(file.name());
-            if(levels){
-                listDir(fs, file.name(), levels -1);
-            }
+            tft.printf("DIR : ");
+            tft.println(file.name());
+//            if(levels){
+//                listDir(fs, file.name(), levels -1);
+//            }
         } else {
-            Serial.print("  FILE: ");
+            Serial.print("FILE: ");
             Serial.print(file.name());
-            Serial.print("  SIZE: ");
+            Serial.print("SIZE: ");
             Serial.println(file.size());
+            tft.print("FILE: ");
+            tft.print(file.name());
+            tft.print("  SIZE: ");
+            tft.println(file.size());
         }
         file = root.openNextFile();
     }
@@ -385,18 +698,18 @@ void listDir(fs::FS &fs, const char * dirname, uint8_t levels){
 void createDir(fs::FS &fs, const char * path){
     Serial.printf("Creating Dir: %s\n", path);
     if(fs.mkdir(path)){
-        Serial.println("Dir created");
+        tft.println("Dir created");
     } else {
-        Serial.println("mkdir failed");
+        tft.println("Dir creating failed");
     }
 }
 
 void removeDir(fs::FS &fs, const char * path){
     Serial.printf("Removing Dir: %s\n", path);
     if(fs.rmdir(path)){
-        Serial.println("Dir removed");
+        tft.println("Dir removed");
     } else {
-        Serial.println("rmdir failed");
+        tft.println("rmdir failed");
     }
 }
 
@@ -404,16 +717,16 @@ void readFile(fs::FS &fs, const char * path){
     Serial.printf("Reading file: %s\n", path);
     File file = fs.open(path);
     if(!file){
-        Serial.println("Failed to open file for reading");
+        tft.println("\nFailed to open file for reading");
         return;
     }
 
-    Serial.print("Read from file: ");
+    tft.println("");
     while(file.available()){
-        Serial.write(file.read());
-        code[(sizeof(code)+1)] = file.read(); // Прочитали фаил в массив code
+        tft.print(char(file.read()));
     }
     file.close();
+    tft.println("");
 }
 
 void writeFile(fs::FS &fs, const char * path, const char * message){
@@ -460,9 +773,9 @@ void renameFile(fs::FS &fs, const char * path1, const char * path2){
 void deleteFile(fs::FS &fs, const char * path){
     Serial.printf("Deleting file: %s\n", path);
     if(fs.remove(path)){
-        Serial.println("File deleted");
+        tft.println("File deleted");
     } else {
-        Serial.println("Delete failed");
+        tft.println("File does not exist");
     }
 }
 
