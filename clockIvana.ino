@@ -66,7 +66,8 @@ String varName[4096] = {};
 int varNumber[6] = {0,0,0,0,0,0};
   
 char *tmp1, *tmp2, *stemp[65536]; // 64 KBytes for the current user program
-char code[] = {"int abc=1234;"};
+//char code[] = {"int abc=1234;"};
+const char *code[] = {"","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""};
 char toCompile = 'start.ttg';
 String cmd = "";
 String pwd = "/";
@@ -308,6 +309,54 @@ void exe(const char * s) {
        Serial.println("CharAt");
        Serial.println(pwd);
      }
+   }
+   else if (s[0] == 'e' and s[1] == 'x' and s[2] == 'e' and s[3] == 'c'){
+     if (s[4] == ' ' and s[5] == '\"'){
+       int n = 6;
+       int m = 6;
+       unsigned char* buf = new unsigned char[100]; 
+       String tempName = "";
+       while (s[n] != '\"'){
+         if (s[n] != '\"'){
+           n++;   
+         }
+       while(m != n){         
+         tempName = tempName + s[m];
+         m++;
+       } 
+       }
+       tempName = pwd + tempName;
+       tempName.getBytes(buf, 100, 0);
+       const char *str2 = (const char*)buf;  
+       Serial.println(str2);
+       n=0;
+       int nStr = 0;
+       const char *received = "";
+       char ch;
+       if(SD.exists(str2)){
+         myFile = SD.open(str2);
+         while (myFile.available()) {
+           ch = char(myFile.read());
+           if (ch == '\n'){
+             Serial.println(nStr);
+             code[nStr] = received;
+             received = "";
+             Serial.println(code[nStr]);
+             nStr++;
+           }
+           else {
+             received += ch;
+           }
+         }
+         while (n != nStr){
+           //Serial.println(code[n]);
+           n++;
+       }
+         myFile.close();
+       }
+       else {tft.println("\nFile does not exist");}
+     }
+     else{tft.println("\nSyntax Error");}
    }
    else if (s[0] == 'r' and s[1] == 'e' and s[2] == 'a' and s[3] == 'd'){
      if (s[4] == ' ' and s[5] == '\"'){
@@ -554,105 +603,92 @@ void Abort(char *s){ // Report Error and Halt
 //isDigit
 //isAlpha
 
-void thisIntVar(){
-  int n = 4;
-  while (code[n] != '='){     // Определили длинну имени переменной
-    if (isAlpha(code[n])){
-      n++;
-      Serial.println(n);
-    }
-  }
-  int m = 4;
-  String tempName = "";
-  while(m != n){              // Определили имя переменной
-    tempName = tempName + code[m];
-    m++;
-    Serial.println(tempName);
-  }
-  varName[varNumber[0]] = tempName;  
-  Serial.println(varName[varNumber[0]]);
-  n++;
-  while (code[n] != ';'){     // Определили значение переменной
-    if (isDigit(code[n])){
-      n++;
-      Serial.println(n);
-    }
-  }
-  m++;
-  tempName = "";
-  while(m != n){         
-    tempName = tempName + code[m];
-    m++;
-    Serial.println(tempName);
-  }
-  Serial.println(tempName);
-  myInt[varNumber[0]] = 0;
-  unsigned char* buf = new unsigned char[100];  // О чудо!!!! Преобразование String в const char*
-  tempName.getBytes(buf, 100, 0);
-  const char *str2 = (const char*)buf;
-  myInt[varNumber[0]] = atoi(str2);  
-  Serial.println(myInt[varNumber[0]]);
-  varNumber[0]++;
-  Serial.println(code);
-  
-  
-  
-}
-
-void thisCharVar(){
-  delay(1);
-}
-
-void thisFloatVar(){
-  delay(1);
-}
-
-void thisDoubleVar(){
-  delay(1);
-}
-
-void thisBoolVar(){
-  delay(1);
-}
-
-void thisLongVar(){
-  delay(1);
-}
+//void thisIntVar(){
+//  int n = 4;
+//  while (code[n] != '='){     // Определили длинну имени переменной
+//    if (isAlpha(code[n])){
+//      n++;
+//      Serial.println(n);
+//    }
+//  }
+//  int m = 4;
+//  String tempName = "";
+//  while(m != n){              // Определили имя переменной
+//    tempName = tempName + code[m];
+//    m++;
+//    Serial.println(tempName);
+//  }
+//  varName[varNumber[0]] = tempName;  
+//  Serial.println(varName[varNumber[0]]);
+//  n++;
+//  while (code[n] != ';'){     // Определили значение переменной
+//    if (isDigit(code[n])){
+//      n++;
+//      Serial.println(n);
+//    }
+//  }
+//  m++;
+//  tempName = "";
+//  while(m != n){         
+//    tempName = tempName + code[m];
+//    m++;
+//    Serial.println(tempName);
+//  }
+//  Serial.println(tempName);
+//  myInt[varNumber[0]] = 0;
+//  unsigned char* buf = new unsigned char[100];  // О чудо!!!! Преобразование String в const char*
+//  tempName.getBytes(buf, 100, 0);
+//  const char *str2 = (const char*)buf;
+//  myInt[varNumber[0]] = atoi(str2);  
+//  Serial.println(myInt[varNumber[0]]);
+//  varNumber[0]++;
+//  Serial.println(code);
+//  
+//  
+//  
+//}
+//
+//void thisCharVar(){
+//  delay(1);
+//}
+//
+//void thisFloatVar(){
+//  delay(1);
+//}
+//
+//void thisDoubleVar(){
+//  delay(1);
+//}
+//
+//void thisBoolVar(){
+//  delay(1);
+//}
+//
+//void thisLongVar(){
+//  delay(1);
+//}
 
 void lexer(char * x) {
   delay(1);
-  
-  if (code[0] == 'i' and code[1] == 'n' and code[2] == 't' and code[3] == ' '){ // int = Integer
-    thisIntVar();
-  }
-  else if (code[0] == 'c' and code[1] == 'h' and code[2] == 'r' and code[3] == ' '){ // chr = Char
-    delay(1);
-  }
-  else if (code[0] == 'f' and code[1] == 'l' and code[2] == 'o' and code[3] == ' '){ // flo = Float
-    delay(1);
-  }
-  else if (code[0] == 'd' and code[1] == 'o' and code[2] == 'b' and code[3] == ' '){ // dob = Double
-    delay(1);
-  }
-  else if (code[0] == 'l' and code[1] == 'o' and code[2] == 'n' and code[3] == 'g' and code[4] == ' '){ // long = Long
-    delay(1);
-  }
-  else if (code[0] == 'b' and code[1] == 'y' and code[2] == 't' and code[3] == 'e' and code[4] == ' '){ // byte = Byte
-    delay(1);
-  }
+//  if (code[0] == 'i' and code[1] == 'n' and code[2] == 't' and code[3] == ' '){ // int = Integer
+//    thisIntVar();
+//  }
+//  else if (code[0] == 'c' and code[1] == 'h' and code[2] == 'r' and code[3] == ' '){ // chr = Char
+//    delay(1);
+//  }
+//  else if (code[0] == 'f' and code[1] == 'l' and code[2] == 'o' and code[3] == ' '){ // flo = Float
+//    delay(1);
+//  }
+//  else if (code[0] == 'd' and code[1] == 'o' and code[2] == 'b' and code[3] == ' '){ // dob = Double
+//    delay(1);
+//  }
+//  else if (code[0] == 'l' and code[1] == 'o' and code[2] == 'n' and code[3] == 'g' and code[4] == ' '){ // long = Long
+//    delay(1);
+//  }
+//  else if (code[0] == 'b' and code[1] == 'y' and code[2] == 't' and code[3] == 'e' and code[4] == ' '){ // byte = Byte
+//    delay(1);
+//  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 void listDir(fs::FS &fs, const char * dirname, uint8_t levels){
     tft.println("");
