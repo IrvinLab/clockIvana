@@ -286,7 +286,19 @@ void exe(const char * s) {
      tft.setCursor(0, 0, 1);
      tft.setTextColor(TFT_GREEN, TFT_BLACK);
      tft.setTextSize(1);
-   } 
+   }
+   else if (s[0] == 'd' and s[1] == 'o' and s[2] == 's' and s[3] == 'c' and s[4] == 'o' and s[5] == 'l' and s[6] == 'o' and s[7] == 'r'){
+     tft.fillScreen(TFT_BLUE);
+     tft.setCursor(0, 0, 1);
+     tft.setTextColor(TFT_WHITE, TFT_BLUE);
+     tft.setTextSize(1); 
+   }
+   else if (s[0] == 't' and s[1] == 'e' and s[2] == 'r' and s[3] == 'm' and s[4] == 'i' and s[5] == 'n' and s[6] == 'a' and s[7] == 't' and s[8] == 'o' and s[9] == 'r'){
+     tft.fillScreen(TFT_RED);
+     tft.setCursor(0, 0, 1);
+     tft.setTextColor(TFT_WHITE, TFT_RED);
+     tft.setTextSize(1); 
+   }
    else if (s[0] == 'l' and s[1] == 's'){  // Просмотр текущей директории
      int tmp = 0;
      int n = 0;
@@ -310,7 +322,7 @@ void exe(const char * s) {
        Serial.println(pwd);
      }
    }
-   else if (s[0] == 'e' and s[1] == 'x' and s[2] == 'e' and s[3] == 'c'){
+   else if (s[0] == 'e' and s[1] == 'x' and s[2] == 'e' and s[3] == 'c' and s[4] == ' '){
      if (s[4] == ' ' and s[5] == '\"'){
        int n = 6;
        int m = 6;
@@ -358,7 +370,7 @@ void exe(const char * s) {
      }
      else{tft.println("\nSyntax Error");}
    }
-   else if (s[0] == 'r' and s[1] == 'e' and s[2] == 'a' and s[3] == 'd'){
+   else if (s[0] == 'r' and s[1] == 'e' and s[2] == 'a' and s[3] == 'd' and s[4] == ' '){
      if (s[4] == ' ' and s[5] == '\"'){
        int n = 6;
        int m = 6;
@@ -381,7 +393,7 @@ void exe(const char * s) {
      }
      else{tft.println("\nSyntax Error");}
    }
-   else if (s[0] == 't' and s[1] == 'o' and s[2] == 'u' and s[3] == 'c' and s[4] == 'h'){
+   else if (s[0] == 't' and s[1] == 'o' and s[2] == 'u' and s[3] == 'c' and s[4] == 'h' and s[5] == ' '){
     if (s[5] == ' ' and s[6] == '\"'){
        int n = 7;
        int m = 7;
@@ -408,7 +420,7 @@ void exe(const char * s) {
      else{tft.println("\nSyntax Error");}
        
    }
-   else if (s[0] == 'r' and s[1] == 'm'){
+   else if (s[0] == 'r' and s[1] == 'm' and s[2] == ' '){
     if (s[2] == ' ' and s[3] == '\"'){
        int n = 4;
        int m = 4;
@@ -433,7 +445,7 @@ void exe(const char * s) {
      else{tft.println("\nSyntax Error");}
        
    }
-   else if (s[0] == 'm' and s[1] == 'k' and s[2] == 'd' and s[3] == 'i' and s[4] == 'r'){
+   else if (s[0] == 'm' and s[1] == 'k' and s[2] == 'd' and s[3] == 'i' and s[4] == 'r' and s[5] == ' '){
     if (s[5] == ' ' and s[6] == '\"'){
        int n = 7;
        int m = 7;
@@ -458,7 +470,7 @@ void exe(const char * s) {
      else{tft.println("\nSyntax Error");}
        
    }
-   else if (s[0] == 'r' and s[1] == 'm' and s[2] == 'd' and s[3] == 'i' and s[4] == 'r'){
+   else if (s[0] == 'r' and s[1] == 'm' and s[2] == 'd' and s[3] == 'i' and s[4] == 'r' and s[5] == ' '){
     if (s[5] == ' ' and s[6] == '\"'){
        int n = 7;
        int m = 7;
@@ -483,7 +495,7 @@ void exe(const char * s) {
      else{tft.println("\nSyntax Error");}
        
    }
-   else if (s[0] == 'c' and s[1] == 'd'){
+   else if (s[0] == 'c' and s[1] == 'd' and s[2] == ' '){
     if (s[2] == ' ' and s[3] == '\"'){
        int n = 4;
        int m = 4;
@@ -560,7 +572,9 @@ void exe(const char * s) {
     tft.println("PWD - print current directory");
     tft.println("READ - print file. Ex. read \"myFile.txt\"");
     tft.println("LS - list directory");
-    tft.println("CLS - clear screen");
+    tft.println("CLS - clear screen (BLACK background and GREEN text)");
+    tft.println("DOSCOLOR - clear screen (BLUE background and WHITE text)");
+    tft.println("TERMINATOR - clear screen (RED background and WHITE text)");
     tft.println("TOUCH - create empty file");
     tft.println("RM - remove file");
     tft.println("MKDIR - create directory");
