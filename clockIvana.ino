@@ -68,6 +68,7 @@ int varNumber[6] = {0,0,0,0,0,0};
 char *tmp1, *tmp2, *stemp[65536]; // 64 KBytes for the current user program
 //char code[] = {"int abc=1234;"};
 const char *code[] = {"","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""};
+int numStr = 0;
 char toCompile = 'start.ttg';
 String cmd = "";
 String pwd = "/";
@@ -280,6 +281,48 @@ void loop()
   }
 }
 
+void lexer(){
+  int n = 0;
+  String sas = "";
+  while (n != numStr){
+    sas = String(code[n]);
+    sas.trim();
+    if (sas.startsWith("int")){
+      delay(1);
+    }
+    else if (sas.startsWith("char")){
+      delay(1);
+    }
+    else if (sas.startsWith("float")){
+      delay(1);
+    }
+    else if (sas.startsWith("byte")){
+      delay(1);
+    }
+    else if (sas.startsWith("long")){
+      delay(1);
+    }
+    else if (sas.startsWith("double")){
+      delay(1);
+    }
+    else if (sas.startsWith("if (")){
+      delay(1);
+    }
+    else if (sas.startsWith("while (")){
+      delay(1);
+    }
+    else if (sas.startsWith("out")){
+      delay(1);
+    }
+    else {
+      tft.println("\nSyntax Error");
+      return;
+    }
+    n++;
+  }
+  
+}
+
 void exe(const char * s) {
    if (s[0] == 'c' and s[1] == 'l' and s[2] == 's'){
      tft.fillScreen(TFT_BLACK);
@@ -359,15 +402,13 @@ void exe(const char * s) {
              stroka = "";
              Serial.println(code[nStr]);
              nStr++;
+             numStr++;
            }
            else {
              stroka += ch;
            }
          }
-         while (n != nStr){
-           //Serial.println(code[n]);
-           n++;
-       }
+         lexer();
          myFile.close();
        }
        else {tft.println("\nFile does not exist");}
@@ -686,27 +727,6 @@ void Abort(char *s){ // Report Error and Halt
 //  delay(1);
 //}
 
-void lexer(char * x) {
-  delay(1);
-//  if (code[0] == 'i' and code[1] == 'n' and code[2] == 't' and code[3] == ' '){ // int = Integer
-//    thisIntVar();
-//  }
-//  else if (code[0] == 'c' and code[1] == 'h' and code[2] == 'r' and code[3] == ' '){ // chr = Char
-//    delay(1);
-//  }
-//  else if (code[0] == 'f' and code[1] == 'l' and code[2] == 'o' and code[3] == ' '){ // flo = Float
-//    delay(1);
-//  }
-//  else if (code[0] == 'd' and code[1] == 'o' and code[2] == 'b' and code[3] == ' '){ // dob = Double
-//    delay(1);
-//  }
-//  else if (code[0] == 'l' and code[1] == 'o' and code[2] == 'n' and code[3] == 'g' and code[4] == ' '){ // long = Long
-//    delay(1);
-//  }
-//  else if (code[0] == 'b' and code[1] == 'y' and code[2] == 't' and code[3] == 'e' and code[4] == ' '){ // byte = Byte
-//    delay(1);
-//  }
-}
 
 void listDir(fs::FS &fs, const char * dirname, uint8_t levels){
     tft.println("");
