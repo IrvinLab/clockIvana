@@ -259,7 +259,7 @@ void loop()
   // pressing 'b' turns off the backlight and pressing Shift+b turns it on
   if (key.state == BBQ10Keyboard::StatePress) {
     if (key.key == '\n') {
-    unsigned char* buf = new unsigned char[100];  // О чудо!!!! Преобразование String в const char*
+    unsigned char* buf = new unsigned char[100]; 
     cmd.getBytes(buf, 100, 0);
     const char *str2 = (const char*)buf;
     Serial.println(str2);
@@ -343,21 +343,25 @@ void exe(const char * s) {
        Serial.println(str2);
        n=0;
        int nStr = 0;
-       const char *received = "";
        char ch;
+       String stroka;
+
        if(SD.exists(str2)){
          myFile = SD.open(str2);
          while (myFile.available()) {
            ch = char(myFile.read());
            if (ch == '\n'){
              Serial.println(nStr);
-             code[nStr] = received;
-             received = "";
+             unsigned char* buf = new unsigned char[100]; 
+             stroka.getBytes(buf, 100, 0);
+             const char *str2 = (const char*)buf;
+             code[nStr] = str2;
+             stroka = "";
              Serial.println(code[nStr]);
              nStr++;
            }
            else {
-             received += ch;
+             stroka += ch;
            }
          }
          while (n != nStr){
