@@ -281,8 +281,7 @@ void loop()
   }
 }
 
-void lexer(){
-  int n = 0;
+void lexer(int n){
   String sas = "";
   while (n != numStr){
     sas = String(code[n]);
@@ -408,7 +407,7 @@ void exe(const char * s) {
              stroka += ch;
            }
          }
-         lexer();
+         lexer(0);
          myFile.close();
        }
        else {tft.println("\nFile does not exist");}
