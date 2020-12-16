@@ -282,41 +282,57 @@ void loop()
 }
 
 void lexer(int n){
-  String sas = "";
+  String cStr = "";
+  int m = 0;
+  int o = 0;
+  String tempName = "";
   while (n != numStr){
-    sas = String(code[n]);
-    sas.trim();
-    if (sas.startsWith("int")){
-      delay(1);
+    cStr = String(code[n]);
+    cStr.trim();
+    if (cStr[0] == 'i' and cStr[1] == 'n' and cStr[2] == 't' and cStr[3] == ' '){
+      m = 4;
+  while (cStr[m] != '='){     // Определили длинну имени переменной
+    if (isAlpha(cStr[m])){
+      m++;
+      Serial.println("Len Varible - " + String(m));
     }
-    else if (sas.startsWith("char")){
-      delay(1);
+  }
+  o = 4;
+  tempName = "";
+  while(o != m){              // Определили имя переменной
+    tempName = tempName + code[o];
+    o++;
+  }
+  varName[varNumber[0]] = tempName;  
+  //Serial.println(varName[varNumber[0]]);
+  m++;
+  while (cStr[m] != ';'){     // Определили значение переменной
+    if (isDigit(cStr[m])){
+      m++;
+      Serial.println("Variable - " + String(m));
     }
-    else if (sas.startsWith("float")){
-      delay(1);
-    }
-    else if (sas.startsWith("byte")){
-      delay(1);
-    }
-    else if (sas.startsWith("long")){
-      delay(1);
-    }
-    else if (sas.startsWith("double")){
-      delay(1);
-    }
-    else if (sas.startsWith("if (")){
-      delay(1);
-    }
-    else if (sas.startsWith("while (")){
-      delay(1);
-    }
-    else if (sas.startsWith("out")){
-      delay(1);
+  }
+  o++;
+  tempName = "";
+  while(o != m){         
+    tempName = tempName + cStr[o];
+    o++;
+    //Serial.println(tempName);
+  }
+  //Serial.println(tempName);
+  myInt[varNumber[0]] = 0;
+  unsigned char* buf = new unsigned char[100];  // О чудо!!!! Преобразование String в const char*
+  tempName.getBytes(buf, 100, 0);
+  const char *str2 = (const char*)buf;
+  myInt[varNumber[0]] = atoi(str2);  
+  Serial.println("Varible Name - " + String(myInt[varNumber[0]]));
+  varNumber[0]++;
+  
     }
     else {
-      tft.println("\nSyntax Error");
+      tft.println("\nSyntax Error in line: " + String(n+1));
       return;
-    }
+    } 
     n++;
   }
   
@@ -382,7 +398,7 @@ void exe(const char * s) {
        tempName = pwd + tempName;
        tempName.getBytes(buf, 100, 0);
        const char *str2 = (const char*)buf;  
-       Serial.println(str2);
+       //Serial.println(str2);
        n=0;
        int nStr = 0;
        char ch;
@@ -393,13 +409,13 @@ void exe(const char * s) {
          while (myFile.available()) {
            ch = char(myFile.read());
            if (ch == '\n'){
-             Serial.println(nStr);
+             //Serial.println(nStr);
              unsigned char* buf = new unsigned char[100]; 
              stroka.getBytes(buf, 100, 0);
              const char *str2 = (const char*)buf;
              code[nStr] = str2;
              stroka = "";
-             Serial.println(code[nStr]);
+             //Serial.println(code[nStr]);
              nStr++;
              numStr++;
            }
