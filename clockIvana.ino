@@ -261,7 +261,6 @@ void loop()
       cmd = cmd + key.key;
     }
     if (key.key == '\b') { // Fucking BACKSPACE
-      tft.print("SAS");
       cmd = cmd + '\b';
     }
     
