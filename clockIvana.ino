@@ -243,7 +243,10 @@ void loop()
 
   // pressing 'b' turns off the backlight and pressing Shift+b turns it on
   if (key.state == BBQ10Keyboard::StatePress) {
-    if (key.key == '\n') {
+    if (key.key == '\b') { // Fucking BACKSPACE
+      Serial.println(cmd);
+    }
+    else if (key.key == '\n') {
     unsigned char* buf = new unsigned char[100]; 
     cmd.getBytes(buf, 100, 0);
     const char *str2 = (const char*)buf;
@@ -281,40 +284,37 @@ void lexer(int n){
     cStr.trim();
     if (cStr[0] == 'i' and cStr[1] == 'n' and cStr[2] == 't' and cStr[3] == ' '){
       m = 4;
-  while (cStr[m] != '='){     // Определили длинну имени переменной
-    if (isAlpha(cStr[m])){
+      while (cStr[m] != '='){     // Определили длинну имени переменной
+        if (isAlpha(cStr[m])){
+          m++;
+        }
+      }
+      o = 4;
+      tempName = "";
+      while(o != m){              // Определили имя переменной
+        tempName = tempName + cStr[o];
+        o++;
+      }
+      intName[varNumber[2]] = tempName;  
+      Serial.println("Say Var Name - " + String(intName[varNumber[2]]));
       m++;
-      
-    }
-  }
-  o = 4;
-  tempName = "";
-  while(o != m){              // Определили имя переменной
-    tempName = tempName + cStr[o];
-    o++;
-  }
-  intName[varNumber[2]] = tempName;  
-  Serial.println("Say Var Name - " + String(intName[varNumber[2]]));
-  m++;
-  while (cStr[m] != ';'){     // Определили значение переменной
-    if (isDigit(cStr[m])){
-      m++;
-    }
-  }
-  o++;
-  tempName = "";
-  while(o != m){         
-    tempName = tempName + cStr[o];
-    o++;
-  }
-  
-  unsigned char* buf = new unsigned char[100];  // О чудо!!!! Преобразование String в const char*
-  tempName.getBytes(buf, 100, 0);
-  const char *str2 = (const char*)buf;
-  myInt[varNumber[2]] = atoi(str2);  
-  Serial.println("Varible value - " + String(myInt[varNumber[2]]));
-  varNumber[2]++;
-  
+      while (cStr[m] != ';'){     // Определили значение переменной
+        if (isDigit(cStr[m])){
+          m++;
+        }
+      }
+      o++;
+      tempName = "";
+      while(o != m){         
+        tempName = tempName + cStr[o];
+        o++;
+      }
+      unsigned char* buf = new unsigned char[100];  // О чудо!!!! Преобразование String в const char*
+      tempName.getBytes(buf, 100, 0);
+      const char *str2 = (const char*)buf;
+      myInt[varNumber[2]] = atoi(str2);  
+      Serial.println("Varible value - " + String(myInt[varNumber[2]]));
+      varNumber[2]++;
     }
     else {
       tft.println("\nSyntax Error in line: " + String(n+1));
