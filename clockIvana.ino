@@ -317,7 +317,9 @@ void lexer(int n){
       varNumber[2]++;
     }
     else {
+      tft.setTextColor(TFT_RED, TFT_BLACK);
       tft.println("\nSyntax Error in line: " + String(n+1));
+      tft.setTextColor(TFT_GREEN, TFT_BLACK);
       return;
     } 
     n++;
