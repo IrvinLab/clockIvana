@@ -243,10 +243,7 @@ void loop()
 
   // pressing 'b' turns off the backlight and pressing Shift+b turns it on
   if (key.state == BBQ10Keyboard::StatePress) {
-    if (key.key == '\b') { // Fucking BACKSPACE
-      Serial.println(cmd);
-    }
-    else if (key.key == '\n') {
+    if (key.key == '\n') {
     unsigned char* buf = new unsigned char[100]; 
     cmd.getBytes(buf, 100, 0);
     const char *str2 = (const char*)buf;
@@ -262,6 +259,10 @@ void loop()
     tft.print(key.key);
     if (key.key != '\n'){
       cmd = cmd + key.key;
+    }
+    if (key.key == '\b') { // Fucking BACKSPACE
+      tft.print("SAS");
+      cmd = cmd + '\b';
     }
     
     n++;
@@ -631,7 +632,7 @@ void exe(const char * s) {
     tft.println("REBOOT - restart computer");
    }
    else {
-     tft.println("\nUnknown command. Abort");
+     tft.println("\nUnknown command " + String(s));
    }
    cmd = "";
 }
