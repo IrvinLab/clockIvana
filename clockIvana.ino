@@ -62,7 +62,12 @@ float myFloat[512]; // 4 Bytes   - 3
 double myDouble[512]; // 4 Bytes - 4
 long myLong[256]; // 4 Bytes     - 5
 
-String varName[4096] = {};
+String charName[512] = {};
+String boolName[512] = {};
+String intName[512] = {};
+String floatName[512] = {};
+String doubleName[512] = {};
+String longName[512] = {};
 int varNumber[6] = {0,0,0,0,0,0};
   
 char *tmp1, *tmp2, *stemp[65536]; // 64 KBytes for the current user program
@@ -209,33 +214,12 @@ void setup()
     tft.printf("Total space: %lluMB\n", SD.totalBytes() / (1024 * 1024));
     tft.printf("Used space: %lluMB\n", SD.usedBytes() / (1024 * 1024));
 
-
-
-
-  
-
   // Подключаемся к WiFi
 //  WiFi.begin(ssid, password); 
 //  while (WiFi.status() != WL_CONNECTED) {
 //      delay(500);
 //  }
 //  Serial.printf("WiFi connection established");
-
-
-myInt[0] = 1;
-myInt[1] = 2;
-myFloat[0] = 0.11;
-myFloat[1] = 0.22;
-myDouble[0] = 0.1111;
-myDouble[1] = 0.2222;
-myLong[0] = 1010101;
-myLong[1] = 2121212;
-myChar[0] = 'a';
-myChar[1] = 'b';
-myBool[0] = 1;
-myBool[1] = 0;
-
-//lexer(code);
 
 tft.println("");
 }
@@ -286,6 +270,12 @@ void lexer(int n){
   int m = 0;
   int o = 0;
   String tempName = "";
+  myChar[varNumber[0]] = 0;
+  myBool[varNumber[1]] = 0;
+  myInt[varNumber[2]] = 0;
+  myFloat[varNumber[3]] = 0;
+  myDouble[varNumber[4]] = 0;
+  myLong[varNumber[5]] = 0;
   while (n != numStr){
     cStr = String(code[n]);
     cStr.trim();
@@ -294,22 +284,21 @@ void lexer(int n){
   while (cStr[m] != '='){     // Определили длинну имени переменной
     if (isAlpha(cStr[m])){
       m++;
-      Serial.println("Len Varible - " + String(m));
+      
     }
   }
   o = 4;
   tempName = "";
   while(o != m){              // Определили имя переменной
-    tempName = tempName + code[o];
+    tempName = tempName + cStr[o];
     o++;
   }
-  varName[varNumber[0]] = tempName;  
-  //Serial.println(varName[varNumber[0]]);
+  intName[varNumber[2]] = tempName;  
+  Serial.println("Say Var Name - " + String(intName[varNumber[2]]));
   m++;
   while (cStr[m] != ';'){     // Определили значение переменной
     if (isDigit(cStr[m])){
       m++;
-      Serial.println("Variable - " + String(m));
     }
   }
   o++;
@@ -317,16 +306,14 @@ void lexer(int n){
   while(o != m){         
     tempName = tempName + cStr[o];
     o++;
-    //Serial.println(tempName);
   }
-  //Serial.println(tempName);
-  myInt[varNumber[0]] = 0;
+  
   unsigned char* buf = new unsigned char[100];  // О чудо!!!! Преобразование String в const char*
   tempName.getBytes(buf, 100, 0);
   const char *str2 = (const char*)buf;
-  myInt[varNumber[0]] = atoi(str2);  
-  Serial.println("Varible Name - " + String(myInt[varNumber[0]]));
-  varNumber[0]++;
+  myInt[varNumber[2]] = atoi(str2);  
+  Serial.println("Varible value - " + String(myInt[varNumber[2]]));
+  varNumber[2]++;
   
     }
     else {
