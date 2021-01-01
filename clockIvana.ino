@@ -77,6 +77,7 @@ int numStr = 0;
 char toCompile = 'start.ttg';
 String cmd = "";
 String pwd = "/";
+const char *lastCmd = "";
 
 byte second, minute, hour, dayOfWeek, dayOfMonth, month, year;
 String days[] = {"VOS", "PON", "VTO", "SRE", "CHE", "PTN", "SUB" };
@@ -136,6 +137,7 @@ void setup()
    pinMode(12, OUTPUT);
    digitalWrite(12, HIGH); // Подсветка
    pinMode(25, OUTPUT); //объявляем пин как выход. Этим пином издаём звуки
+   pinMode(36, INPUT); // Пользовательская кнопка
    Serial.begin(115200);
    Wire.begin();
    keyboard.begin();
@@ -215,11 +217,11 @@ void setup()
     tft.printf("Used space: %lluMB\n", SD.usedBytes() / (1024 * 1024));
 
 tft.println("");
+
 }
 
 void loop()
 {
-  
   const int keyCount = keyboard.keyCount();
   int n = 0;
   if (keyCount == 0)
@@ -243,6 +245,7 @@ void loop()
     const char *str2 = (const char*)buf;
     Serial.println(str2);
     exe(str2);
+    lastCmd = str2;
     str2 = "";
 //      keyboard.setBacklight(0);
 //    } else if (key.key == 'B') {
@@ -258,6 +261,10 @@ void loop()
     
     n++;
   }
+}
+
+String keyInput(){
+delay(1);
 }
 
 void lexer(int n){
@@ -608,14 +615,61 @@ void exe(const char * s) {
     delay(1);
    }
    else if (s[0] == 'i' and s[1] == 'f' and s[2] == 'c' and s[3] == 'o' and s[4] == 'n' and s[5] == 'f' and s[6] == 'i' and s[7] == 'g'){
-      tft.print("\nIP Address: ");
+      tft.print("\nIP Address:           ");
       tft.println(WiFi.localIP());
-      tft.print("MAC Address:  ");
+      tft.print("MAC Address:          ");
       tft.println(WiFi.macAddress());
-      tft.print("Subnet:       ");
+      tft.print("Subnet:               ");
       tft.println(WiFi.subnetMask());
-      tft.print("Gateway:      ");
+      tft.print("Gateway:              ");
       tft.println(WiFi.gatewayIP());
+   }
+   else if (s[0] == 'e' and s[1] == 'c' and s[2] == 'h' and s[3] == 'o' and s[4] == ' '){
+      if (s[4] == ' ' and s[5] == '\"'){
+       int n = 6;
+       int m = 6;
+       unsigned char* buf = new unsigned char[100]; 
+       String tempName = "";
+       while (s[n] != '\"'){
+         if (s[n] != '\"'){
+           n++;   
+         }
+       while(m != n){         
+         tempName = tempName + s[m];
+         m++;
+       } 
+       }
+       tempName = pwd + tempName;
+       tempName.getBytes(buf, 100, 0);
+       const char *str2 = (const char*)buf;  
+       Serial.println(str2);
+       Serial.println(n);
+       Serial.println(s[n]);
+       Serial.println(m);
+       // тут мы определили имя файла
+       n = n + 3;
+       m = n;
+       Serial.println(s[n]);
+       tempName = "";
+       while (s[n] != '\"'){
+         Serial.println(tempName);
+         if (s[n] != '\"'){
+           n++;   
+         }
+       while(m != n){         
+         tempName = tempName + s[m];
+         m++;
+       } 
+       }
+       buf = new unsigned char[100];
+       tempName.getBytes(buf, 100, 0);
+       const char *str3 = (const char*)buf; 
+       // Тут мы определили, что будем записывать в конец файла
+       Serial.println(str3);
+       Serial.println(n);
+       Serial.println(m);
+       writeFile(SD, str2,str3);
+   }
    }
    else if (s[0] == 'c' and s[1] == 'o' and s[2] == 'n' and s[3] == 'n' and s[4] == 'e' and s[5] == 'c' and s[6] == 't'){
       WiFi.begin(ssid, password); 
@@ -649,15 +703,27 @@ void exe(const char * s) {
    }  
 
    }
+   else if (s[0] == 'W' and s[1] == 'a' and s[2] == 'k' and s[3] == 'e' and s[4] == ' ' and s[5] == 'u' and s[6] == 'p' and s[7] == ',' and s[8] == ' ' and s[9] == 'N' and s[10] == 'e' and s[11] == 'o' and s[12] == '.' and s[13] == '.' and s[14] == '.'){
+      delay(2500);
+      tft.println("\nThe Matrix has you...");
+      delay(2500);
+      tft.println("Follow the white rabbit.");
+      delay(2500);
+      tft.println("");
+      tft.println("");
+      tft.println("Knock, knock, Neo.");
+   }
    else if (s[0] == 'h' and s[1] == 'e' and s[2] == 'l' and s[3] == 'p'){
-    tft.println("\nCD - change directory. Ex. cd \"myDir\" or cd /");
+    tft.println("\nCD - change directory");
+    tft.println("IFCONFIG - net configuration");
+    tft.println("SCAN - scan wifi range");
+    tft.println("CONNECT - connect to WiFi AP");
+    tft.println("ECHO - write text to the end of the file");
     tft.println("DATE - print current date and time ");
     tft.println("PWD - print current directory");
     tft.println("READ - print file. Ex. read \"myFile.txt\"");
     tft.println("LS - list directory");
-    tft.println("CLS - clear screen (BLACK background and GREEN text)");
-    tft.println("DOSCOLOR - clear screen (BLUE background and WHITE text)");
-    tft.println("TERMINATOR - clear screen (RED background and WHITE text)");
+    tft.println("CLS - clear screen");
     tft.println("TOUCH - create empty file");
     tft.println("RM - remove file");
     tft.println("MKDIR - create directory");
@@ -846,13 +912,13 @@ void writeFile(fs::FS &fs, const char * path, const char * message){
 
     File file = fs.open(path, FILE_WRITE);
     if(!file){
-        Serial.println("Failed to open file for writing");
+        tft.println("\nFailed to open file for writing");
         return;
     }
-    if(file.print(message)){
-        Serial.println("File written");
+    if(file.println(message)){
+        tft.println("\nFile written");
     } else {
-        Serial.println("Write failed");
+        tft.println("\nWrite failed");
     }
     file.close();
 }
