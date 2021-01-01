@@ -28,7 +28,7 @@
 //
 #define I2C_SDA                     21  // Клавиатура
 #define I2C_SCL                     22
-#define I2C_INT                      4
+#define I2C_INT                      35
 //#define RTC_INT_PIN                 37
 //#define AXP202_INT                  35
 //#define BMA423_INT1                 39
@@ -214,18 +214,12 @@ void setup()
     tft.printf("Total space: %lluMB\n", SD.totalBytes() / (1024 * 1024));
     tft.printf("Used space: %lluMB\n", SD.usedBytes() / (1024 * 1024));
 
-  // Подключаемся к WiFi
-//  WiFi.begin(ssid, password); 
-//  while (WiFi.status() != WL_CONNECTED) {
-//      delay(500);
-//  }
-//  Serial.printf("WiFi connection established");
-
 tft.println("");
 }
 
 void loop()
 {
+  
   const int keyCount = keyboard.keyCount();
   int n = 0;
   if (keyCount == 0)
@@ -250,8 +244,6 @@ void loop()
     Serial.println(str2);
     exe(str2);
     str2 = "";
-    
-    delay(1);
 //      keyboard.setBacklight(0);
 //    } else if (key.key == 'B') {
 //      keyboard.setBacklight(1.0);
@@ -614,6 +606,48 @@ void exe(const char * s) {
    }
    else if (s[0] == 'p' and s[1] == 'r' and s[2] == 'i' and s[3] == 'n' and s[4] == 't'){
     delay(1);
+   }
+   else if (s[0] == 'i' and s[1] == 'f' and s[2] == 'c' and s[3] == 'o' and s[4] == 'n' and s[5] == 'f' and s[6] == 'i' and s[7] == 'g'){
+      tft.print("\nIP Address: ");
+      tft.println(WiFi.localIP());
+      tft.print("MAC Address:  ");
+      tft.println(WiFi.macAddress());
+      tft.print("Subnet:       ");
+      tft.println(WiFi.subnetMask());
+      tft.print("Gateway:      ");
+      tft.println(WiFi.gatewayIP());
+   }
+   else if (s[0] == 'c' and s[1] == 'o' and s[2] == 'n' and s[3] == 'n' and s[4] == 'e' and s[5] == 'c' and s[6] == 't'){
+      WiFi.begin(ssid, password); 
+      while (WiFi.status() != WL_CONNECTED) {
+      delay(500);
+      }
+      tft.println("\nWiFi connection established");
+      tft.print("IP address: ");
+      tft.println(WiFi.localIP());
+   }
+   else if (s[0] == 's' and s[1] == 'c' and s[2] == 'a' and s[3] == 'n'){
+     WiFi.mode(WIFI_STA);
+     WiFi.disconnect();
+     delay(100);
+     int n = WiFi.scanNetworks();
+    tft.println("");
+    if (n == 0) {
+        tft.println("no networks found");
+    } else {
+      for (int i = 0; i < n; ++i) {
+        tft.print(i + 1);
+        tft.print(": ");
+        tft.print(WiFi.SSID(i));
+        tft.print(" (");
+        tft.print(WiFi.RSSI(i));
+        tft.print(")");
+        tft.println((WiFi.encryptionType(i) == WIFI_AUTH_OPEN)?" ":"*");
+        delay(10);
+        if (i >= 9) { break; }
+    }
+   }  
+
    }
    else if (s[0] == 'h' and s[1] == 'e' and s[2] == 'l' and s[3] == 'p'){
     tft.println("\nCD - change directory. Ex. cd \"myDir\" or cd /");
