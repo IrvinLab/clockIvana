@@ -4,7 +4,6 @@
 #include <SD.h>
 #include <string.h>
 #include <TFT_eSPI.h>
-#include <JPEGDecoder.h>
 #include <Wire.h>
 #include <BBQ10Keyboard.h>
 
@@ -43,6 +42,9 @@
 //#define GPS_BAUD_RATE               9600
 
 #define PCF8563address 0x51  // I2C адрес RTC
+#define minimum(a,b)     (((a) < (b)) ? (a) : (b))
+#define USE_SPI_BUFFER // Comment out to use slower 16 bit pushColor()
+
 
 BBQ10Keyboard keyboard;
 volatile bool dataReady = false;
@@ -78,9 +80,11 @@ char toCompile = 'start.ttg';
 String cmd = "";
 String pwd = "/";
 const char *lastCmd = "";
+const char *tempFile = "";
 
 byte second, minute, hour, dayOfWeek, dayOfMonth, month, year;
 String days[] = {"VOS", "PON", "VTO", "SRE", "CHE", "PTN", "SUB" };
+int globalClock = 0;
 
 File myFile;  
 
@@ -222,6 +226,14 @@ tft.println("");
 
 void loop()
 {
+  if (digitalRead(36) == LOW){
+    if (globalClock == 0) {
+      globalClock == 1;
+    }
+    else if (globalClock == 1){
+      globalClock = 0;
+    }
+  }
   const int keyCount = keyboard.keyCount();
   int n = 0;
   if (keyCount == 0)
@@ -255,8 +267,8 @@ void loop()
     if (key.key != '\n'){
       cmd = cmd + key.key;
     }
-    if (key.key == '\b') { // Fucking BACKSPACE
-      cmd = cmd + '\b';
+    else if (key.key == '~') {
+      cmd = cmd + '\n';
     }
     
     n++;
@@ -265,6 +277,180 @@ void loop()
 
 String keyInput(){
 delay(1);
+}
+
+void pingPong(){
+  int score = 0;
+  int life = 3;
+  int weapon = 0;
+  int x1 = 0;
+  int y1 = 0;
+  int n = 0;
+  int xg = 0;
+  int yg = 0;
+  int xk = 0;
+  int yk = 10;
+  // 0 - void
+  // 1 - wall
+  // 2 - teleport
+  // 3 - standart enemy
+  // 4 - +1 life
+  // 5 - +100 score
+  // 6 - hard enemy
+  // 7 - very hard enemy, vashe pizdec
+  // 8 - SAS weapon
+  // 9 - you
+  int gameMatrix[22][22] = {
+    {9,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1},
+    {0,1,0,0,0,0,0,0,1,0,1,1,1,1,1,0,1,0,0,0,0},
+    {0,1,0,1,1,1,1,1,1,0,1,0,0,0,1,0,1,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,1,2,0,0,1,0,0,0,0,0,0},
+    {1,1,1,1,0,1,1,1,1,0,1,1,1,0,1,0,1,0,0,0,0},
+    {0,0,0,1,0,1,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0},
+    {0,0,0,1,0,0,0,0,0,0,1,0,1,0,1,0,1,1,1,1,1},
+    {0,0,0,0,0,1,1,1,1,1,1,0,1,0,1,0,0,0,0,0,0},
+    {0,0,0,1,0,1,0,0,0,0,0,0,1,0,1,0,1,1,0,1,1},
+    {0,0,0,1,0,1,0,0,0,0,0,0,1,0,1,0,1,0,0,1,0},
+    {1,1,1,1,0,1,1,1,0,1,1,0,1,0,0,0,1,0,1,1,0},
+    {0,1,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,1,0,0},
+    {0,1,1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,0,0,0,0},
+    {0,0,0,1,0,0,0,0,0,0,1,0,1,0,1,1,1,1,0,1,1},
+    {1,1,0,1,0,1,1,1,1,0,0,0,0,0,1,0,0,1,0,0,0},
+    {0,1,0,0,0,1,0,0,1,0,1,1,1,1,1,0,0,1,0,0,0},
+    {0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1},
+    {1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,0,0,0},
+    {0,0,0,1,0,0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0},
+    {0,1,0,1,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,1,0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0},
+    };
+
+  
+  tft.fillCircle(x1, y1, 5, TFT_BLUE);
+  tft.fillRect(0, 10, 240, 5,  TFT_WHITE);
+  tft.fillRect(0, 10, 5, 240,  TFT_WHITE);
+  tft.fillRect(235, 10, 235, 240,  TFT_WHITE);
+  tft.fillRect(0, 235, 240, 240,  TFT_WHITE);
+  while (1){
+    tft.setCursor(0,0);
+    tft.print("SCORE: ");
+    tft.print(score);
+    if (weapon == 1) {
+      tft.setCursor(90,0);
+      tft.print("IMBA");
+    }
+    else {
+      tft.setCursor(90,0);
+      tft.print("    ");
+    }  
+    tft.setCursor(190,0);
+    tft.print("LIFE: ");
+    tft.print(life);
+    while (n!=500){
+      if(gameMatrix[yg][xg] == 1){
+        tft.fillRect(((xg+1)*5)+xk,((yg+1)*5)+yk,5,5,TFT_WHITE); // Wall
+      }
+      if(gameMatrix[yg][xg] == 2){
+        tft.fillRect(((xg+1)*5)+xk,((yg+1)*5)+yk,5,5,TFT_YELLOW); // Teleport
+      }
+      if(gameMatrix[yg][xg] == 3){
+        tft.fillRect(((xg+1)*5)+xk,((yg+1)*5)+yk,5,5,TFT_RED);  // Standart enemy
+      }
+      if(gameMatrix[yg][xg] == 4){
+        tft.fillRect(((xg+1)*5)+xk,((yg+1)*5)+yk,5,5,TFT_GREEN); // Life
+      }
+      if(gameMatrix[yg][xg] == 5){
+        tft.fillRect(((xg+1)*5)+xk,((yg+1)*5)+yk,5,5,TFT_GOLD); // +100 Score
+      }
+      if(gameMatrix[yg][xg] == 6){
+        tft.fillRect(((xg+1)*5)+xk,((yg+1)*5)+yk,5,5,TFT_MAGENTA); // Hard Enemy
+      }
+      if(gameMatrix[yg][xg] == 7){
+        tft.fillRect(((xg+1)*5)+xk,((yg+1)*5)+yk,5,5,TFT_BROWN);  // Very Hard Enemy
+      }
+      if(gameMatrix[yg][xg] == 8){
+        tft.fillRect(((xg+1)*5)+xk,((yg+1)*5)+yk,5,5,TFT_ORANGE); // Weapon
+      }
+      if(gameMatrix[yg][xg] == 9){
+        tft.fillRect(((xg+1)*5)+xk,((yg+1)*5)+yk,5,5,TFT_BLUE); // YOU
+      }
+      if(gameMatrix[yg][xg] == 0){
+        tft.fillRect(((xg+1)*5)+xk,((yg+1)*5)+yk,5,5,TFT_BLACK);  // Void
+      }
+
+      n++;
+      xg++;
+      if (xg == 22){
+        xg = 0;
+        yg++;
+      }
+      if (yg == 23){
+        return;
+      }        
+    }
+    xg = 0;
+    yg = 0;
+    
+    
+  const int keyCount = keyboard.keyCount();
+//  if (keyCount == 0)
+//    return;
+
+  const BBQ10Keyboard::KeyEvent key = keyboard.keyEvent();
+  String state = "pressed";
+  
+
+  // pressing 'b' turns off the backlight and pressing Shift+b turns it on
+  if (key.state == BBQ10Keyboard::StatePress) {
+    if (key.key == '\n') {
+      delay(1);
+    }
+    if (key.key == 'w') {
+      if (y1 > 0){
+        gameMatrix[y1][x1] = 0;
+        y1--;
+        gameMatrix[y1][x1] = 9;
+        
+      }
+    }
+    if (key.key == 's') {
+      if (y1 < 21){
+        gameMatrix[y1][x1] = 0;
+        y1++;
+        gameMatrix[y1][x1] = 9;
+      }
+    }
+    if (key.key == 'a') {
+      if (x1 > 0){
+        gameMatrix[y1][x1] = 0;
+        x1--;
+        gameMatrix[y1][x1] = 9;
+      }
+    }
+    if (key.key == 'd') {
+      if (x1 < 21) {
+        gameMatrix[y1][x1] = 0;
+        x1++;
+        gameMatrix[y1][x1] = 9;
+      }
+    }
+    if (key.key == ' ') {
+     tft.fillScreen(TFT_BLACK);
+     tft.setCursor(0, 0, 1);
+     tft.setTextColor(TFT_GREEN, TFT_BLACK);
+     tft.setTextSize(1);
+     tft.println("Quit");
+      return;
+    }
+    
+    if (key.key == '\n'){
+      Serial.println("OK");
+    }
+    else if (key.key == '~') {
+      delay(1);
+    }
+    
+  }  
+  }
 }
 
 void lexer(int n){
@@ -325,6 +511,7 @@ void lexer(int n){
   }
   
 }
+
 
 void exe(const char * s) {
    if (s[0] == 'c' and s[1] == 'l' and s[2] == 's'){
@@ -657,8 +844,13 @@ void exe(const char * s) {
            n++;   
          }
        while(m != n){         
+         if (s[m] != '~'){
          tempName = tempName + s[m];
          m++;
+         } else {
+          tempName = tempName + '~';
+          m++;
+         }
        } 
        }
        buf = new unsigned char[100];
@@ -668,6 +860,8 @@ void exe(const char * s) {
        Serial.println(str3);
        Serial.println(n);
        Serial.println(m);
+       
+       
        writeFile(SD, str2,str3);
    }
    }
@@ -703,6 +897,31 @@ void exe(const char * s) {
    }  
 
    }
+   else if (s[0] == 'i' and s[1] == 'm' and s[2] == 'a' and s[3] == 'g' and s[4] == 'e' and s[5] == ' '){
+     if (s[5] == ' ' and s[6] == '\"'){
+       int n = 7;
+       int m = 7;
+       unsigned char* buf = new unsigned char[100]; 
+       String tempName = "";
+       while (s[n] != '\"'){
+         if (s[n] != '\"'){
+           n++;   
+         }
+       while(m != n){         
+         tempName = tempName + s[m];
+         m++;
+       } 
+       }
+       tempName = pwd + tempName;
+       tempName.getBytes(buf, 100, 0);
+       const char *str2 = (const char*)buf;
+       if (SD.exists(str2)){
+         File jpgFile = SD.open( str2, FILE_READ);  
+         
+         }
+         else { tft.println("\nFile not exist");}
+       }
+   }
    else if (s[0] == 'W' and s[1] == 'a' and s[2] == 'k' and s[3] == 'e' and s[4] == ' ' and s[5] == 'u' and s[6] == 'p' and s[7] == ',' and s[8] == ' ' and s[9] == 'N' and s[10] == 'e' and s[11] == 'o' and s[12] == '.' and s[13] == '.' and s[14] == '.'){
       delay(2500);
       tft.println("\nThe Matrix has you...");
@@ -712,6 +931,14 @@ void exe(const char * s) {
       tft.println("");
       tft.println("");
       tft.println("Knock, knock, Neo.");
+   }
+   else if (s[0] == 'd' and s[1] == 'e' and s[2] == 'm' and s[3] == 'o'){
+     tft.fillScreen(TFT_BLACK);
+     tft.setCursor(0, 0, 1);
+     tft.setTextColor(TFT_GREEN, TFT_BLACK);
+     tft.setTextSize(1);
+     pingPong();  
+
    }
    else if (s[0] == 'h' and s[1] == 'e' and s[2] == 'l' and s[3] == 'p'){
     tft.println("\nCD - change directory");
@@ -735,36 +962,6 @@ void exe(const char * s) {
    }
    cmd = "";
 }
-
-void Error(char *s) { // Report an Error 
-  delay(1);
-  Serial.printf("Error: ", s,'.');
-}
-
-//void Match(char *x){ // Match a Specific Input Character
-//  delay(1);
-//  if (look = *x){
-//    GetChar();
-//  }
-//  else {
-//    Expected(x);
-//  }
-//}
-
-void Expected(char *s){ // Report What Was Expected 
-  delay(1);
-  Abort(s + ' Expected');
-}
-
-void Abort(char *s){ // Report Error and Halt
-  delay(1);
-  Error(s);
-  return;
-}
-
-
-//isDigit
-//isAlpha
 
 //void thisIntVar(){
 //  int n = 4;
@@ -806,31 +1003,6 @@ void Abort(char *s){ // Report Error and Halt
 //  Serial.println(myInt[varNumber[0]]);
 //  varNumber[0]++;
 //  Serial.println(code);
-//  
-//  
-//  
-//}
-//
-//void thisCharVar(){
-//  delay(1);
-//}
-//
-//void thisFloatVar(){
-//  delay(1);
-//}
-//
-//void thisDoubleVar(){
-//  delay(1);
-//}
-//
-//void thisBoolVar(){
-//  delay(1);
-//}
-//
-//void thisLongVar(){
-//  delay(1);
-//}
-
 
 void listDir(fs::FS &fs, const char * dirname, uint8_t levels){
     tft.println("");
@@ -892,6 +1064,8 @@ void removeDir(fs::FS &fs, const char * path){
 }
 
 void readFile(fs::FS &fs, const char * path){
+    char tempChr;
+    tempFile = "";
     Serial.printf("Reading file: %s\n", path);
     File file = fs.open(path);
     if(!file){
@@ -901,10 +1075,13 @@ void readFile(fs::FS &fs, const char * path){
 
     tft.println("");
     while(file.available()){
-        tft.print(char(file.read()));
+        tempChr = char(file.read());
+        tft.print(tempChr);
+        //tempFile = tempFile + &tempChr;
     }
     file.close();
     tft.println("");
+    
 }
 
 void writeFile(fs::FS &fs, const char * path, const char * message){
