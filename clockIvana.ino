@@ -165,7 +165,7 @@ void setup()
    tft.setTextColor(TFT_BLUE, TFT_BLACK);
    tft.setTextSize(2);
    tft.println("Irvin Lab");
-   tft.setTextColor(TFT_WHITE, TFT_GREEN);
+   tft.setTextColor(TFT_GREEN, TFT_BLACK);
    tft.setTextSize(1);
    tft.println("");
    tft.println("");
@@ -454,24 +454,56 @@ void pingPong(){
   }
 }
 void dragon(){
+// warningi:
+// 1 - skelet 1yp, 2 - skelet 2yp, 3 - skelet 3yp, 4 - skelet-mag 4yp, 5 - skelet-mag 5yp 6 - lich 6 yp, 7 - knyaz tmi 7yp
+// 6 - goblin 1yp, 7 - goblin-mag 2yp,
+ int rnd = random(99);
  int heal = 100;
  int mana = 0;
  int gold = 0;
- int weapon[] = {0,0,0,0,0,0};
- int armor[] = {0,0,0,0,0,0,0};
+ int weapon[] = {0,5,10,2,16,28};
+ int currentWeapon = 0;
+ int armor[] = {0,0,0,0,0,0,0}; 
  int gameCurrent = 0;
- int lvl = 1;
- int lvlScore = 4;
- int hp = 0;
+ int lvl = 1; // Уровень
+ int lvlScore = 4; // Очки уровня, которые дают для прокачки персонажа за новый уровень
+ int hp = 0; // Опыт
  int cast[] = {0,0,0,0,0,0,0,0,0,0};
- int healScore = 0;
- int manaScore = 0;
- int silaScore = 0;
- int lovkScore = 0;
- int luckScore = 0;
- int diplScore = 0;
+ int healScore = 1; // Коэфициент здоровья 
+ int manaScore = 1; // Коэфициент количества маны
+ int silaScore = 1; // Коэфициент силы удара
+ int lovkScore = 1; // Коэфициент уклонения/ловкости
+ int luckScore = 1; // Удача
+ int diplScore = 1; // Дипломатия
+ int mozgScore = 1; // Способности к магии
+ int menuPosition = 1; // Позиция курсора меню
+ int stroki = 0;
+ int warning = 0;
+ int healVraga = 0;
+ int manaVraga = 0;
+ int lvlVraga = 0;
+ int silaVraga = 0;
+ int lovkVraga = 0;
+ int luckVraga = 0;
+ int mozgVraga = 0;
+ int castVraga[] = {0,0,0,0,0,0,0,0,0,0};
+ int damag = 0;
+ int dobicha = 0;
+ int tmpHP = 0;
+
+ tft.fillScreen(TFT_BLACK);
+ tft.setCursor(0, 0, 1);
+ tft.setTextColor(TFT_GREEN, TFT_BLACK);
+ tft.setTextSize(1);
+ tft.println("ABYSS DUNGEON");
+ tft.println("");
+ tft.println("  MENU:");
+ tft.println("1. Start Game<=");
+ tft.println("2. Load Game");
+ tft.println("3. Exit Game");
  
  while(1){
+  
   const int keyCount = keyboard.keyCount();
 
   const BBQ10Keyboard::KeyEvent key = keyboard.keyEvent();
@@ -486,28 +518,325 @@ void dragon(){
   // pressing 'b' turns off the backlight and pressing Shift+b turns it on
   if (key.state == BBQ10Keyboard::StatePress) {
     if (key.key == '\n') {
-      delay(1);
+      if (gameCurrent == 0){
+        if (menuPosition == 1){
+          gameCurrent = 1;
+          tft.fillScreen(TFT_BLACK);
+          tft.setCursor(0, 0, 1);
+          tft.setTextColor(TFT_GREEN, TFT_BLACK);
+          tft.setTextSize(1);
+          tft.println("Zadai nachalnogo personaja\n");
+          tft.print("Level Scores: ");
+          tft.println(lvlScore);
+          tft.print("Zdorovie: ");
+          tft.println(healScore);
+          tft.print("Mana: ");
+          tft.println(manaScore);
+          tft.print("Sila: ");
+          tft.println(silaScore);
+          tft.print("Lovkost: ");
+          tft.println(lovkScore);
+          tft.print("Intellekt: ");
+          tft.println(mozgScore);
+          tft.print("Ydacha: ");
+          tft.println(luckScore);
+          tft.print("Diplomatia: ");
+          tft.println(diplScore);
+          tft.println("Press Y for continue");
+        }  
+        if (menuPosition == 2){
+          delay(1);
+        }
+        if (menuPosition == 3){
+          return;
+        }
+      }
+      if (gameCurrent == 4){
+        if (stroki >= 28){
+          stroki = 0;
+          tft.fillScreen(TFT_BLACK);
+          tft.setCursor(0, 0, 1);
+          tft.setTextColor(TFT_GREEN, TFT_BLACK);
+          tft.setTextSize(1);
+        }
+        tft.setTextColor(TFT_GREEN, TFT_BLACK);
+        rnd = random(99);
+        if (rnd >= 1 and rnd <= luckScore){ // Сначала Я бью
+          tft.setTextColor(TFT_RED, TFT_BLACK);  // От крита увернуться нельзя
+          tft.print("!KRIT! ");
+          stroki++;
+          damag = ((silaScore*2)+weapon[currentWeapon])*2;
+          healVraga = healVraga - damag;
+          tft.print("Udar -");
+          tft.print(damag);
+          tft.println("HP");
+        }
+        else {  // Простой удар
+          rnd = random(99);
+          if (rnd >= 1 and rnd <= luckVraga){  // Если у Врага Удача, я промазал
+            stroki++;
+            tft.println("YOU MISS");
+          }
+          else {   // Иначе всё же бью
+            stroki++;
+            damag = (silaScore*2)+weapon[currentWeapon];
+            healVraga = healVraga - damag;
+            tft.print("Udar -");
+            tft.print(damag);
+            tft.println("HP");
+          }
+        }
+        tft.print("HP enemy: ");  // Показываем сколько у Врага осталось
+        tft.println(healVraga);
+        stroki++;
+        rnd = random(99);
+        if (rnd >= 1 and rnd <= luckVraga){  // Я тоже не могу увернуться от Крита
+          tft.setTextColor(TFT_RED, TFT_BLACK);
+          tft.print("!KRIT! ");
+          stroki++;
+          damag = silaVraga*2;
+          heal = heal - damag;
+          tft.print("Udar Sopernika -");
+          tft.print(damag);
+          tft.print(" HP. My Heal ");
+          tft.println(heal);
+        }
+        else {   // Но и он может промазать если у Меня Удача
+          rnd = random(99);
+          if (rnd >= 1 and rnd <= luckScore){
+            stroki++;
+            tft.println("HIM MISS");
+          }
+          else {  // Ну а если нет я получаю ответочку
+            stroki++;
+            damag = silaVraga*2;
+            heal = heal - damag;
+            tft.print("Udar Sopernika -");
+            tft.print(damag);
+            tft.print(" HP. My Heal ");
+            tft.println(heal);
+          }
+        }
+        if (heal<= 0){  
+          tft.println("Game Over");
+          return;
+        }
+        if (healVraga <= 0){
+          if (warning > 5){
+            dobicha = 10 * lvlVraga + warning;
+            gold = gold + dobicha;
+            tft.setTextColor(TFT_GOLD, TFT_BLACK);
+            tft.print("Nagrada: ");
+            tft.print(dobicha);
+            tft.println(" GOLD");
+            tft.setTextColor(TFT_GREEN, TFT_BLACK);
+            dobicha = 0;
+            stroki++;
+          }
+          stroki++;
+          hp = hp + tmpHP;
+          tft.println("Pobeda!");
+          gameCurrent = 2;
+          tmpHP=0;
+          heal = 100 + (healScore * 25);
+        }
+      }
     }
     if (key.key == 'w') {
-      delay(1);
+      tft.setTextColor(TFT_GREEN, TFT_BLACK);
+      damag = 0;
+      if (stroki >= 28){
+          stroki = 0;
+          tft.fillScreen(TFT_BLACK);
+          tft.setCursor(0, 0, 1);
+          tft.setTextColor(TFT_GREEN, TFT_BLACK);
+          tft.setTextSize(1);
+        }
+      if (gameCurrent == 1 and menuPosition != 1){
+        menuPosition--;
+      }
+      if (gameCurrent == 2){
+        int seed = random(999);
+        if (seed == 1){
+          tft.println("Ti nashel 1000 zolota");
+          gold = gold + 1000;
+          stroki++;
+        }
+        else if (seed >= 50 and seed <= 90) {
+          tft.setTextColor(TFT_RED, TFT_BLACK);
+          tft.println("Na puti stoit Skelet 1 lvl, chto delat?");
+          tft.println("Y-boy, D-dogovoritsa, G-bejat");
+          stroki=stroki+2;
+          gameCurrent=3;
+          warning = 1;
+          healVraga = 40;
+          manaVraga = 0;
+          lvlVraga = 1;
+          silaVraga = 5;
+          lovkVraga = 1;
+          luckVraga = 1;
+          mozgVraga = 0;
+          tmpHP = healVraga;
+           
+        }
+        else {
+          tft.print("Nichego ne proishodit ");
+          tft.println(seed);
+          stroki++;
+        }
+        
+      }
     }
     if (key.key == 'a') {
       delay(1);
     }
     if (key.key == 's') {
-      delay(1);
+      if (gameCurrent == 1 and menuPosition != 7){
+        menuPosition++;
+      }
     } 
     if (key.key == 'd') {
       delay(1);
     }
     if (key.key == 'i') {
-      delay(1);
+      tft.fillScreen(TFT_BLACK);
+      tft.setCursor(0, 0, 1);
+      tft.setTextColor(TFT_GREEN, TFT_BLACK);
+      tft.setTextSize(1);
+      tft.println("INFORMATION ");
+      tft.print("Level: ");
+      tft.println(lvl);
+      tft.print("Zdorovie: ");
+      tft.println(heal);
+      tft.print("Mana: ");
+      tft.println(mana);
+      tft.print("GOLD: ");
+      tft.println(gold);
+      tft.print("Jivuchest: ");
+      tft.println(healScore);
+      tft.print("Magicheskaya Sila: ");
+      tft.println(manaScore);
+      tft.print("Sila: ");
+      tft.println(silaScore);
+      tft.print("Lovkost: ");
+      tft.println(lovkScore);
+      tft.print("Ydacha: ");
+      tft.println(luckScore);
+      tft.print("Diplomatia: ");
+      tft.println(diplScore);
+      tft.print("Magicheskie Sposobnosti: ");
+      tft.println(mozgScore);  
+      stroki = stroki + 12;    
     }
     if (key.key == '+') {
-      delay(1);
+      tft.setTextColor(TFT_GREEN, TFT_BLACK);
+      if (gameCurrent == 1 and menuPosition == 1 and lvlScore != 0){
+        healScore++;
+        lvlScore--;
+      }
+      if (gameCurrent == 1 and menuPosition == 2 and lvlScore != 0){
+        manaScore++;
+        lvlScore--;
+      }
+      if (gameCurrent == 1 and menuPosition == 3 and lvlScore != 0){
+        silaScore++;
+        lvlScore--;
+      }
+      if (gameCurrent == 1 and menuPosition == 4 and lvlScore != 0){
+        lovkScore++;
+        lvlScore--;
+      }
+      if (gameCurrent == 1 and menuPosition == 5 and lvlScore != 0){
+        mozgScore++;
+        lvlScore--;
+      }
+      if (gameCurrent == 1 and menuPosition == 6 and lvlScore != 0){
+        luckScore++;
+        lvlScore--;
+      }
+      if (gameCurrent == 1 and menuPosition == 7 and lvlScore != 0){
+        diplScore++;
+        lvlScore--;
+      }
+      if (gameCurrent == 1){
+        tft.fillScreen(TFT_BLACK);
+          tft.setCursor(0, 0, 1);
+          tft.setTextColor(TFT_GREEN, TFT_BLACK);
+          tft.setTextSize(1);
+          tft.println("Zadai nachalnogo personaja\n");
+          tft.print("Level Scores: ");
+          tft.println(lvlScore);
+          tft.print("Zdorovie: ");
+          tft.println(healScore);
+          tft.print("Mana: ");
+          tft.println(manaScore);
+          tft.print("Sila: ");
+          tft.println(silaScore);
+          tft.print("Lovkost: ");
+          tft.println(lovkScore);
+          tft.print("Intellekt: ");
+          tft.println(mozgScore);
+          tft.print("Ydacha: ");
+          tft.println(luckScore);
+          tft.print("Diplomatia: ");
+          tft.println(diplScore);
+          tft.println("Press Y for continue");
+      }
     }
     if (key.key == '-') {
-      delay(1);
+      tft.setTextColor(TFT_GREEN, TFT_BLACK);
+      if (gameCurrent == 1 and menuPosition == 1 and lvlScore != 4 and healScore != 0){
+        healScore--;
+        lvlScore++;
+      }
+      if (gameCurrent == 1 and menuPosition == 2 and lvlScore != 4 and manaScore != 0){
+        manaScore--;
+        lvlScore++;
+      }
+      if (gameCurrent == 1 and menuPosition == 3 and lvlScore != 4 and silaScore != 0){
+        silaScore--;
+        lvlScore++;
+      }
+      if (gameCurrent == 1 and menuPosition == 4 and lvlScore != 4 and lovkScore != 0){
+        lovkScore--;
+        lvlScore++;
+      }
+      if (gameCurrent == 1 and menuPosition == 5 and lvlScore != 4 and mozgScore != 0){
+        mozgScore--;
+        lvlScore++;
+      }
+      if (gameCurrent == 1 and menuPosition == 6 and lvlScore != 4 and luckScore != 0){
+        luckScore--;
+        lvlScore++;
+      }
+      if (gameCurrent == 1 and menuPosition == 7 and lvlScore != 4 and diplScore != 0){
+        diplScore--;
+        lvlScore++;
+      }
+      if (gameCurrent == 1){
+        tft.fillScreen(TFT_BLACK);
+          tft.setCursor(0, 0, 1);
+          tft.setTextColor(TFT_GREEN, TFT_BLACK);
+          tft.setTextSize(1);
+          tft.println("Zadai nachalnogo personaja\n");
+          tft.print("Level Scores: ");
+          tft.println(lvlScore);
+          tft.print("Zdorovie: ");
+          tft.println(healScore);
+          tft.print("Mana: ");
+          tft.println(manaScore);
+          tft.print("Sila: ");
+          tft.println(silaScore);
+          tft.print("Lovkost: ");
+          tft.println(lovkScore);
+          tft.print("Intellekt: ");
+          tft.println(mozgScore);
+          tft.print("Ydacha: ");
+          tft.println(luckScore);
+          tft.print("Diplomatia: ");
+          tft.println(diplScore);
+          tft.println("Press Y for continue");
+      }
     }
     if (key.key == 'k') {
       delay(1);
@@ -515,8 +844,65 @@ void dragon(){
     if (key.key == 'g') {
       delay(1);
     }
-    if (key.key == '\n') {
+    if (key.key == 'y') {
+      if (stroki >= 28){
+          stroki = 0;
+          tft.fillScreen(TFT_BLACK);
+          tft.setCursor(0, 0, 1);
+          tft.setTextColor(TFT_GREEN, TFT_BLACK);
+          tft.setTextSize(1);
+        }
+      tft.setTextColor(TFT_GREEN, TFT_BLACK);
+      if (gameCurrent == 1){
+        gameCurrent = 2;
+      }
+      if (gameCurrent == 2){
+         tft.fillScreen(TFT_BLACK);
+         tft.setCursor(0, 0, 1);
+         tft.setTextColor(TFT_GREEN, TFT_BLACK);
+         tft.setTextSize(1);
+      }
+      if (gameCurrent == 3){
+        gameCurrent = 4;
+        stroki++;
+        tft.fillScreen(TFT_BLACK);
+        tft.setCursor(0, 0, 1);
+        tft.setTextColor(TFT_RED, TFT_BLACK);
+        tft.setTextSize(1);
+        tft.println("ENT-Udar, E-sm.Oruj, (1-0)-Cast:");
+        if (warning == 1){
+          tft.println("Skelet 1yp.");
+          tft.print("Zdorovie: ");
+          tft.println(healVraga);
+          tft.print("Mana: ");
+          tft.println(manaVraga);
+        }
+        else if (warning == 2){
+          tft.println("Skelet 2yp.");
+          tft.print("Zdorovie: ");
+          tft.println(healVraga);
+          tft.print("Mana: ");
+          tft.println(manaVraga);
+        }
+        
+      }
+    }
+    if (key.key == 'n') {
       delay(1);
+    }
+    if (key.key == 'm') {
+      delay(1);
+    }
+    if (key.key == 'p') {
+      delay(1);
+    }
+    if (key.key == 'C') {
+      tft.fillScreen(TFT_BLACK);
+          tft.setCursor(0, 0, 1);
+          tft.setTextColor(TFT_GREEN, TFT_BLACK);
+          tft.setTextSize(1);
+          tft.println("Exit\n");
+      return;
     }
     if (key.key == '1') {
       delay(1);
@@ -550,6 +936,75 @@ void dragon(){
     }
     if (key.key == ' ') {
       delay(1);
+    }
+    if (key.key == 'e'){
+      if (stroki >= 28){
+          stroki = 0;
+          tft.fillScreen(TFT_BLACK);
+          tft.setCursor(0, 0, 1);
+          tft.setTextColor(TFT_GREEN, TFT_BLACK);
+          tft.setTextSize(1);
+        }
+      tft.setTextColor(TFT_YELLOW, TFT_BLACK);
+      currentWeapon++;
+      if (currentWeapon == 6){
+        currentWeapon = 0;
+      }
+      if (weapon[currentWeapon] == 0){
+        tft.println("Kulaki");
+      }
+      if (weapon[currentWeapon] == 1){
+        tft.println("Volshebnaya palochka 1yp.(+1 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 2){
+        tft.println("Korotkii mech 1yp. (+2 dmg)");
+      }
+      if (weapon[currentWeapon] == 3){
+        tft.println("Topor 1yp. (+3 dmg)");
+      }
+      if (weapon[currentWeapon] == 4){
+        tft.println("Korotkii mech 2yp. (+4 dmg)");
+      }
+      if (weapon[currentWeapon] == 5){
+        tft.println("Posoh adepta 2yp. (+5 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 6){
+        tft.println("Topor 2yp. (+6 dmg)");
+      }
+      if (weapon[currentWeapon] == 7){
+        tft.println("Korotkii mech 3yp. (+7 dmg)");
+      }
+      if (weapon[currentWeapon] == 8){
+        tft.println("Volshebnaya palochka 2yp. (+8 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 9){
+        tft.println("Mech 1yp. (+9 dmg)");
+      }
+      if (weapon[currentWeapon] == 10){
+        tft.println("Posoh maga 3yp.(+10 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 11){
+        tft.println("Topor voina 3yp.(+11 dmg)");
+      }
+      if (weapon[currentWeapon] == 12){
+        tft.println("Topor klana Ordi 3yp.(+12 dmg)");
+      }
+      if (weapon[currentWeapon] == 13){
+        tft.println("Rapira 1yp.(+13 dmg)");
+      }
+      if (weapon[currentWeapon] == 14){
+        tft.println("Bulava 1yp.(+14 dmg)");
+      }
+      if (weapon[currentWeapon] == 15){
+        tft.println("Topor Varvara 3yp. (+15 dmg)");
+      }
+      if (weapon[currentWeapon] == 16){
+        tft.println("Posoh kolduna 4yp. (+16 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 28){
+        tft.println("Topor Dush 4yp. (+28 dmg)");
+      }
+      stroki++;
     }
   }
     
