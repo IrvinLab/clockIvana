@@ -570,6 +570,7 @@ void dragon(){
           tft.print("Udar -");
           tft.print(damag);
           tft.println("HP");
+          tft.setTextColor(TFT_GREEN, TFT_BLACK);
         }
         else {  // Простой удар
           rnd = random(99);
@@ -600,6 +601,7 @@ void dragon(){
           tft.print(damag);
           tft.print(" HP. My Heal ");
           tft.println(heal);
+          tft.setTextColor(TFT_GREEN, TFT_BLACK);
         }
         else {   // Но и он может промазать если у Меня Удача
           rnd = random(99);
@@ -662,7 +664,7 @@ void dragon(){
           gold = gold + 1000;
           stroki++;
         }
-        else if (seed >= 50 and seed <= 90) {
+        else if (seed >= 11 and seed <= 20) {
           tft.setTextColor(TFT_RED, TFT_BLACK);
           tft.println("Na puti stoit Skelet 1 lvl, chto delat?");
           tft.println("Y-boy, D-dogovoritsa, G-bejat");
@@ -675,6 +677,23 @@ void dragon(){
           silaVraga = 5;
           lovkVraga = 1;
           luckVraga = 1;
+          mozgVraga = 0;
+          tmpHP = healVraga;
+           
+        }
+        else if (seed >= 21 and seed <= 30) {
+          tft.setTextColor(TFT_RED, TFT_BLACK);
+          tft.println("Na puti stoit Skelet 2 lvl, chto delat?");
+          tft.println("Y-boy, D-dogovoritsa, G-bejat");
+          stroki=stroki+2;
+          gameCurrent=3;
+          warning = 1;
+          healVraga = 80;
+          manaVraga = 0;
+          lvlVraga = 2;
+          silaVraga = 8;
+          lovkVraga = 2;
+          luckVraga = 2;
           mozgVraga = 0;
           tmpHP = healVraga;
            
