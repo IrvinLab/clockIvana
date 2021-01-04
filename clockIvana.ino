@@ -456,7 +456,7 @@ void pingPong(){
 void dragon(){
 // warningi:
 // 1 - skelet 1yp, 2 - skelet 2yp, 3 - skelet 3yp, 4 - skelet-mag 4yp, 5 - skelet-mag 5yp 6 - lich 6 yp, 7 - knyaz tmi 7yp
-// 6 - goblin 1yp, 7 - goblin-mag 2yp,
+// 6 - goblin 1yp, 7 - goblin-mag 2yp, 8 - goblin-koldun 3 yp, 9 - goblin-charodey 4yp., 10 - goblin 4yp, 11 - golin 5 yp
  int rnd = random(99);
  int heal = 100;
  int mana = 0;
@@ -468,7 +468,8 @@ void dragon(){
  int lvl = 1; // Уровень
  int lvlScore = 4; // Очки уровня, которые дают для прокачки персонажа за новый уровень
  int hp = 0; // Опыт
- int cast[] = {0,0,0,0,0,0,0,0,0,0};
+ int cast[] = {1,3,5,6,8,10,11,12,0,0};
+ int currentCast = 0;
  int healScore = 1; // Коэфициент здоровья 
  int manaScore = 1; // Коэфициент количества маны
  int silaScore = 1; // Коэфициент силы удара
@@ -552,7 +553,7 @@ void dragon(){
         }
       }
       if (gameCurrent == 4){
-        if (stroki >= 28){
+        if (stroki >= 25){
           stroki = 0;
           tft.fillScreen(TFT_BLACK);
           tft.setCursor(0, 0, 1);
@@ -565,7 +566,7 @@ void dragon(){
           tft.setTextColor(TFT_RED, TFT_BLACK);  // От крита увернуться нельзя
           tft.print("!KRIT! ");
           stroki++;
-          damag = ((silaScore*2)+weapon[currentWeapon])*2;
+          damag = ((silaScore*4)+weapon[currentWeapon])*2;
           healVraga = healVraga - damag;
           tft.print("Udar -");
           tft.print(damag);
@@ -576,11 +577,13 @@ void dragon(){
           rnd = random(99);
           if (rnd >= 1 and rnd <= luckVraga){  // Если у Врага Удача, я промазал
             stroki++;
+            tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("YOU MISS");
+            tft.setTextColor(TFT_GREEN, TFT_BLACK);
           }
           else {   // Иначе всё же бью
             stroki++;
-            damag = (silaScore*2)+weapon[currentWeapon];
+            damag = (silaScore*4)+weapon[currentWeapon];
             healVraga = healVraga - damag;
             tft.print("Udar -");
             tft.print(damag);
@@ -595,7 +598,7 @@ void dragon(){
           tft.setTextColor(TFT_RED, TFT_BLACK);
           tft.print("!KRIT! ");
           stroki++;
-          damag = silaVraga*2;
+          damag = (silaVraga*2)*2;
           heal = heal - damag;
           tft.print("Udar Sopernika -");
           tft.print(damag);
@@ -641,13 +644,14 @@ void dragon(){
           gameCurrent = 2;
           tmpHP=0;
           heal = 100 + (healScore * 25);
+          mana = manaScore * 30;
         }
       }
     }
     if (key.key == 'w') {
       tft.setTextColor(TFT_GREEN, TFT_BLACK);
       damag = 0;
-      if (stroki >= 28){
+      if (stroki >= 25){
           stroki = 0;
           tft.fillScreen(TFT_BLACK);
           tft.setCursor(0, 0, 1);
@@ -663,6 +667,43 @@ void dragon(){
           tft.println("Ti nashel 1000 zolota");
           gold = gold + 1000;
           stroki++;
+        }
+        else if (seed == 2){
+          tft.println("Skali razverzlis nad golovoi geroya");
+          tft.println("Ne chto inoe kak bojectvenniy luch");
+          tft.println("Ykazal na serdche igroka"); 
+          tft.setTextColor(TFT_GOLD, TFT_BLACK);
+          tft.println("+1 Luck Score"); 
+          luckScore++;
+          stroki += 4;
+        }
+        else if (seed == 3){
+          tft.println("Chtobi ne ymeret ot jajdi vi");
+          tft.println("Ubili gigntskogo pauka i vipiv");
+          tft.println("Ego krov, vi pochustvovali priliv"); 
+          tft.setTextColor(TFT_GOLD, TFT_BLACK);
+          tft.println("+1 Power Score"); 
+          silaScore++;
+          stroki += 4;
+        }
+        else if (seed == 4){
+          tft.println("Pod vashimi nogami okazalsya");
+          tft.println("Grib Istini. S`ev ego, vi obreli");
+          tft.println("poznania tain magicheskih nauk"); 
+          tft.setTextColor(TFT_GOLD, TFT_BLACK);
+          tft.println("+1 Magic Score"); 
+          mozgScore++;
+          stroki += 4;
+        }
+        else if (seed == 5){
+          tft.println("Pod vashimi nogami okazalsya");
+          tft.println("Grib Sili. S`ev ego, vi stali");
+          tft.println("sposobni nakaplivat bolche"); 
+          tft.println("magicheskoy energii");
+          tft.setTextColor(TFT_GOLD, TFT_BLACK);
+          tft.println("+1 Mana Score"); 
+          manaScore++;
+          stroki += 5;
         }
         else if (seed >= 11 and seed <= 20) {
           tft.setTextColor(TFT_RED, TFT_BLACK);
@@ -687,13 +728,30 @@ void dragon(){
           tft.println("Y-boy, D-dogovoritsa, G-bejat");
           stroki=stroki+2;
           gameCurrent=3;
-          warning = 1;
+          warning = 2;
           healVraga = 80;
           manaVraga = 0;
           lvlVraga = 2;
           silaVraga = 8;
           lovkVraga = 2;
           luckVraga = 2;
+          mozgVraga = 0;
+          tmpHP = healVraga;
+           
+        }
+        else if (seed >= 31 and seed <= 40) {
+          tft.setTextColor(TFT_RED, TFT_BLACK);
+          tft.println("Na puti stoit Skelet 3 lvl, chto delat?");
+          tft.println("Y-boy, D-dogovoritsa, G-bejat");
+          stroki=stroki+2;
+          gameCurrent=3;
+          warning = 3;
+          healVraga = 145;
+          manaVraga = 0;
+          lvlVraga = 3;
+          silaVraga = 11;
+          lovkVraga = 3;
+          luckVraga = 4;
           mozgVraga = 0;
           tmpHP = healVraga;
            
@@ -715,7 +773,14 @@ void dragon(){
       }
     } 
     if (key.key == 'd') {
-      delay(1);
+      if (gameCurrent == 3){
+        if (warning >=1 and warning <= 7){
+          tft.setTextColor(TFT_GREEN, TFT_BLACK);
+          tft.println("Dogovoritsya ne vishlo, suchestvo yvlaetsa nejitiy");
+          tft.println("Y-boy, D-dogovoritsa, G-bejat");
+          stroki = stroki + 2;
+        }
+      }
     }
     if (key.key == 'i') {
       tft.fillScreen(TFT_BLACK);
@@ -745,6 +810,7 @@ void dragon(){
       tft.println(diplScore);
       tft.print("Magicheskie Sposobnosti: ");
       tft.println(mozgScore);  
+      stroki = 0;
       stroki = stroki + 12;    
     }
     if (key.key == '+') {
@@ -861,10 +927,22 @@ void dragon(){
       delay(1);
     }
     if (key.key == 'g') {
-      delay(1);
+      if (gameCurrent == 3){
+        tft.setTextColor(TFT_GREEN, TFT_BLACK);
+        if (lovkScore > lovkVraga and luckScore > luckVraga){
+          gameCurrent = 2;
+          stroki++;
+          tft.println("Vam udalos sbajat blagodarya lovkosti i yadache");
+        }
+        else {
+          gameCurrent = 4;
+          stroki++;
+          tft.println("Sbejat NE udalos, pridetsya vstupit v boy");
+        }
+      }
     }
     if (key.key == 'y') {
-      if (stroki >= 28){
+      if (stroki >= 25){
           stroki = 0;
           tft.fillScreen(TFT_BLACK);
           tft.setCursor(0, 0, 1);
@@ -874,6 +952,8 @@ void dragon(){
       tft.setTextColor(TFT_GREEN, TFT_BLACK);
       if (gameCurrent == 1){
         gameCurrent = 2;
+        heal = 100 + (healScore * 25);
+        mana = manaScore * 30;
       }
       if (gameCurrent == 2){
          tft.fillScreen(TFT_BLACK);
@@ -910,7 +990,283 @@ void dragon(){
       delay(1);
     }
     if (key.key == 'm') {
-      delay(1);
+     if (gameCurrent == 2 or gameCurrent == 4){ 
+      if (stroki >= 25){
+          stroki = 0;
+          tft.fillScreen(TFT_BLACK);
+          tft.setCursor(0, 0, 1);
+          tft.setTextColor(TFT_GREEN, TFT_BLACK);
+          tft.setTextSize(1);
+      }
+      currentCast++;
+      stroki++;
+      tft.setTextColor(TFT_YELLOW, TFT_BLACK);
+      if (currentCast >= 10){currentCast = 0;}
+      if (cast[currentCast] == 0){
+        tft.println("Empty");
+      }
+      else if (cast[currentCast] == 1){
+        tft.println("Lechenie 1yp (30HP/20MN)");
+      }
+      else if (cast[currentCast] == 2){
+        tft.println("Lechenie 2yp (50HP/40MN)");
+      }
+      else if (cast[currentCast] == 3){
+        tft.println("Lechenie 3yp (80HP/70MN)");
+      }
+      else if (cast[currentCast] == 4){
+        tft.println("Lechenie 4yp (120HP/100MN)");
+      }
+      else if (cast[currentCast] == 5){
+        tft.println("Lechenie 5yp (175HP/150MN)");
+      }
+      else if (cast[currentCast] == 6){
+        tft.println("Fire Ball 1yp (-20HP/30MN)");
+      }
+      else if (cast[currentCast] == 7){
+        tft.println("Fire Ball 2yp (-40HP/50MN)");
+      }
+      else if (cast[currentCast] == 8){
+        tft.println("Fire Ball 3yp (-80HP/100MN)");
+      }
+      else if (cast[currentCast] == 9){
+        tft.println("Fire Ball 4yp (-160HP/200MN)");
+      }
+      else if (cast[currentCast] == 10){
+        tft.println("Fire Ball 5yp (-320HP/400MN)");
+      }
+      else if (cast[currentCast] == 11){
+        tft.println("Proklyatie (1Luck/250MN)");
+      }
+      else if (cast[currentCast] == 12){
+        tft.println("Neuklujest (1Lovk/275MN)");
+      }
+      tft.setTextColor(TFT_GREEN, TFT_BLACK);
+     } 
+    }
+
+    if (key.key == '\b'){
+     if (gameCurrent == 4){
+       if (stroki >= 25){
+          stroki = 0;
+          tft.fillScreen(TFT_BLACK);
+          tft.setCursor(0, 0, 1);
+          tft.setTextColor(TFT_GREEN, TFT_BLACK);
+          tft.setTextSize(1);
+        }
+        if (weapon[currentWeapon] == 1){  // Дамаг от магического оружия
+           damag = 1;
+        }
+        else if (weapon[currentWeapon] == 8){
+           damag = 8;
+        }
+        else if (weapon[currentWeapon] == 10){
+           damag = 10;
+        }
+        else if (weapon[currentWeapon] == 16){
+           damag = 16;
+        }
+        tft.setTextColor(TFT_GREEN, TFT_BLACK);
+        rnd = random(99);
+        if (rnd >= 1 and rnd <= luckScore){ // Сначала Я бью
+          delay(1);
+        }
+        else {  // Простой удар
+          rnd = random(99);
+          if (rnd >= 1 and rnd <= luckVraga){  // Если у Врага Удача, я промазал
+            stroki++;
+            tft.println("YOU MAGIC FUCKUP");
+          }
+          else {   // Иначе всё же бью
+            stroki++;
+            if (cast[currentCast] == 1){
+              damag = 0;
+              if (heal <= (100+(healScore*25)) + 30 and mana < 20){
+                 tft.print("NET! Y tebia: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
+              }
+              else {
+                heal += 30;
+                mana -= 20;
+                tft.print("Lechenie 1yp: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
+              }
+            }
+            else if (cast[currentCast] == 2){
+              damag = 0;
+              if (heal <= (100+(healScore*25)) + 50 and mana < 40){
+                 tft.print("NET! Y tebia: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
+              }
+              else {
+                heal += 30;
+                mana -= 20;
+                tft.print("Lechenie 2yp: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
+              }
+            }
+            else if (cast[currentCast] == 3){
+              damag = 0;
+              if (heal <= (100+(healScore*25)) + 80 and mana < 70){
+                 tft.print("NET! Y tebia: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
+              }
+              else {
+                heal += 30;
+                mana -= 20;
+                tft.print("Lechenie 3yp: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
+              }
+            }
+            else if (cast[currentCast] == 4){
+              damag = 0;
+              if (heal <= (100+(healScore*25)) + 120 and mana < 100){
+                 tft.print("NET! Y tebia: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
+              }
+              else {
+                heal += 30;
+                mana -= 20;
+                tft.print("Lechenie 4yp: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
+              }
+            }
+            else if (cast[currentCast] == 5){
+              damag = 0;
+              if (heal <= (100+(healScore*25)) + 175 and mana < 150){
+                 tft.print("NET! Y tebia: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
+              }
+              else {
+                heal += 30;
+                mana -= 20;
+                tft.print("Lechenie 5yp: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
+              }
+            }
+            else if (cast[currentCast] == 6){
+              if (mana < 30){
+                 tft.print("NET! Y tebia: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
+              }
+              else {
+                damag = damag + (mozgScore*2) + 20;
+                mana -= 30;
+                tft.print("Fire Ball 1yp: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
+              }
+            }
+            else if (cast[currentCast] == 7){
+              if (mana < 50){
+                 tft.print("NET! Y tebia: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
+              }
+              else {
+                damag = damag + (mozgScore*2) + 40;
+                mana -= 50;
+                tft.print("Fire Ball 2yp: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
+              }
+            }
+            if (cast[currentCast] == 8){
+              if (mana < 100){
+                 tft.print("NET! Y tebia: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
+              }
+              else {
+                damag = damag + (mozgScore*2) + 80;
+                mana -= 100;
+                tft.print("Fire Ball 3yp: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
+              }
+            }
+            if (cast[currentCast] == 9){
+              if (mana < 200){
+                 tft.print("NET! Y tebia: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
+              }
+              else {
+                damag = damag + (mozgScore*2) + 160;
+                mana -= 200;
+                tft.print("Fire Ball 4yp: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
+              }
+            }
+            if (cast[currentCast] == 10){
+              if (mana < 400){
+                 tft.print("NET! Y tebia: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
+              }
+              else {
+                damag = damag + (mozgScore*2) + 320;
+                mana -= 400;
+                tft.print("Fire Ball 5yp: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
+              }
+            }
+            if (cast[currentCast] == 11 and luckVraga != 1){
+              if (mana < 250){
+                 tft.print("NET! Y tebia: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
+              }
+              else {
+                luckVraga = 1;
+                mana -= 250;
+                tft.print("Proklyatie: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
+              }
+            } else if (cast[currentCast] == 11 and luckVraga > 1){ tft.println("Proklyatie ne vozimeet effecta");}
+            if (cast[currentCast] == 12 and lovkVraga != 1){
+              if (mana < 275){
+                 tft.print("NET! Y tebia: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
+              }
+              else {
+                lovkVraga = 1;
+                mana -= 275;
+                tft.print("Neuklujest: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
+              }
+            } else if (cast[currentCast] == 12 and lovkVraga > 1) { tft.println("Neuklujest ne vozimeet effecta");}
+            healVraga = healVraga - damag;
+            tft.print("Udar -");
+            tft.print(damag);
+            tft.println("HP");
+          }
+        }
+        tft.print("HP enemy: ");  // Показываем сколько у Врага осталось
+        tft.println(healVraga);
+        stroki++;
+        rnd = random(99);
+        if (rnd >= 1 and rnd <= luckVraga){  // Я тоже не могу увернуться от Крита
+          tft.setTextColor(TFT_RED, TFT_BLACK);
+          tft.print("!KRIT! ");
+          stroki++;
+          damag = (silaVraga*2)*2;
+          heal = heal - damag;
+          tft.print("Udar Sopernika -");
+          tft.print(damag);
+          tft.print(" HP. My Heal ");
+          tft.println(heal);
+          tft.setTextColor(TFT_GREEN, TFT_BLACK);
+        }
+        else {   // Но и он может промазать если у Меня Удача
+          rnd = random(99);
+          if (rnd >= 1 and rnd <= luckScore){
+            stroki++;
+            tft.println("HIM MISS");
+          }
+          else {  // Ну а если нет я получаю ответочку
+            stroki++;
+            damag = silaVraga*2;
+            heal = heal - damag;
+            tft.print("Udar Sopernika -");
+            tft.print(damag);
+            tft.print(" HP. My Heal ");
+            tft.println(heal);
+          }
+        }
+        if (heal<= 0){  
+          tft.println("Game Over");
+          return;
+        }
+        if (healVraga <= 0){
+          if (warning > 5){
+            dobicha = 10 * lvlVraga + warning;
+            gold = gold + dobicha;
+            tft.setTextColor(TFT_GOLD, TFT_BLACK);
+            tft.print("Nagrada: ");
+            tft.print(dobicha);
+            tft.println(" GOLD");
+            tft.setTextColor(TFT_GREEN, TFT_BLACK);
+            dobicha = 0;
+            stroki++;
+          }
+          stroki++;
+          hp = hp + tmpHP;
+          tft.println("Pobeda!");
+          gameCurrent = 2;
+          tmpHP=0;
+          heal = 100 + (healScore * 25);
+          mana = manaScore * 30;
+        }
+     }
     }
     if (key.key == 'p') {
       delay(1);
