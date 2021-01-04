@@ -532,6 +532,7 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
  int tmpUdacha = 0;
  int tmpLovkost = 0;
  int n = 0;
+ int m = 0;
 
  tft.fillScreen(TFT_BLACK);
  tft.setCursor(0, 0, 1);
@@ -601,6 +602,7 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
           tft.setTextColor(TFT_GREEN, TFT_BLACK);
           tft.setTextSize(1);
         }
+        if (m > 3){m++;} // обнулили счётчик стеков заклинаний
         tft.setTextColor(TFT_GREEN, TFT_BLACK);
         rnd = random(99);
         if (rnd >= 1 and rnd <= luckScore){ // Сначала Я бью
@@ -651,7 +653,7 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
           tft.setTextColor(TFT_GREEN, TFT_BLACK);
         }
         else {                                                                       // Если противник не кританул
-            if (castVraga[1] == 5 and healVraga < tmpHP - 370 and manaVraga >= 400){  // Кастуем магию
+            if (castVraga[m+1] == 5 and healVraga < tmpHP - 370 and manaVraga >= 400){  // Кастуем магию
               manaVraga -= 400;                                                     // Условия и приоритеты заклинаний
               healVraga += 320; 
               damag = 0;
@@ -660,7 +662,7 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
               tft.setTextColor(TFT_GREEN, TFT_BLACK);
               tft.print("Udar Sopernika -");tft.print(damag);tft.print(" HP. My Heal ");tft.println(heal);
             }
-            else if (castVraga[1] == 4 and healVraga < tmpHP - 190 and manaVraga >= 200){  
+            else if (castVraga[m+1] == 4 and healVraga < tmpHP - 190 and manaVraga >= 200){  
               manaVraga -= 200;                                                    
               healVraga += 160; 
               damag = 0;
@@ -669,7 +671,7 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
               tft.setTextColor(TFT_GREEN, TFT_BLACK);
               tft.print("Udar Sopernika -");tft.print(damag);tft.print(" HP. My Heal ");tft.println(heal);
             }
-            else if (castVraga[2] == 11 and manaVraga >= 250 and luckScore != 1) { 
+            else if (castVraga[m+2] == 11 and manaVraga >= 250 and luckScore != 1) { 
               manaVraga = manaVraga - 250;
               damag = 0;
               luckScore = 1;
@@ -678,7 +680,7 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
               tft.setTextColor(TFT_GREEN, TFT_BLACK);
               tft.print("Udar Sopernika -");tft.print(damag);tft.print(" HP. My Heal ");tft.println(heal);
             }
-            else if (castVraga[2] == 12 and manaVraga >= 275 and lovkScore != 1) { 
+            else if (castVraga[m+2] == 12 and manaVraga >= 275 and lovkScore != 1) { 
               manaVraga = manaVraga - 275;
               damag = 0;
               lovkScore = 1;
@@ -687,7 +689,7 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
               tft.setTextColor(TFT_GREEN, TFT_BLACK);
               tft.print("Udar Sopernika -");tft.print(damag);tft.print(" HP. My Heal ");tft.println(heal);
             }
-            else if (castVraga[0] == 10 and manaVraga >= 400) { 
+            else if (castVraga[m+0] == 10 and manaVraga >= 400) { 
               manaVraga = manaVraga - 400;
               damag = 320;
               heal = heal - damag;
@@ -696,7 +698,7 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
               tft.setTextColor(TFT_GREEN, TFT_BLACK);
               tft.print("Udar Sopernika -");tft.print(damag);tft.print(" HP. My Heal ");tft.println(heal);
             }
-            else if (castVraga[0] == 9 and manaVraga >= 200) { 
+            else if (castVraga[m+0] == 9 and manaVraga >= 200) { 
               manaVraga = manaVraga - 200;
               damag = 160;
               heal = heal - damag;
@@ -705,7 +707,7 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
               tft.setTextColor(TFT_GREEN, TFT_BLACK);
               tft.print("Udar Sopernika -");tft.print(damag);tft.print(" HP. My Heal ");tft.println(heal);
             }
-            else if (castVraga[0] == 8 and manaVraga >= 100) { 
+            else if (castVraga[m+0] == 8 and manaVraga >= 100) { 
               manaVraga = manaVraga - 100;
               damag = 80;
               heal = heal - damag;
@@ -714,7 +716,7 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
               tft.setTextColor(TFT_GREEN, TFT_BLACK);
               tft.print("Udar Sopernika -");tft.print(damag);tft.print(" HP. My Heal ");tft.println(heal);
             }
-            else if (castVraga[0] == 7 and manaVraga >= 50) { 
+            else if (castVraga[m+0] == 7 and manaVraga >= 50) { 
               manaVraga = manaVraga - 50;
               damag = 40;
               heal = heal - damag;
@@ -723,7 +725,7 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
               tft.setTextColor(TFT_GREEN, TFT_BLACK);
               tft.print("Udar Sopernika -");tft.print(damag);tft.print(" HP. My Heal ");tft.println(heal);
             }
-            else if (castVraga[0] == 6 and manaVraga >= 30) {  
+            else if (castVraga[m+0] == 6 and manaVraga >= 30) {  
               manaVraga = manaVraga - 30;
               damag = 20;
               heal = heal - damag;
@@ -732,7 +734,7 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
               tft.setTextColor(TFT_GREEN, TFT_BLACK);
               tft.print("Udar Sopernika -");tft.print(damag);tft.print(" HP. My Heal ");tft.println(heal);
             }
-            else if (castVraga[1] == 3 and healVraga < tmpHP - 100 and manaVraga >= 100){  
+            else if (castVraga[m+1] == 3 and healVraga < tmpHP - 100 and manaVraga >= 100){  
               manaVraga -= 100;                                                    
               healVraga += 80; 
               damag = 0;
@@ -741,7 +743,7 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
               tft.setTextColor(TFT_GREEN, TFT_BLACK);
               tft.print("Udar Sopernika -");tft.print(damag);tft.print(" HP. My Heal ");tft.println(heal);
             }
-            else if (castVraga[1] == 2 and healVraga < tmpHP - 60 and manaVraga >= 50){  
+            else if (castVraga[m+1] == 2 and healVraga < tmpHP - 60 and manaVraga >= 50){  
               manaVraga -= 50;                                                    
               healVraga += 40; 
               damag = 0;
@@ -750,7 +752,7 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
               tft.setTextColor(TFT_GREEN, TFT_BLACK);
               tft.print("Udar Sopernika -");tft.print(damag);tft.print(" HP. My Heal ");tft.println(heal);
             }
-            else if (castVraga[1] == 1 and healVraga < tmpHP - 30 and manaVraga >= 30){  
+            else if (castVraga[m+1] == 1 and healVraga < tmpHP - 30 and manaVraga >= 30){  
               manaVraga -= 30;                                                    
               healVraga += 20; 
               damag = 0;
@@ -776,7 +778,8 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
               tft.println(heal);
             }
           }
-        }  
+        }
+        m++; // Переключились на другой стек заклинаний  
         if (heal<= 0){  
           tft.println("Game Over");
           return;
@@ -1310,12 +1313,12 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
         }
         tft.setTextColor(TFT_GREEN, TFT_BLACK);
         rnd = random(99);
-        if (rnd >= 1 and rnd <= luckScore){ // Сначала Я бью
+        if (rnd >= 1 and rnd <= luckScore){
           delay(1);
         }
         else {  // Простой удар
           rnd = random(99);
-          if (rnd >= 1 and rnd <= luckVraga){  // Если у Врага Удача, я промазал
+          if (rnd >= 1 and rnd <= luckVraga){ 
             stroki++;
             tft.println("YOU MAGIC FUCKUP");
           }
@@ -1323,56 +1326,56 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
             stroki++;
             if (cast[currentCast] == 1){
               damag = 0;
-              if (mana < 20){
+              if (mana < 30){
                  tft.print("NET! Y tebia: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
               }
-              else if (heal <= (100+(healScore*25)) - 30 and mana >= 20){
-                heal += 30;
-                mana -= 20;
+              else if (heal <= (100+(healScore*25)) - 20 and mana >= 30){
+                heal += 20;
+                mana -= 30;
                 tft.print("Lechenie 1yp: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
               }
             }
             else if (cast[currentCast] == 2){
               damag = 0;
-              if (mana < 40){
+              if (mana < 50){
                  tft.print("NET! Y tebia: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
               }
-              else if(heal <= (100+(healScore*25)) - 50 and mana >= 40) {
-                heal += 30;
-                mana -= 20;
+              else if(heal <= (100+(healScore*25)) - 40 and mana >= 50) {
+                heal += 40;
+                mana -= 50;
                 tft.print("Lechenie 2yp: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
               }
             }
             else if (cast[currentCast] == 3){
               damag = 0;
-              if (mana < 70){
+              if (mana < 100){
                  tft.print("NET! Y tebia: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
               }
-              else if (heal <= (100+(healScore*25)) - 80 and mana >= 70){
-                heal += 30;
-                mana -= 20;
+              else if (heal <= (100+(healScore*25)) - 80 and mana >= 100){
+                heal += 80;
+                mana -= 10;
                 tft.print("Lechenie 3yp: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
               }
             }
             else if (cast[currentCast] == 4){
               damag = 0;
-              if (mana < 100){
+              if (mana < 200){
                  tft.print("NET! Y tebia: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
               }
-              else if (heal <= (100+(healScore*25)) - 120 and mana >= 100){
-                heal += 30;
-                mana -= 20;
+              else if (heal <= (100+(healScore*25)) - 120 and mana >= 200){
+                heal += 160;
+                mana -= 200;
                 tft.print("Lechenie 4yp: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
               }
             }
             else if (cast[currentCast] == 5){
               damag = 0;
-              if (mana < 150){
+              if (mana < 400){
                  tft.print("NET! Y tebia: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
               }
-              else if (heal <= (100+(healScore*25)) - 175 and mana >= 150){
-                heal += 30;
-                mana -= 20;
+              else if (heal <= (100+(healScore*25)) - 175 and mana >= 400){
+                heal += 320;
+                mana -= 400;
                 tft.print("Lechenie 5yp: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
               }
             }
