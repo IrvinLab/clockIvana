@@ -457,23 +457,61 @@ void dragon(){
 // warningi:
 // 1 - skelet 1yp, 2 - skelet 2yp, 3 - skelet 3yp, 4 - skelet-mag 4yp, 5 - skelet-mag 5yp 6 - lich 6 yp, 7 - knyaz tmi 7yp
 // 6 - goblin 1yp, 7 - goblin-mag 2yp, 8 - goblin-koldun 3 yp, 9 - goblin-charodey 4yp., 10 - goblin 4yp, 11 - golin 5 yp
+ int test = 1;
  int rnd = random(99);
  int heal = 100;
  int mana = 0;
  int gold = 0;
- int weapon[] = {0,5,10,2,16,28};
+ int weapon[] = {0,0,0,0,0,0};
  int currentWeapon = 0;
  int armor[] = {0,0,0,0,0,0,0}; 
  int gameCurrent = 0;
  int lvl = 1; // Уровень
  int lvlScore = 4; // Очки уровня, которые дают для прокачки персонажа за новый уровень
  int hp = 0; // Опыт
- int cast[] = {1,3,5,6,8,10,11,12,0,0};
- int currentCast = 0;
- int healScore = 1; // Коэфициент здоровья 
- int manaScore = 1; // Коэфициент количества маны
- int silaScore = 1; // Коэфициент силы удара
- int lovkScore = 1; // Коэфициент уклонения/ловкости
+ int cast[] = {0,0,0,0,0,0,0,0,0,0};
+ if (test == 1){
+   heal = 100;
+   mana = 0;
+   gold = 0;
+   weapon[0] = 0;
+   weapon[1] = 1;
+   weapon[2] = 28;
+   weapon[3] = 7;
+   weapon[4] = 13;
+   weapon[5] = 10;
+   currentWeapon = 0;
+   gameCurrent = 0;
+   lvl = 4; // Уровень
+   lvlScore = 4; // Очки уровня, которые дают для прокачки персонажа за новый уровень
+   hp = 0; // Опыт
+   cast[0] = 5;
+   cast[1] = 9;
+   cast[2] = 2;
+   cast[3] = 7;
+   cast[4] = 3;
+   cast[5] = 8;
+   cast[6] = 4;
+   cast[7] = 9;
+   cast[8] = 11;
+   cast[9] = 12;
+   
+ } 
+ else {
+   heal = 100;
+   mana = 0;
+   gold = 0;
+   currentWeapon = 0;
+   gameCurrent = 0;
+   lvl = 1; // Уровень
+   lvlScore = 4; // Очки уровня, которые дают для прокачки персонажа за новый уровень
+   hp = 0; // Опыт
+ }
+int currentCast = 0;
+int healScore = 1; // Коэфициент здоровья 
+int manaScore = 1; // Коэфициент количества маны
+int silaScore = 1; // Коэфициент силы удара
+int lovkScore = 1; // Коэфициент уклонения/ловкости
  int luckScore = 1; // Удача
  int diplScore = 1; // Дипломатия
  int mozgScore = 1; // Способности к магии
@@ -491,6 +529,7 @@ void dragon(){
  int damag = 0;
  int dobicha = 0;
  int tmpHP = 0;
+ int n = 0;
 
  tft.fillScreen(TFT_BLACK);
  tft.setCursor(0, 0, 1);
@@ -568,12 +607,12 @@ void dragon(){
           stroki++;
           damag = ((silaScore*4)+weapon[currentWeapon])*2;
           healVraga = healVraga - damag;
-          tft.print("Udar -");
+          tft.print("Moy Udar -");
           tft.print(damag);
           tft.println("HP");
           tft.setTextColor(TFT_GREEN, TFT_BLACK);
         }
-        else {  // Простой удар
+        else {  // НЕ критовый удар
           rnd = random(99);
           if (rnd >= 1 and rnd <= luckVraga){  // Если у Врага Удача, я промазал
             stroki++;
@@ -585,16 +624,19 @@ void dragon(){
             stroki++;
             damag = (silaScore*4)+weapon[currentWeapon];
             healVraga = healVraga - damag;
-            tft.print("Udar -");
+            tft.print("Moy Udar -");
             tft.print(damag);
             tft.println("HP");
           }
         }
         tft.print("HP enemy: ");  // Показываем сколько у Врага осталось
-        tft.println(healVraga);
+        tft.print(healVraga);
+        tft.print(" / ");
+        tft.print(manaVraga);
+        tft.println(" MANA"); 
         stroki++;
         rnd = random(99);
-        if (rnd >= 1 and rnd <= luckVraga){  // Я тоже не могу увернуться от Крита
+        if (rnd >= 1 and rnd <= luckVraga){  // Противник Бъёт меня. Я тоже не могу увернуться от Крита
           tft.setTextColor(TFT_RED, TFT_BLACK);
           tft.print("!KRIT! ");
           stroki++;
@@ -606,22 +648,52 @@ void dragon(){
           tft.println(heal);
           tft.setTextColor(TFT_GREEN, TFT_BLACK);
         }
-        else {   // Но и он может промазать если у Меня Удача
-          rnd = random(99);
-          if (rnd >= 1 and rnd <= luckScore){
-            stroki++;
-            tft.println("HIM MISS");
+        else {                                                                       // Если противник не кританул
+            if (castVraga[1] == 5 and healVraga < tmpHP - 370 and manaVraga >= 400){  // Кастуем магию
+              manaVraga -= 400;                                                     // Условия и приоритеты заклинаний
+              healVraga += 320; 
+              damag = 0;
+              tft.setTextColor(TFT_PINK, TFT_BLACK);
+              tft.print("Lechenie 5yp: "); tft.print("Enemy HP "); tft.print(healVraga); tft.print("/");tft.print(manaVraga); tft.println("MN"); stroki++;
+              tft.setTextColor(TFT_GREEN, TFT_BLACK);
+              tft.print("Udar Sopernika -");tft.print(damag);tft.print(" HP. My Heal ");tft.println(heal);
+            }
+            else if (castVraga[0] == 7 and manaVraga >= 50) { 
+              manaVraga = manaVraga - 50;
+              damag = 40;
+              heal = heal - damag;
+              tft.setTextColor(TFT_PINK, TFT_BLACK);
+              tft.print("Fire Ball 2yp: "); tft.print("Enemy HP "); tft.print(healVraga); tft.print("/");tft.print(manaVraga); tft.println("MN"); stroki++;
+              tft.setTextColor(TFT_GREEN, TFT_BLACK);
+              tft.print("Udar Sopernika -");tft.print(damag);tft.print(" HP. My Heal ");tft.println(heal);
+            }
+            else if (castVraga[0] == 6 and manaVraga >= 30) {  
+              manaVraga = manaVraga - 30;
+              damag = 20;
+              heal = heal - damag;
+              tft.setTextColor(TFT_PINK, TFT_BLACK);
+              tft.print("Fire Ball 1yp: "); tft.print("Enemy HP "); tft.print(healVraga); tft.print("/");tft.print(manaVraga); tft.println("MN"); stroki++;
+              tft.setTextColor(TFT_GREEN, TFT_BLACK);
+              tft.print("Udar Sopernika -");tft.print(damag);tft.print(" HP. My Heal ");tft.println(heal);
+            }
+            else { // Если противник НЕ владеет заклинаниями ИЛИ кончилась МАНА
+            // Но и он может промазать если у Меня Удача
+            rnd = random(99);
+            if (rnd >= 1 and rnd <= luckScore){
+              stroki++;
+              tft.println("HIM MISS");
+            }
+            else {  // Ну а если нет я получаю ответочку
+              stroki++;
+              damag = silaVraga;
+              heal = heal - damag;
+              tft.print("Udar Sopernika -");
+              tft.print(damag);
+              tft.print(" HP. My Heal ");
+              tft.println(heal);
+            }
           }
-          else {  // Ну а если нет я получаю ответочку
-            stroki++;
-            damag = silaVraga*2;
-            heal = heal - damag;
-            tft.print("Udar Sopernika -");
-            tft.print(damag);
-            tft.print(" HP. My Heal ");
-            tft.println(heal);
-          }
-        }
+        }  
         if (heal<= 0){  
           tft.println("Game Over");
           return;
@@ -645,13 +717,57 @@ void dragon(){
           tmpHP=0;
           heal = 100 + (healScore * 25);
           mana = manaScore * 30;
+          healVraga = 0;
+          manaVraga = 0;
+          castVraga[0] = 0;
+          castVraga[1] = 0;
+          castVraga[2] = 0;
+          castVraga[3] = 0;
         }
       }
     }
-    if (key.key == 'w') {
+    if (key.key == 'w') {   //  ИДЁМ ВПЕРЕД
+      heal = 100 + (healScore * 25);
+      mana = manaScore * 30;
+      if (hp >= 1000 and lvl == 1){
+        stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 2 LVL PRESS ENTER");
+        lvl = 2; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
+      }
+      else if (hp >= 1500 and lvl == 2){
+        stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 3 LVL PRESS ENTER");
+        lvl = 3; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
+      }
+      else if (hp >= 2250 and lvl == 3){
+        stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 3 LVL PRESS ENTER");
+        lvl = 4; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
+      }
+      else if (hp >= 3250 and lvl == 4){
+        stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 3 LVL PRESS ENTER");
+        lvl = 5; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
+      }
+      else if (hp >= 4500 and lvl == 5){
+        stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 3 LVL PRESS ENTER");
+        lvl = 6; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
+      }
+      else if (hp >= 6000 and lvl == 6){
+        stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 3 LVL PRESS ENTER");
+        lvl = 7; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
+      }
+      else if (hp >= 8500 and lvl == 7){
+        stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 3 LVL PRESS ENTER");
+        lvl = 8; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
+      }
+      else if (hp >= 10000 and lvl == 8){
+        stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 3 LVL PRESS ENTER");
+        lvl = 9; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
+      }
+      else if (hp >= 15000 and lvl == 9){
+        stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 3 LVL PRESS ENTER");
+        lvl = 10; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
+      }
       tft.setTextColor(TFT_GREEN, TFT_BLACK);
       damag = 0;
-      if (stroki >= 25){
+      if (stroki >= 24){
           stroki = 0;
           tft.fillScreen(TFT_BLACK);
           tft.setCursor(0, 0, 1);
@@ -706,55 +822,80 @@ void dragon(){
           stroki += 5;
         }
         else if (seed >= 11 and seed <= 20) {
-          tft.setTextColor(TFT_RED, TFT_BLACK);
-          tft.println("Na puti stoit Skelet 1 lvl, chto delat?");
-          tft.println("Y-boy, D-dogovoritsa, G-bejat");
-          stroki=stroki+2;
-          gameCurrent=3;
-          warning = 1;
-          healVraga = 40;
-          manaVraga = 0;
-          lvlVraga = 1;
-          silaVraga = 5;
-          lovkVraga = 1;
-          luckVraga = 1;
-          mozgVraga = 0;
-          tmpHP = healVraga;
-           
+          healVraga = 40;manaVraga = 0;lvlVraga = 1;silaVraga = 5;lovkVraga = 1;luckVraga = 1;mozgVraga = 0;
+          if (lvl >= lvlVraga) {
+            tft.setTextColor(TFT_RED, TFT_BLACK);
+            tft.println("Na puti stoit Skelet 1 lvl, chto delat?");
+            tft.println("Y-boy, D-dogovoritsa, G-bejat");
+            stroki=stroki+2;
+            gameCurrent=3;
+            warning = 1;
+            tmpHP = healVraga;
+          }
+          else{
+            tft.setTextColor(TFT_RED, TFT_BLACK);
+            tft.println("Promelknula yjasnaya ten");
+            tft.println("vi bejite so vseh nog");
+            stroki=+3;
+            warning = 0;
+          }
         }
         else if (seed >= 21 and seed <= 30) {
-          tft.setTextColor(TFT_RED, TFT_BLACK);
-          tft.println("Na puti stoit Skelet 2 lvl, chto delat?");
-          tft.println("Y-boy, D-dogovoritsa, G-bejat");
-          stroki=stroki+2;
-          gameCurrent=3;
-          warning = 2;
-          healVraga = 80;
-          manaVraga = 0;
-          lvlVraga = 2;
-          silaVraga = 8;
-          lovkVraga = 2;
-          luckVraga = 2;
-          mozgVraga = 0;
-          tmpHP = healVraga;
-           
+          healVraga = 80;manaVraga = 0;lvlVraga = 2;silaVraga = 8;lovkVraga = 2;luckVraga = 2;mozgVraga = 0;
+          if (lvl >= lvlVraga) {
+            tft.setTextColor(TFT_RED, TFT_BLACK);
+            tft.println("Na puti stoit Skelet 2 lvl, chto delat?");
+            tft.println("Y-boy, D-dogovoritsa, G-bejat");
+            stroki=stroki+3;
+            gameCurrent=3;
+            warning = 2;
+            tmpHP = healVraga;
+          }
+          else{
+            tft.setTextColor(TFT_RED, TFT_BLACK);
+            tft.println("Promelknula yjasnaya ten");
+            tft.println("vi bejite so vseh nog");
+            stroki=+3;
+            warning = 0;
+          }
         }
         else if (seed >= 31 and seed <= 40) {
-          tft.setTextColor(TFT_RED, TFT_BLACK);
-          tft.println("Na puti stoit Skelet 3 lvl, chto delat?");
-          tft.println("Y-boy, D-dogovoritsa, G-bejat");
-          stroki=stroki+2;
-          gameCurrent=3;
-          warning = 3;
-          healVraga = 145;
-          manaVraga = 0;
-          lvlVraga = 3;
-          silaVraga = 11;
-          lovkVraga = 3;
-          luckVraga = 4;
-          mozgVraga = 0;
-          tmpHP = healVraga;
-           
+          healVraga = 145;manaVraga = 0;lvlVraga = 3;silaVraga = 11;lovkVraga = 3;luckVraga = 4;mozgVraga = 0;
+          if (lvl >= lvlVraga) {
+            tft.setTextColor(TFT_RED, TFT_BLACK);
+            tft.println("Na puti stoit Skelet 3 lvl, chto delat?");
+            tft.println("Y-boy, D-dogovoritsa, G-bejat");
+            stroki=stroki+2;
+            gameCurrent=3;
+            warning = 3;
+            tmpHP = healVraga;
+          }
+          else{
+            tft.setTextColor(TFT_RED, TFT_BLACK);
+            tft.println("Promelknula yjasnaya ten");
+            tft.println("vi bejite so vseh nog");
+            stroki=+3;
+            warning = 0;
+          }
+        }
+        else if (seed >= 41 and seed <= 50) {
+          healVraga = 200; manaVraga = 90;lvlVraga = 4;silaVraga = 11;lovkVraga = 5;luckVraga = 5;mozgVraga = 1;castVraga[0] = 6;
+          if (lvl >= lvlVraga) {
+            tft.setTextColor(TFT_RED, TFT_BLACK);
+            tft.println("Na puti stoit Skelet 4 lvl, chto delat?");
+            tft.println("Y-boy, D-dogovoritsa, G-bejat");
+            stroki=stroki+2;
+            gameCurrent=3;
+            warning = 4;
+            tmpHP = healVraga;
+          }
+          else{
+            tft.setTextColor(TFT_RED, TFT_BLACK);
+            tft.println("Promelknula yjasnaya ten");
+            tft.println("vi bejite so vseh nog");
+            stroki=+2;
+            warning = 0;
+          }
         }
         else {
           tft.print("Nichego ne proishodit ");
@@ -789,7 +930,9 @@ void dragon(){
       tft.setTextSize(1);
       tft.println("INFORMATION ");
       tft.print("Level: ");
-      tft.println(lvl);
+      tft.print(lvl);
+      tft.print(" / XP: ");
+      tft.println(hp);
       tft.print("Zdorovie: ");
       tft.println(heal);
       tft.print("Mana: ");
@@ -968,21 +1111,18 @@ void dragon(){
         tft.setCursor(0, 0, 1);
         tft.setTextColor(TFT_RED, TFT_BLACK);
         tft.setTextSize(1);
-        tft.println("ENT-Udar, E-sm.Oruj, (1-0)-Cast:");
-        if (warning == 1){
-          tft.println("Skelet 1yp.");
-          tft.print("Zdorovie: ");
-          tft.println(healVraga);
-          tft.print("Mana: ");
-          tft.println(manaVraga);
-        }
-        else if (warning == 2){
-          tft.println("Skelet 2yp.");
-          tft.print("Zdorovie: ");
-          tft.println(healVraga);
-          tft.print("Mana: ");
-          tft.println(manaVraga);
-        }
+        tft.println("ENT-Udar, E-sm.Oruj, M-Cast Back-MagUdar");
+        if (warning == 1){tft.println("Skelet 1yp.");}
+        else if (warning == 2){tft.println("Skelet 2yp.");}
+        else if (warning == 3){tft.println("Skelet 3yp.");}
+        tft.print("Zdorovie: ");
+        tft.println(healVraga);
+        tft.print("Mana: ");
+        tft.println(manaVraga);
+        tft.print("Lovkost: ");
+        tft.println(lovkVraga);
+        tft.print("Udacha: ");
+        tft.println(luckVraga);
         
       }
     }
@@ -1054,6 +1194,7 @@ void dragon(){
           tft.setTextColor(TFT_GREEN, TFT_BLACK);
           tft.setTextSize(1);
         }
+        damag = 0;
         if (weapon[currentWeapon] == 1){  // Дамаг от магического оружия
            damag = 1;
         }
@@ -1081,10 +1222,10 @@ void dragon(){
             stroki++;
             if (cast[currentCast] == 1){
               damag = 0;
-              if (heal <= (100+(healScore*25)) + 30 and mana < 20){
+              if (mana < 20){
                  tft.print("NET! Y tebia: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
               }
-              else {
+              else if (heal <= (100+(healScore*25)) - 30 and mana >= 20){
                 heal += 30;
                 mana -= 20;
                 tft.print("Lechenie 1yp: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
@@ -1092,10 +1233,10 @@ void dragon(){
             }
             else if (cast[currentCast] == 2){
               damag = 0;
-              if (heal <= (100+(healScore*25)) + 50 and mana < 40){
+              if (mana < 40){
                  tft.print("NET! Y tebia: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
               }
-              else {
+              else if(heal <= (100+(healScore*25)) - 50 and mana >= 40) {
                 heal += 30;
                 mana -= 20;
                 tft.print("Lechenie 2yp: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
@@ -1103,10 +1244,10 @@ void dragon(){
             }
             else if (cast[currentCast] == 3){
               damag = 0;
-              if (heal <= (100+(healScore*25)) + 80 and mana < 70){
+              if (mana < 70){
                  tft.print("NET! Y tebia: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
               }
-              else {
+              else if (heal <= (100+(healScore*25)) - 80 and mana >= 70){
                 heal += 30;
                 mana -= 20;
                 tft.print("Lechenie 3yp: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
@@ -1114,10 +1255,10 @@ void dragon(){
             }
             else if (cast[currentCast] == 4){
               damag = 0;
-              if (heal <= (100+(healScore*25)) + 120 and mana < 100){
+              if (mana < 100){
                  tft.print("NET! Y tebia: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
               }
-              else {
+              else if (heal <= (100+(healScore*25)) - 120 and mana >= 100){
                 heal += 30;
                 mana -= 20;
                 tft.print("Lechenie 4yp: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
@@ -1125,10 +1266,10 @@ void dragon(){
             }
             else if (cast[currentCast] == 5){
               damag = 0;
-              if (heal <= (100+(healScore*25)) + 175 and mana < 150){
+              if (mana < 150){
                  tft.print("NET! Y tebia: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
               }
-              else {
+              else if (heal <= (100+(healScore*25)) - 175 and mana >= 150){
                 heal += 30;
                 mana -= 20;
                 tft.print("Lechenie 5yp: "); tft.print(heal); tft.print("HP/"); tft.print(mana); tft.println("MN"); stroki++;
@@ -1265,6 +1406,12 @@ void dragon(){
           tmpHP=0;
           heal = 100 + (healScore * 25);
           mana = manaScore * 30;
+          healVraga = 0;
+          manaVraga = 0;
+          castVraga[0] = 0;
+          castVraga[1] = 0;
+          castVraga[2] = 0;
+          castVraga[3] = 0;
         }
      }
     }
