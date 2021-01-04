@@ -165,7 +165,7 @@ void setup()
    tft.setTextColor(TFT_BLUE, TFT_BLACK);
    tft.setTextSize(2);
    tft.println("Irvin Lab");
-   tft.setTextColor(TFT_GREEN, TFT_BLACK);
+   tft.setTextColor(TFT_WHITE, TFT_GREEN);
    tft.setTextSize(1);
    tft.println("");
    tft.println("");
@@ -278,6 +278,7 @@ void loop()
 String keyInput(){
 delay(1);
 }
+
 
 void pingPong(){
   int score = 0;
@@ -452,7 +453,108 @@ void pingPong(){
   }  
   }
 }
+void dragon(){
+ int heal = 100;
+ int mana = 0;
+ int gold = 0;
+ int weapon[] = {0,0,0,0,0,0};
+ int armor[] = {0,0,0,0,0,0,0};
+ int gameCurrent = 0;
+ int lvl = 1;
+ int lvlScore = 4;
+ int hp = 0;
+ int cast[] = {0,0,0,0,0,0,0,0,0,0};
+ int healScore = 0;
+ int manaScore = 0;
+ int silaScore = 0;
+ int lovkScore = 0;
+ int luckScore = 0;
+ int diplScore = 0;
+ 
+ while(1){
+  const int keyCount = keyboard.keyCount();
 
+  const BBQ10Keyboard::KeyEvent key = keyboard.keyEvent();
+  String state = "pressed";
+  if (key.state == BBQ10Keyboard::StateLongPress){
+    state = "held down";
+    cmd = cmd + '=';
+  }
+  else if (key.state == BBQ10Keyboard::StateRelease)
+    state = "released";
+
+  // pressing 'b' turns off the backlight and pressing Shift+b turns it on
+  if (key.state == BBQ10Keyboard::StatePress) {
+    if (key.key == '\n') {
+      delay(1);
+    }
+    if (key.key == 'w') {
+      delay(1);
+    }
+    if (key.key == 'a') {
+      delay(1);
+    }
+    if (key.key == 's') {
+      delay(1);
+    } 
+    if (key.key == 'd') {
+      delay(1);
+    }
+    if (key.key == 'i') {
+      delay(1);
+    }
+    if (key.key == '+') {
+      delay(1);
+    }
+    if (key.key == '-') {
+      delay(1);
+    }
+    if (key.key == 'k') {
+      delay(1);
+    }
+    if (key.key == 'g') {
+      delay(1);
+    }
+    if (key.key == '\n') {
+      delay(1);
+    }
+    if (key.key == '1') {
+      delay(1);
+    }
+    if (key.key == '2') {
+      delay(1);
+    }
+    if (key.key == '3') {
+      delay(1);
+    } 
+    if (key.key == '4') {
+      delay(1);
+    }
+    if (key.key == '5') {
+      delay(1);
+    }
+    if (key.key == '6') {
+      delay(1);
+    }
+    if (key.key == '7') {
+      delay(1);
+    }
+    if (key.key == '8') {
+      delay(1);
+    }
+    if (key.key == '9') {
+      delay(1);
+    }
+    if (key.key == '0') {
+      delay(1);
+    }
+    if (key.key == ' ') {
+      delay(1);
+    }
+  }
+    
+ }
+}
 void lexer(int n){
   String cStr = "";
   int m = 0;
@@ -939,6 +1041,9 @@ void exe(const char * s) {
      tft.setTextSize(1);
      pingPong();  
 
+   }
+   else if (s[0] == 'd' and s[1] == 'r' and s[2] == 'a' and s[3] == 'g' and s[4] == 'o' and s[5] == 'n'){
+     dragon();
    }
    else if (s[0] == 'h' and s[1] == 'e' and s[2] == 'l' and s[3] == 'p'){
     tft.println("\nCD - change directory");
