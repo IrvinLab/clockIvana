@@ -486,8 +486,8 @@ void dragon(){
    weapon[5] = 10;
    currentWeapon = 0;
    gameCurrent = 0;
-   lvl = 7; // Уровень
-   lvlScore = 16; // Очки уровня, которые дают для прокачки персонажа за новый уровень
+   lvl = 2; // Уровень
+   lvlScore = 8; // Очки уровня, которые дают для прокачки персонажа за новый уровень
    hp = 0; // Опыт
    cast[0] = 5;
    cast[1] = 10;
@@ -537,6 +537,7 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
  int tmpLovkost = 0;
  int n = 0;
  int m = 0;
+String save = "";
 
  tft.fillScreen(TFT_BLACK);
  tft.setCursor(0, 0, 1);
@@ -789,7 +790,7 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
           return;
         }
         if (healVraga <= 0){
-          if (warning >= 1 and warning <= 5 and warning != 14 and warning != 15 and warning != 16 and warning != 23 and warning != 26 and warning != 27 and warning != 30 and warning != 33){
+          if (warning != 1 and warning != 2 and warning != 3 and warning != 4 and warning != 5 and warning != 14 and warning != 15 and warning != 16 and warning != 23 and warning != 26 and warning != 27 and warning != 30 and warning != 33){
             dobicha = 10 * lvlVraga + warning;
             gold = gold + dobicha;
             tft.setTextColor(TFT_GOLD, TFT_BLACK);
@@ -829,32 +830,32 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
         stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 3 LVL PRESS ENTER");
         lvl = 3; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
       }
-      else if (hp >= 2250 and lvl == 3){
-        stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 3 LVL PRESS ENTER");
+      else if (hp >= 2750 and lvl == 3){
+        stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 4 LVL PRESS ENTER");
         lvl = 4; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
       }
-      else if (hp >= 3250 and lvl == 4){
-        stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 3 LVL PRESS ENTER");
+      else if (hp >= 5250 and lvl == 4){
+        stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 5 LVL PRESS ENTER");
         lvl = 5; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
       }
-      else if (hp >= 4500 and lvl == 5){
-        stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 3 LVL PRESS ENTER");
+      else if (hp >= 7500 and lvl == 5){
+        stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 6 LVL PRESS ENTER");
         lvl = 6; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
       }
-      else if (hp >= 6000 and lvl == 6){
-        stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 3 LVL PRESS ENTER");
+      else if (hp >= 10500 and lvl == 6){
+        stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 7 LVL PRESS ENTER");
         lvl = 7; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
       }
-      else if (hp >= 8500 and lvl == 7){
-        stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 3 LVL PRESS ENTER");
+      else if (hp >= 14500 and lvl == 7){
+        stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 8 LVL PRESS ENTER");
         lvl = 8; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
       }
-      else if (hp >= 10000 and lvl == 8){
-        stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 3 LVL PRESS ENTER");
+      else if (hp >= 19500 and lvl == 8){
+        stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 9 LVL PRESS ENTER");
         lvl = 9; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
       }
-      else if (hp >= 15000 and lvl == 9){
-        stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 3 LVL PRESS ENTER");
+      else if (hp >= 26000 and lvl == 9){
+        stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 10 LVL PRESS ENTER");
         lvl = 10; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
       }
       tft.setTextColor(TFT_GREEN, TFT_BLACK);
@@ -1400,11 +1401,6 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
     if (key.key == 'a') {
       delay(1);
     }
-    if (key.key == 's') {
-      if (gameCurrent == 1 and menuPosition != 7){
-        menuPosition++;
-      }
-    } 
     if (key.key == 'd') {
       if (gameCurrent == 3){
         if (warning >=1 and warning <= 7){
@@ -1415,6 +1411,64 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
         }
       }
     }
+    if (key.key == 's') {
+      if (gameCurrent == 1 and menuPosition != 7){
+        menuPosition++;
+      }
+      if (gameCurrent == 2){
+        save = String(heal) +','+String(mana)+','+String(gold)+','+String(weapon[0])+','+String(weapon[1])+','+String(weapon[2])+','
+        +String(weapon[3])+','+String(weapon[4])+','+String(weapon[5])+','+String(gameCurrent)+','+String(lvl)+','+String(hp)+','
+        +String(cast[0])+','+String(cast[1])+','+String(cast[2])+','+String(cast[3])+','+String(cast[4])+','+String(cast[5])+','
+        +String(cast[6])+','+String(cast[7])+','+String(cast[8])+','+String(cast[9])+','+String(healScore)+','+String(manaScore)+','
+        +String(silaScore)+','+String(lovkScore)+','+String(luckScore)+','+String(diplScore)+','+String(mozgScore)+';';  // 29 переменных
+      unsigned char* buf = new unsigned char[200]; 
+      save.getBytes(buf, 200, 0);
+      const char *str2 = (const char*)buf;
+      writeFile(SD,"/save.drg",str2);
+      tft.setTextColor(TFT_YELLOW, TFT_BLACK);
+      tft.println("Save!!!");
+      tft.setTextColor(TFT_GREEN, TFT_BLACK);
+      stroki++;
+      }
+    }
+    if (key.key == 'l'){
+      if (gameCurrent == 2){
+        int gameStack[] = {0,0,0,0,0,0,0};
+        char load[200];
+        n = 0;
+        m = 0;
+        int z = 0; // Счётчик запятых
+        int s, tempS = 0; // Счётчик стека/степень
+        int tempInt = 0;
+        File mySave = SD.open("/save.drg");
+        if (mySave) {
+          while(mySave.available()){
+            load[n] = (char)mySave.read();  // Эврика!!!! Читаем файлы из файла в переменную
+            n++; // Очень важно в дальнейшем знать значение переменной n
+          }
+        }
+      else {tft.println("File \"save.drg\" not exist");}    
+      
+      Serial.println(n);
+      while (m != n){
+        if (load[m] == ','){
+          z++;
+          tempInt = 0;
+//          while (s != 0){
+//            tempInt = tempInt + gameStack[s] + int(pow(float(10),float(s)));
+//          }
+          if (z == 1){heal = tempInt;}
+        }
+        else if (load[m] == ';'){break;}
+        gameStack[s] = int(load[m]);
+        tft.println(gameStack[s]);
+        m++;
+        s++;
+        
+      }
+      }
+    } 
+    
     if (key.key == 'i') {
       tft.fillScreen(TFT_BLACK);
       tft.setCursor(0, 0, 1);
@@ -1884,7 +1938,7 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
           tft.setTextColor(TFT_RED, TFT_BLACK);
           tft.print("!KRIT! ");
           stroki++;
-          damag = (silaVraga*2)*2;
+          damag = (silaVraga*2);
           heal = heal - damag;
           tft.print("Udar Sopernika -");
           tft.print(damag);
@@ -1900,7 +1954,7 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
           }
           else {  // Ну а если нет я получаю ответочку
             stroki++;
-            damag = silaVraga*2;
+            damag = silaVraga;
             heal = heal - damag;
             tft.print("Udar Sopernika -");
             tft.print(damag);
@@ -1926,6 +1980,7 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
           }
           stroki++;
           hp = hp + tmpHP;
+          tft.setTextColor(TFT_YELLOW, TFT_BLACK);
           tft.println("Pobeda!");
           gameCurrent = 2;
           tmpHP=0;
@@ -1937,6 +1992,7 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
           castVraga[1] = 0;
           castVraga[2] = 0;
           castVraga[3] = 0;
+          tft.setTextColor(TFT_GREEN, TFT_BLACK);
         }
      }
     }
@@ -2208,6 +2264,34 @@ void exe(const char * s) {
        else {tft.println("\nFile does not exist");}
      }
      else{tft.println("\nSyntax Error");}
+   }
+
+   else if (s[0] == 's' and s[1] == 'd' and s[2] == 'i' and s[3] == 'n' and s[4] == 'i' and s[5] == 't'){
+     tft.println("\nMicroSD Card Initialization...");
+    if(!SD.begin()){
+        tft.println("Card Mount Failed");
+        return;
+    }
+    uint8_t cardType = SD.cardType();
+    if(cardType == CARD_NONE){
+        tft.println("No SD card attached");
+        return;
+    }
+    tft.print("SD Card Type: ");
+    if(cardType == CARD_MMC){
+        tft.println("MMC");
+    } else if(cardType == CARD_SD){
+        tft.println("SDSC");
+    } else if(cardType == CARD_SDHC){
+        tft.println("SDHC");
+    } else {
+        tft.println("UNKNOWN");
+    }
+    uint64_t cardSize = SD.cardSize() / (1024 * 1024);
+    tft.printf("SD Card Size: %lluMB\n", cardSize);
+    tft.printf("Total space: %lluMB\n", SD.totalBytes() / (1024 * 1024));
+    tft.printf("Used space: %lluMB\n", SD.usedBytes() / (1024 * 1024));
+    tft.println("");
    }
    else if (s[0] == 'r' and s[1] == 'e' and s[2] == 'a' and s[3] == 'd' and s[4] == ' '){
      if (s[4] == ' ' and s[5] == '\"'){
