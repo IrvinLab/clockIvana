@@ -479,11 +479,11 @@ void dragon(){
    mana = 0;
    gold = 0;
    weapon[0] = 0;
-   weapon[1] = 1;
-   weapon[2] = 28;
-   weapon[3] = 7;
-   weapon[4] = 13;
-   weapon[5] = 10;
+   weapon[1] = 0;
+   weapon[2] = 0;
+   weapon[3] = 0;
+   weapon[4] = 0;
+   weapon[5] = 0;
    currentWeapon = 0;
    gameCurrent = 0;
    lvl = 2; // Уровень
@@ -803,7 +803,41 @@ String save = "";
           }
           stroki++;
           hp = hp + tmpHP;
-          tft.println("Pobeda!");
+          int dropWeapon = random(10);
+          if (lvl == lvlVraga and dropWeapon >= 0 and lvl != 9 and lvl != 10){
+            tft.setTextColor(TFT_YELLOW, TFT_BLACK);
+            int rndWpn = (lvl*10) - random(10);
+            if (weapon[0] == 0){
+              weapon[0] = rndWpn;
+              tft.println("Vipalo orujie!!!");
+            }
+            else if (weapon[1] == 0){
+              weapon[1] = rndWpn;
+              tft.println("Vipalo orujie!!!");
+            }
+            else if (weapon[2] == 0){
+              weapon[2] = rndWpn;
+              tft.println("Vipalo orujie!!!");
+            }
+            else if (weapon[3] == 0){
+              weapon[3] = rndWpn;
+              tft.println("Vipalo orujie!!!");
+            }
+            else if (weapon[4] == 0){
+              weapon[4] = rndWpn;
+              tft.println("Vipalo orujie!!!");
+            }
+            else if (weapon[5] == 0){
+              weapon[5] = rndWpn;
+              tft.println("Vipalo orujie!!!");
+            }
+            else{
+              tft.println("Vipalo orujie, no ego nekuda klast");
+            }
+            stroki++;
+            tft.setTextColor(TFT_GREEN, TFT_BLACK);
+          }
+          tft.println("YOU WIN!");
           gameCurrent = 2;
           luckScore = tmpUdacha;
           lovkScore = tmpLovkost;
@@ -884,7 +918,7 @@ String save = "";
           tft.setTextColor(TFT_GOLD, TFT_BLACK);
           tft.println("+1 Luck Score"); 
           luckScore++;
-          stroki += 4;
+          stroki += 5;
         }
         else if (seed == 3){
           tft.println("Chtobi ne ymeret ot jajdi vi");
@@ -893,7 +927,7 @@ String save = "";
           tft.setTextColor(TFT_GOLD, TFT_BLACK);
           tft.println("+1 Power Score"); 
           silaScore++;
-          stroki += 4;
+          stroki += 5;
         }
         else if (seed == 4){
           tft.println("Pod vashimi nogami okazalsya");
@@ -902,7 +936,7 @@ String save = "";
           tft.setTextColor(TFT_GOLD, TFT_BLACK);
           tft.println("+1 Magic Score"); 
           mozgScore++;
-          stroki += 4;
+          stroki += 5;
         }
         else if (seed == 5){
           tft.println("Pod vashimi nogami okazalsya");
@@ -913,8 +947,41 @@ String save = "";
           tft.println("+1 Mana Score"); 
           manaScore++;
           stroki += 5;
-        }                           // Существа, населяющие подземелье ++++===========++++++++++===========++++++++++============++++++++===========+++++++++==
-        else if (seed >= 11 and seed <= 20) {
+        }
+        else if (seed == 6 and lvl != 9 and lvl != 10){
+          tft.setTextColor(TFT_YELLOW, TFT_BLACK);
+          int rndWeapon = (lvl*10) - random(10);
+          if (weapon[0] == 0){
+            weapon[0] = rndWeapon*10;
+            tft.println("Vi nashli orujie!!!");
+          }
+          else if (weapon[1] == 0){
+            weapon[1] = rndWeapon;
+            tft.println("Vi nashli orujie!!!");
+          }
+          else if (weapon[2] == 0){
+            weapon[2] = rndWeapon;
+            tft.println("Vi nashli orujie!!!");
+          }
+          else if (weapon[3] == 0){
+            weapon[3] = rndWeapon;
+            tft.println("Vi nashli orujie!!!");
+          }
+          else if (weapon[4] == 0){
+            weapon[4] = rndWeapon;
+            tft.println("Vi nashli orujie!!!");
+          }
+          else if (weapon[5] == 0){
+            weapon[5] = rndWeapon;
+            tft.println("Vi nashli orujie!!!");
+          }
+          else{
+            tft.println("Vi nashli orujie, no ego nekuda klast");
+          }
+          stroki++;
+          tft.setTextColor(TFT_GREEN, TFT_BLACK);
+        }
+        else if (seed >= 11 and seed <= 20) {  // Существа, населяющие подземелье ++++===========++++++++++===========++++++++++============++++++++===========+++++++++==
           healVraga = 80;manaVraga = 0;lvlVraga = 2;silaVraga = 8;lovkVraga = 2;luckVraga = 2;mozgVraga = 0;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
@@ -925,7 +992,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 21 and seed <= 30) {
@@ -939,7 +1006,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 31 and seed <= 40) {
@@ -953,7 +1020,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+2;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 41 and seed <= 50) {
@@ -967,7 +1034,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("Aj murashki po koje...");
-            stroki=+2;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 51 and seed <= 60) {
@@ -981,7 +1048,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("Aj murashki po koje...");
-            stroki=+2;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 61 and seed <= 70) {
@@ -995,7 +1062,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("Aj murashki po koje...");
-            stroki=+2;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 71 and seed <= 80) {
@@ -1009,7 +1076,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 81 and seed <= 90) {
@@ -1023,7 +1090,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 91 and seed <= 100) {
@@ -1037,7 +1104,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 101 and seed <= 110) {
@@ -1051,7 +1118,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 121 and seed <= 130) {
@@ -1065,7 +1132,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 131 and seed <= 140) {
@@ -1079,7 +1146,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 141 and seed <= 150) {
@@ -1093,7 +1160,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 151 and seed <= 160) {
@@ -1107,7 +1174,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 161 and seed <= 170) {
@@ -1121,7 +1188,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 171 and seed <= 180) {
@@ -1135,7 +1202,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 181 and seed <= 190) {
@@ -1149,7 +1216,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 191 and seed <= 200) {
@@ -1163,7 +1230,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 201 and seed <= 210) {
@@ -1177,7 +1244,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 211 and seed <= 220) {
@@ -1191,7 +1258,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 221 and seed <= 230) {
@@ -1205,7 +1272,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 231 and seed <= 240) {
@@ -1219,7 +1286,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 241 and seed <= 250) {
@@ -1233,7 +1300,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 251 and seed <= 260) {
@@ -1247,7 +1314,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 261 and seed <= 270) {
@@ -1261,7 +1328,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 271 and seed <= 280) {
@@ -1275,7 +1342,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 281 and seed <= 290) {
@@ -1289,7 +1356,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 291 and seed <= 300) {
@@ -1303,7 +1370,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 301 and seed <= 310) {
@@ -1317,7 +1384,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 311 and seed <= 320) {
@@ -1331,7 +1398,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 321 and seed <= 330) {
@@ -1345,7 +1412,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 331 and seed <= 340) {
@@ -1359,7 +1426,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 341 and seed <= 350) {
@@ -1373,7 +1440,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else if (seed >= 351 and seed <= 360) {  
@@ -1387,7 +1454,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=+3;warning = 0;
+            stroki=stroki+3;warning = 0;
           }
         }
         else {
@@ -1516,7 +1583,16 @@ String save = "";
       tft.println("Game Loaded");
       }
     } 
-    
+    if (key.key == 'g') {
+      tft.setTextColor(TFT_YELLOW, TFT_BLACK);
+      if (weapon[currentWeapon] != 0){
+        weapon[currentWeapon] = 0;
+        tft.println("Weapon dropped");
+      }else{
+        tft.println("V rukax net orujia");
+      }
+      tft.setTextColor(TFT_GREEN, TFT_BLACK);
+    }
     if (key.key == 'i') {
       tft.fillScreen(TFT_BLACK);
       tft.setCursor(0, 0, 1);
@@ -1700,7 +1776,7 @@ String save = "";
       }
       if (gameCurrent == 3){
         gameCurrent = 4;
-        stroki++;
+        stroki+= 4;
         tft.fillScreen(TFT_BLACK);
         tft.setCursor(0, 0, 1);
         tft.setTextColor(TFT_RED, TFT_BLACK);
@@ -1739,7 +1815,7 @@ String save = "";
         else if (warning == 31){tft.println("Vampir 8yp.");}
         else if (warning == 32){tft.println("Nekromant 8yp.");}
         else if (warning == 33){tft.println("Cerber 9yp.");}
-        else if (warning == 33){tft.println("DRAGON 10 LVL.");}
+        else if (warning == 34){tft.println("DRAGON 10 LVL.");}
         tft.print("Zdorovie: ");
         tft.println(healVraga);
         tft.print("Mana: ");
@@ -1822,17 +1898,16 @@ String save = "";
           tft.setTextSize(1);
         }
         damag = 0;
-        if (weapon[currentWeapon] == 1){  // Дамаг от магического оружия
-           damag = 1;
-        }
-        else if (weapon[currentWeapon] == 8){
-           damag = 8;
-        }
-        else if (weapon[currentWeapon] == 10){
-           damag = 10;
-        }
-        else if (weapon[currentWeapon] == 16){
-           damag = 16;
+        if (weapon[currentWeapon] == 1 or weapon[currentWeapon] == 8 or weapon[currentWeapon] == 10 or weapon[currentWeapon] == 16
+          or weapon[currentWeapon] == 17 or weapon[currentWeapon] == 26 or weapon[currentWeapon] == 27 or weapon[currentWeapon] == 29
+           or weapon[currentWeapon] == 30 or weapon[currentWeapon] == 31 or weapon[currentWeapon] == 32 or weapon[currentWeapon] == 36
+            or weapon[currentWeapon] == 37 or weapon[currentWeapon] == 38 or weapon[currentWeapon] == 39 or weapon[currentWeapon] == 40
+             or weapon[currentWeapon] == 46 or weapon[currentWeapon] == 47 or weapon[currentWeapon] == 50 or weapon[currentWeapon] == 51
+              or weapon[currentWeapon] == 54 or weapon[currentWeapon] == 61 or weapon[currentWeapon] == 62 or weapon[currentWeapon] == 63
+               or weapon[currentWeapon] == 66 or weapon[currentWeapon] == 67 or weapon[currentWeapon] == 68 or weapon[currentWeapon] == 75
+                or weapon[currentWeapon] == 76 or weapon[currentWeapon] == 77 or weapon[currentWeapon] == 87 or weapon[currentWeapon] == 88
+                 or weapon[currentWeapon] == 89 or weapon[currentWeapon] == 90){  // Дамаг от магического оружия
+           damag = damag + weapon[currentWeapon];
         }
         tft.setTextColor(TFT_GREEN, TFT_BLACK);
         rnd = random(99);
@@ -2114,48 +2189,274 @@ String save = "";
         tft.println("Topor 1yp. (+3 dmg)");
       }
       if (weapon[currentWeapon] == 4){
-        tft.println("Korotkii mech 2yp. (+4 dmg)");
+        tft.println("Dubina 1yp. (+4 dmg)");
       }
       if (weapon[currentWeapon] == 5){
-        tft.println("Posoh adepta 2yp. (+5 Mdmg)");
+        tft.println("Posoh adepta 1yp. (+5 Mdmg)");
       }
       if (weapon[currentWeapon] == 6){
-        tft.println("Topor 2yp. (+6 dmg)");
+        tft.println("Topor 1yp. (+6 dmg)");
       }
       if (weapon[currentWeapon] == 7){
-        tft.println("Korotkii mech 3yp. (+7 dmg)");
+        tft.println("Korotkii mech 1yp. (+7 dmg)");
       }
       if (weapon[currentWeapon] == 8){
-        tft.println("Volshebnaya palochka 2yp. (+8 Mdmg)");
+        tft.println("Volshebnaya palochka 1yp. (+8 Mdmg)");
       }
       if (weapon[currentWeapon] == 9){
         tft.println("Mech 1yp. (+9 dmg)");
       }
       if (weapon[currentWeapon] == 10){
-        tft.println("Posoh maga 3yp.(+10 Mdmg)");
+        tft.println("Posoh maga 2yp.(+10 Mdmg)");
       }
       if (weapon[currentWeapon] == 11){
-        tft.println("Topor voina 3yp.(+11 dmg)");
+        tft.println("Topor voina 2yp.(+11 dmg)");
       }
       if (weapon[currentWeapon] == 12){
-        tft.println("Topor klana Ordi 3yp.(+12 dmg)");
+        tft.println("Topor klana Ordi 2yp.(+12 dmg)");
       }
       if (weapon[currentWeapon] == 13){
-        tft.println("Rapira 1yp.(+13 dmg)");
+        tft.println("Rapira 2yp.(+13 dmg)");
       }
       if (weapon[currentWeapon] == 14){
-        tft.println("Bulava 1yp.(+14 dmg)");
+        tft.println("Bulava 2yp.(+14 dmg)");
       }
       if (weapon[currentWeapon] == 15){
-        tft.println("Topor Varvara 3yp. (+15 dmg)");
+        tft.println("Topor Varvara 2yp. (+15 dmg)");
       }
       if (weapon[currentWeapon] == 16){
-        tft.println("Posoh kolduna 4yp. (+16 Mdmg)");
+        tft.println("Posoh kolduna 2yp. (+16 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 17){
+        tft.println("Posoh Charodeya 2yp. (+17 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 18){
+        tft.println("Mech 2yp. (+18 dmg)");
+      }
+      if (weapon[currentWeapon] == 19){
+        tft.println("Mech Spravedlivosti 2yp. (+19 dmg)");
+      }
+      if (weapon[currentWeapon] == 20){
+        tft.println("Topor Sudeb 3yp. (+20 dmg)");
+      }
+      if (weapon[currentWeapon] == 21){
+        tft.println("Rapira 3yp. (+21 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 22){
+        tft.println("Bulava 3yp. (+22 dmg)");
+      }
+      if (weapon[currentWeapon] == 23){
+        tft.println("Posoh Sudeb 3yp. (+23 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 24){
+        tft.println("Tesak klana Ordi 3yp. (+25 dmg)");
+      }
+      if (weapon[currentWeapon] == 25){
+        tft.println("Tesak Boli 3yp. (+25 dmg)");
+      }
+      if (weapon[currentWeapon] == 26){
+        tft.println("Krest Monaxa 3yp. (+26 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 27){
+        tft.println("Posoh Vihrey 3yp. (+27 Mdmg)");
       }
       if (weapon[currentWeapon] == 28){
-        tft.println("Topor Dush 4yp. (+28 dmg)");
+        tft.println("Mech 3yp. (+28 dmg)");
+      }
+      if (weapon[currentWeapon] == 29){
+        tft.println("Posoh Povelitelya Dush 3yp. (+29 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 30){
+        tft.println("Posoh Krovi 4yp. (+30 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 31){
+        tft.println("Posoh Povelitelya Dush 4yp. (+31 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 32){
+        tft.println("Posoh Shamana 4yp. (+32 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 33){
+        tft.println("Mech 4yp. (+33 dmg)");
+      }
+      if (weapon[currentWeapon] == 34){
+        tft.println("Topor Dush 4yp. (+34 dmg)");
+      }
+      if (weapon[currentWeapon] == 35){
+        tft.println("Bulava 4yp. (+35 dmg)");
+      }
+      if (weapon[currentWeapon] == 36){
+        tft.println("Rapira 4yp. (+36 dmg)");
+      }
+      if (weapon[currentWeapon] == 35){
+        tft.println("Bulava 4yp. (+35 dmg)");
+      }
+      if (weapon[currentWeapon] == 36){
+        tft.println("Bulava Tirana 4yp. (+36 dmg)");
+      }
+      if (weapon[currentWeapon] == 37){
+        tft.println("Krest Monaxa 4yp. (+37 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 38){
+        tft.println("Posoh Kolduna 4yp. (+38 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 39){
+        tft.println("Posoh Providca 4yp. (+39 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 40){
+        tft.println("Posoh Krovi 5yp. (+40 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 41){
+        tft.println("Topor Ordi 5yp. (+41 dmg)");
+      }
+      if (weapon[currentWeapon] == 42){
+        tft.println("Mech 5yp. (+42 dmg)");
+      }
+      if (weapon[currentWeapon] == 43){
+        tft.println("Mech Imperatora 5yp. (+43 dmg)");
+      }
+      if (weapon[currentWeapon] == 44){
+        tft.println("Topor Vlastitelya 5yp. (+44 dmg)");
+      }
+      if (weapon[currentWeapon] == 45){
+        tft.println("Topor Vozmezdia 5yp. (+45 dmg)");
+      }
+      if (weapon[currentWeapon] == 46){
+        tft.println("Posoh Vozmezdia 5yp. (+46 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 47){
+        tft.println("Posoh Nekromanta 5yp. (+47 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 48){
+        tft.println("Bulava 5yp. (+48 dmg)");
+      }
+      if (weapon[currentWeapon] == 49){
+        tft.println("Rapira 5yp. (+49 dmg)");
+      }
+      if (weapon[currentWeapon] == 50){
+        tft.println("Molot Paladina 6yp. (+50 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 51){
+        tft.println("Krest Monaxa 6yp. (+51 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 52){
+        tft.println("Mech 6yp. (+52 dmg)");
+      }
+      if (weapon[currentWeapon] == 53){
+        tft.println("Topor 6yp. (+53 dmg)");
+      }
+      if (weapon[currentWeapon] == 54){
+        tft.println("Posoh Stradanii 6yp. (+54 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 55){
+        tft.println("Topor Istyazatelya 6yp. (+55 dmg)");
+      }
+      if (weapon[currentWeapon] == 56){
+        tft.println("Mech Sudeb 6yp. (+56 dmg)");
+      }
+      if (weapon[currentWeapon] == 57){
+        tft.println("Orochii Topor 6yp. (+57 dmg)");
+      }
+      if (weapon[currentWeapon] == 58){
+        tft.println("Dvuruchnii Mech 6yp. (+58 dmg)");
+      }
+      if (weapon[currentWeapon] == 59){
+        tft.println("Dvuruchnii Topor 6yp. (+59 dmg)");
+      }
+      if (weapon[currentWeapon] == 60){
+        tft.println("Kogti Vurdalaka 7yp. (+60 dmg)");
+      }
+      if (weapon[currentWeapon] == 61){
+        tft.println("Posoh Tmi 7yp. (+61 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 62){
+        tft.println("Posoh Shamana 7yp. (+62 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 63){
+        tft.println("Posoh Kolduna 7yp. (+63 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 64){
+        tft.println("Topor Pechali 7yp. (+64 dmg)");
+      }
+      if (weapon[currentWeapon] == 65){
+        tft.println("Topor Oxotnika 7yp. (+65 dmg)");
+      }
+      if (weapon[currentWeapon] == 66){
+        tft.println("Posoh Voli 7yp. (+66 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 67){
+        tft.println("Posoh Dush 7yp. (+67 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 68){
+        tft.println("Posoh Armagedona 7yp. (+68 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 69){
+        tft.println("Mech 7yp. (+69 dmg)");
+      }
+      if (weapon[currentWeapon] == 70){
+        tft.println("Topor Skorbi 8yp. (+70 dmg)");
+      }
+      if (weapon[currentWeapon] == 71){
+        tft.println("Rapira 8yp. (+71 dmg)");
+      }
+      if (weapon[currentWeapon] == 72){
+        tft.println("Bulava 8yp. (+72 dmg)");
+      }
+      if (weapon[currentWeapon] == 73){
+        tft.println("Mech 8yp. (+73 dmg)");
+      }
+      if (weapon[currentWeapon] == 74){
+        tft.println("Mech Skorbi 8yp. (+74 dmg)");
+      }
+      if (weapon[currentWeapon] == 75){
+        tft.println("Posoh Nekromanta 8yp. (+75 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 76){
+        tft.println("Posoh Ognya 8yp. (+76 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 77){
+        tft.println("Posoh 4-x Stihiy 8yp. (+77 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 78){
+        tft.println("Mech Voli 8yp. (+78 dmg)");
+      }
+      if (weapon[currentWeapon] == 79){
+        tft.println("Mech Sveta 8yp. (+79 dmg)");
+      }
+      if (weapon[currentWeapon] == 80){
+        tft.println("Mech 9yp. (+80 dmg)");
+      }
+      if (weapon[currentWeapon] == 81){
+        tft.println("Mech Strannika 9yp. (+81 dmg)");
+      }
+      if (weapon[currentWeapon] == 82){
+        tft.println("Mech Korolya 9yp. (+82 dmg)");
+      }
+      if (weapon[currentWeapon] == 83){
+        tft.println("Mech Vozmezdia 9yp. (+83 dmg)");
+      }
+      if (weapon[currentWeapon] == 84){
+        tft.println("Topor Vozmezdia 9yp. (+84 dmg)");
+      }
+      if (weapon[currentWeapon] == 85){
+        tft.println("Bulava 9yp. (+85 dmg)");
+      }
+      if (weapon[currentWeapon] == 86){
+        tft.println("Rapira 9yp. (+86 dmg)");
+      }
+      if (weapon[currentWeapon] == 87){
+        tft.println("Posoh Bogov 9yp. (+87 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 88){
+        tft.println("Posoh Pustoti 9yp. (+88 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 89){
+        tft.println("Posoh Shamana 9yp. (+89 Mdmg)");
+      }
+      if (weapon[currentWeapon] == 90){
+        tft.println("Posoh Drakona 9yp. (+90 Mdmg)");
       }
       stroki++;
+      tft.setTextColor(TFT_GREEN, TFT_BLACK);
     }
   }
     
