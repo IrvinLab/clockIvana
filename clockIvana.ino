@@ -1438,7 +1438,8 @@ String save = "";
         n = 0;
         m = 0;
         int z = 0; // Счётчик запятых
-        int s, tempS = 0; // Счётчик стека/степень
+        int s = 0; // Счётчик стека/степень
+        int tempS = 0;
         int tempInt = 0;
         File mySave = SD.open("/save.drg");
         if (mySave) {
@@ -1448,24 +1449,71 @@ String save = "";
           }
         }
       else {tft.println("File \"save.drg\" not exist");}    
-      
+      mySave.close();
+      Serial.println("Simvolov: ");
       Serial.println(n);
       while (m != n){
-        if (load[m] == ','){
+        if (load[m] == ',' or load[m] == ';'){
           z++;
+          Serial.println("Zapyataya!!!");
           tempInt = 0;
-//          while (s != 0){
-//            tempInt = tempInt + gameStack[s] + int(pow(float(10),float(s)));
-//          }
+          tempS = s;
+          s=0;
+          while (s != tempS){
+            tempInt = tempInt + gameStack[s] * int(pow(float(10),float(tempS-s)));
+//            Serial.println("Stack: ");
+//            Serial.println(s);
+//            Serial.println(gameStack[s]);
+//            Serial.println(int(pow(float(10),float(s))));
+//            Serial.println(tempInt);
+            s++;
+          }
+          s=0;
+          m++;
+          tempInt = tempInt/10;
+          Serial.println(tempInt);
+          gameStack[0] = gameStack[1] = gameStack[2] = gameStack[3] = gameStack[4] = gameStack[5] = gameStack[6] = 0;
           if (z == 1){heal = tempInt;}
+          else if (z == 2){mana = tempInt;}
+          else if (z == 3){gold = tempInt;}
+          else if (z == 4){weapon[0] = tempInt;}
+          else if (z == 5){weapon[1] = tempInt;}
+          else if (z == 6){weapon[2] = tempInt;}
+          else if (z == 7){weapon[3] = tempInt;}
+          else if (z == 8){weapon[4] = tempInt;}
+          else if (z == 9){weapon[5] = tempInt;}
+          else if (z == 10){gameCurrent = tempInt;}
+          else if (z == 11){lvl = tempInt;}
+          else if (z == 12){hp = tempInt;}
+          else if (z == 13){cast[0] = tempInt;}
+          else if (z == 14){cast[1] = tempInt;}
+          else if (z == 15){cast[2] = tempInt;}
+          else if (z == 16){cast[3] = tempInt;}
+          else if (z == 17){cast[4] = tempInt;}
+          else if (z == 18){cast[5] = tempInt;}
+          else if (z == 19){cast[6] = tempInt;}
+          else if (z == 20){cast[7] = tempInt;}
+          else if (z == 21){cast[8] = tempInt;}
+          else if (z == 22){cast[9] = tempInt;}
+          else if (z == 23){healScore = tempInt;}
+          else if (z == 24){manaScore = tempInt;}
+          else if (z == 25){silaScore = tempInt;}
+          else if (z == 26){lovkScore = tempInt;}
+          else if (z == 27){luckScore = tempInt;}
+          else if (z == 28){diplScore = tempInt;}
+          else if (z == 29){mozgScore = tempInt;}          
         }
-        else if (load[m] == ';'){break;}
-        gameStack[s] = int(load[m]);
-        tft.println(gameStack[s]);
+        Serial.println("GameStack");
+        Serial.println(load[m]);
+        Serial.println(int(load[m]));
+        gameStack[s] = int(load[m])-48;
+        Serial.println(s);
+        Serial.println(gameStack[s]);
         m++;
         s++;
         
       }
+      tft.println("Game Loaded");
       }
     } 
     
