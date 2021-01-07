@@ -477,7 +477,7 @@ void dragon(){
  if (test == 1){
    heal = 100;
    mana = 0;
-   gold = 0;
+   gold = 15000;
    weapon[0] = 0;
    weapon[1] = 0;
    weapon[2] = 0;
@@ -486,19 +486,19 @@ void dragon(){
    weapon[5] = 0;
    currentWeapon = 0;
    gameCurrent = 0;
-   lvl = 2; // Уровень
-   lvlScore = 8; // Очки уровня, которые дают для прокачки персонажа за новый уровень
+   lvl = 4; // Уровень
+   lvlScore = 16; // Очки уровня, которые дают для прокачки персонажа за новый уровень
    hp = 0; // Опыт
-   cast[0] = 5;
-   cast[1] = 10;
-   cast[2] = 2;
-   cast[3] = 7;
-   cast[4] = 3;
-   cast[5] = 8;
-   cast[6] = 4;
-   cast[7] = 9;
-   cast[8] = 11;
-   cast[9] = 12;
+   cast[0] = 0;
+   cast[1] = 0;
+   cast[2] = 0;
+   cast[3] = 0;
+   cast[4] = 0;
+   cast[5] = 0;
+   cast[6] = 0;
+   cast[7] = 0;
+   cast[8] = 0;
+   cast[9] = 0;
    
  } 
  else {
@@ -803,8 +803,8 @@ String save = "";
           }
           stroki++;
           hp = hp + tmpHP;
-          int dropWeapon = random(10);
-          if (lvl == lvlVraga and dropWeapon >= 0 and lvl != 9 and lvl != 10){
+          int dropWeapon = random(14);
+          if (lvl == lvlVraga and dropWeapon == 7 and lvl != 9 and lvl != 10){
             tft.setTextColor(TFT_YELLOW, TFT_BLACK);
             int rndWpn = (lvl*10) - random(10);
             if (weapon[0] == 0){
@@ -948,11 +948,11 @@ String save = "";
           manaScore++;
           stroki += 5;
         }
-        else if (seed == 6 and lvl != 9 and lvl != 10){
+        else if (seed == 6 and lvl != 10){
           tft.setTextColor(TFT_YELLOW, TFT_BLACK);
           int rndWeapon = (lvl*10) - random(10);
           if (weapon[0] == 0){
-            weapon[0] = rndWeapon*10;
+            weapon[0] = rndWeapon;
             tft.println("Vi nashli orujie!!!");
           }
           else if (weapon[1] == 0){
@@ -1621,7 +1621,7 @@ String save = "";
       tft.println(luckScore);
       tft.print("Diplomatia: ");
       tft.println(diplScore);
-      tft.print("Magicheskie Sposobnosti: ");
+      tft.print("Intellekt: ");
       tft.println(mozgScore);  
       stroki = 0;
       stroki = stroki + 12;    
@@ -1716,7 +1716,7 @@ String save = "";
           tft.setCursor(0, 0, 1);
           tft.setTextColor(TFT_GREEN, TFT_BLACK);
           tft.setTextSize(1);
-          tft.println("Zadai nachalnogo personaja\n");
+          tft.println("Use +/- to add characteristics\n");
           tft.print("Level Scores: ");
           tft.println(lvlScore);
           tft.print("Zdorovie: ");
@@ -1742,7 +1742,7 @@ String save = "";
     if (key.key == 'g') {
       if (gameCurrent == 3){
         tft.setTextColor(TFT_GREEN, TFT_BLACK);
-        if (lovkScore > lovkVraga and luckScore > luckVraga){
+        if (lovkScore >= lovkVraga or luckScore >= luckVraga){
           gameCurrent = 2;
           stroki++;
           tft.println("Vam udalos sbajat blagodarya lovkosti i yadache");
@@ -1774,7 +1774,7 @@ String save = "";
          tft.setTextColor(TFT_GREEN, TFT_BLACK);
          tft.setTextSize(1);
       }
-      if (gameCurrent == 3){
+      if (gameCurrent == 3 or gameCurrent == 4){
         gameCurrent = 4;
         stroki+= 4;
         tft.fillScreen(TFT_BLACK);
@@ -1826,7 +1826,7 @@ String save = "";
         tft.println(luckVraga);
         tmpUdacha = luckScore;
         tmpLovkost = lovkScore;
-        
+        tft.setTextColor(TFT_GREEN, TFT_BLACK);
       }
     }
     if (key.key == 'n') {
@@ -2130,38 +2130,124 @@ String save = "";
           tft.println("Exit\n");
       return;
     }
+    int gameButton = 0;
     if (key.key == '1') {
-      delay(1);
+      if (gameCurrent == 5){gameButton = 1;}
     }
     if (key.key == '2') {
-      delay(1);
+      if (gameCurrent == 5){gameButton = 2;}
     }
     if (key.key == '3') {
-      delay(1);
+      if (gameCurrent == 5){gameButton = 3;}
     } 
     if (key.key == '4') {
-      delay(1);
+      if (gameCurrent == 5){gameButton = 4;}
     }
     if (key.key == '5') {
-      delay(1);
+      if (gameCurrent == 5){gameButton = 5;}
     }
     if (key.key == '6') {
-      delay(1);
+      if (gameCurrent == 5){gameButton = 6;}
     }
     if (key.key == '7') {
-      delay(1);
+      if (gameCurrent == 5){gameButton = 7;}
     }
     if (key.key == '8') {
-      delay(1);
+      if (gameCurrent == 5){gameButton = 8;}
     }
     if (key.key == '9') {
-      delay(1);
+      if (gameCurrent == 5){gameButton = 9;}
     }
     if (key.key == '0') {
-      delay(1);
+      if (gameCurrent == 5){gameButton = 10;}
+    }
+    if (gameCurrent == 5){
+      int buyCast = 0;
+      if (gameButton == 10){
+        gameCurrent = 2;
+      }
+      if (gameButton == 1){
+        if (mozgScore >= 2){
+          if (gold >= 150){gold = gold - 150;buyCast = 2;tft.println("Done");}else{tft.println("Nehvataet Zolota");}
+        }else{tft.println("Nujno kachat Intellekt >= 2");}
+      }
+      else if (gameButton == 2){
+        if (mozgScore >= 3){
+          if (gold >= 450){gold = gold - 450;buyCast = 3;tft.println("Done");}else{tft.println("Nehvataet Zolota");}
+        }else{tft.println("Nujno kachat Intellekt >= 3");}
+      }
+      else if (gameButton == 3){
+        if (mozgScore >= 4){
+          if (gold >= 1250){gold = gold - 1250;buyCast = 4;tft.println("Done");}else{tft.println("Nehvataet Zolota");}
+        }else{tft.println("Nujno kachat Intellekt >= 4");}
+      }
+      else if (gameButton == 4){
+        if (mozgScore >= 5){
+          if (gold >= 2700){gold = gold - 2700;buyCast = 5;tft.println("Done");}else{tft.println("Nehvataet Zolota");}
+        }else{tft.println("Nujno kachat Intellekt >= 5");}
+      }
+      else if (gameButton == 5){
+        if (mozgScore >= 3){
+          if (gold >= 100){gold = gold - 100;buyCast = 6;tft.println("Done");}else{tft.println("Nehvataet Zolota");}
+        }else{tft.println("Nujno kachat Intellekt >= 3");}
+      }
+      else if (gameButton == 6){
+        if (mozgScore >= 4){
+          if (gold >= 300){gold = gold - 300;buyCast = 7;tft.println("Done");}else{tft.println("Nehvataet Zolota");}
+        }else{tft.println("Nujno kachat Intellekt >= 4");}
+      }
+      else if (gameButton == 7){
+        if (mozgScore >= 5){
+          if (gold >= 900){gold = gold - 900;buyCast = 8;tft.println("Done");}else{tft.println("Nehvataet Zolota");}
+        }else{tft.println("Nujno kachat Intellekt >= 5");}
+      }
+      else if (gameButton == 8){
+        if (mozgScore >= 6){
+          if (gold >= 1800){gold = gold - 1800;buyCast = 9;tft.println("Done");}else{tft.println("Nehvataet Zolota");}
+        }else{tft.println("Nujno kachat Intellekt >= 6");}
+      }
+      else if (gameButton == 9){
+        if (mozgScore >= 7){
+          if (gold >= 5000){gold = gold - 5000;buyCast = 10;tft.println("Done");}else{tft.println("Nehvataet Zolota");}
+        }else{tft.println("Nujno kachat Intellekt >= 7");}
+      }
+      if (cast[0] == 0){cast[0] = buyCast;}
+      else if (cast[1] == 0){cast[1] = buyCast;}
+      else if (cast[2] == 0){cast[2] = buyCast;}
+      else if (cast[3] == 0){cast[3] = buyCast;}
+      else if (cast[4] == 0){cast[4] = buyCast;}
+      else if (cast[5] == 0){cast[5] = buyCast;}
+      else if (cast[6] == 0){cast[6] = buyCast;}
+      else if (cast[7] == 0){cast[7] = buyCast;}
+      else if (cast[8] == 0){cast[8] = buyCast;}
+      else if (cast[9] == 0){cast[9] = buyCast;}
+      gameButton = 0;
+      
+      gameCurrent = 2;
+      tft.setTextColor(TFT_GREEN, TFT_BLACK);
     }
     if (key.key == ' ') {
       delay(1);
+    }
+    if (key.key == 'b'){
+      if (gameCurrent == 2){
+        gameCurrent = 5;
+        tft.fillScreen(TFT_BLACK);
+        tft.setCursor(0, 0, 1);
+        tft.setTextColor(TFT_GOLD, TFT_BLACK);
+        tft.setTextSize(1);
+        tft.println("Viberi zaklinanie dlya pokupki");
+        tft.println("1. Lechenie 2yp. (+40HP/50MN)-150G");
+        tft.println("2. Lechenie 3yp. (+80HP/100MN)-450G");
+        tft.println("3. Lechenie 4yp. (+160HP/200MN)-1250G");
+        tft.println("4. Lechenie 5yp. (+320HP/400MN)-2700G");
+        tft.println("5. Fire Ball 1yp. (-20HP/30MN)-100G");
+        tft.println("6. Fire Ball 2yp. (-40HP/50MN)-300G");
+        tft.println("7. Fire Ball 3yp. (-80HP/100MN)-900G");
+        tft.println("8. Fire Ball 4yp. (-160HP/200MN)-1800G");
+        tft.println("9. Fire Ball 5yp. (-320HP/400MN)-5000G");
+        tft.println("0. Exit");
+      }
     }
     if (key.key == 'e'){
       if (stroki >= 28){
