@@ -537,6 +537,7 @@ int lovkScore = 1; // Коэфициент уклонения/ловкости
  int tmpLovkost = 0;
  int n = 0;
  int m = 0;
+ int strannik = 0;
 String save = "";
 
  tft.fillScreen(TFT_BLACK);
@@ -790,11 +791,21 @@ String save = "";
           return;
         }
         if (healVraga <= 0){
+          if (strannik == 1){
+            strannik = 500;
+            gold = gold + strannik;
+            tft.setTextColor(TFT_GOLD, TFT_BLACK);
+            tft.print("Nagrada strannika: ");
+            tft.print(dobicha);
+            tft.println(" GOLD");
+            tft.setTextColor(TFT_GREEN, TFT_BLACK);\
+            strannik = 0;
+          }
           if (warning != 1 and warning != 2 and warning != 3 and warning != 4 and warning != 5 and warning != 14 and warning != 15 and warning != 16 and warning != 23 and warning != 26 and warning != 27 and warning != 30 and warning != 33){
-            dobicha = 10 * lvlVraga + warning;
+            dobicha =  dobicha + 10 * lvlVraga + random(20);
             gold = gold + dobicha;
             tft.setTextColor(TFT_GOLD, TFT_BLACK);
-            tft.print("Nagrada: ");
+            tft.print("Dobicha: ");
             tft.print(dobicha);
             tft.println(" GOLD");
             tft.setTextColor(TFT_GREEN, TFT_BLACK);
@@ -803,37 +814,17 @@ String save = "";
           }
           stroki++;
           hp = hp + tmpHP;
-          int dropWeapon = random(11);
+          int dropWeapon = random(12);
           if (lvl == lvlVraga and dropWeapon == 7 and lvl != 9 and lvl != 10){
             tft.setTextColor(TFT_YELLOW, TFT_BLACK);
             int rndWpn = (lvl*10) - random(10);
-            if (weapon[0] == 0){
-              weapon[0] = rndWpn;
-              tft.println("Vipalo orujie!!!");
-            }
-            else if (weapon[1] == 0){
-              weapon[1] = rndWpn;
-              tft.println("Vipalo orujie!!!");
-            }
-            else if (weapon[2] == 0){
-              weapon[2] = rndWpn;
-              tft.println("Vipalo orujie!!!");
-            }
-            else if (weapon[3] == 0){
-              weapon[3] = rndWpn;
-              tft.println("Vipalo orujie!!!");
-            }
-            else if (weapon[4] == 0){
-              weapon[4] = rndWpn;
-              tft.println("Vipalo orujie!!!");
-            }
-            else if (weapon[5] == 0){
-              weapon[5] = rndWpn;
-              tft.println("Vipalo orujie!!!");
-            }
-            else{
-              tft.println("Vipalo orujie, no ego nekuda klast");
-            }
+            if (weapon[0] == 0){weapon[0] = rndWpn;tft.println("Vipalo orujie!!!");}
+            else if (weapon[1] == 0){weapon[1] = rndWpn;tft.println("Vipalo orujie!!!");}
+            else if (weapon[2] == 0){weapon[2] = rndWpn;tft.println("Vipalo orujie!!!");}
+            else if (weapon[3] == 0){weapon[3] = rndWpn;tft.println("Vipalo orujie!!!");}
+            else if (weapon[4] == 0){weapon[4] = rndWpn;tft.println("Vipalo orujie!!!");}
+            else if (weapon[5] == 0){weapon[5] = rndWpn;tft.println("Vipalo orujie!!!");}
+            else{tft.println("Vipalo orujie, no ego nekuda klast");}
             stroki++;
             tft.setTextColor(TFT_GREEN, TFT_BLACK);
           }
@@ -856,56 +847,58 @@ String save = "";
     if (key.key == 'w') {   //  ИДЁМ ВПЕРЕД
       heal = 100 + (healScore * 25);
       mana = manaScore * 30;
-      if (hp >= 1000 and lvl == 1){  // Level UP
+      dobicha = 0;
+      if (hp >= 1500 and lvl == 1){  // Level UP
         stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 2 LVL PRESS ENTER");
         lvl = 2; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
       }
-      else if (hp >= 1500 and lvl == 2){
+      else if (hp >= 2300 and lvl == 2){
         stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 3 LVL PRESS ENTER");
         lvl = 3; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
       }
-      else if (hp >= 2750 and lvl == 3){
+      else if (hp >= 3500 and lvl == 3){
         stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 4 LVL PRESS ENTER");
         lvl = 4; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
       }
-      else if (hp >= 5250 and lvl == 4){
+      else if (hp >= 5500 and lvl == 4){
         stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 5 LVL PRESS ENTER");
         lvl = 5; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
       }
-      else if (hp >= 7500 and lvl == 5){
+      else if (hp >= 8500 and lvl == 5){
         stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 6 LVL PRESS ENTER");
         lvl = 6; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
       }
-      else if (hp >= 10500 and lvl == 6){
+      else if (hp >= 10000 and lvl == 6){
         stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 7 LVL PRESS ENTER");
         lvl = 7; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
       }
-      else if (hp >= 14500 and lvl == 7){
+      else if (hp >= 20000 and lvl == 7){
         stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 8 LVL PRESS ENTER");
         lvl = 8; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
       }
-      else if (hp >= 19500 and lvl == 8){
+      else if (hp >= 30000 and lvl == 8){
         stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 9 LVL PRESS ENTER");
         lvl = 9; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
       }
-      else if (hp >= 26000 and lvl == 9){
+      else if (hp >= 45000 and lvl == 9){
         stroki++;tft.setTextColor(TFT_YELLOW, TFT_BLACK);tft.println("LEVEL UP++ 10 LVL PRESS ENTER");
         lvl = 10; lvlScore = 4; hp = 0; gameCurrent = 0; menuPosition = 1;
       }
       tft.setTextColor(TFT_GREEN, TFT_BLACK);
       damag = 0;
-      if (stroki >= 24){
+      
+      if (gameCurrent == 1 and menuPosition != 1){
+        menuPosition--;
+      }
+      if (gameCurrent == 2){
+        int seed = random(999);
+        if (stroki >= 24){
           stroki = 0;
           tft.fillScreen(TFT_BLACK);
           tft.setCursor(0, 0, 1);
           tft.setTextColor(TFT_GREEN, TFT_BLACK);
           tft.setTextSize(1);
         }
-      if (gameCurrent == 1 and menuPosition != 1){
-        menuPosition--;
-      }
-      if (gameCurrent == 2){
-        int seed = random(999);
         if (seed == 1){
           tft.println("Ti nashel 1000 zolota");
           gold = gold + 1000;
@@ -982,7 +975,7 @@ String save = "";
           tft.setTextColor(TFT_GREEN, TFT_BLACK);
         }
         else if (seed >= 11 and seed <= 20) {  // Существа, населяющие подземелье ++++===========++++++++++===========++++++++++============++++++++===========+++++++++==
-          healVraga = 80;manaVraga = 0;lvlVraga = 2;silaVraga = 8;lovkVraga = 2;luckVraga = 2;mozgVraga = 0;
+          healVraga = 80;manaVraga = 0;lvlVraga = 2;silaVraga = 10;lovkVraga = 2;luckVraga = 2;mozgVraga = 0;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Na puti stoit Skelet 2 lvl, chto delat?");
@@ -996,7 +989,7 @@ String save = "";
           }
         }
         else if (seed >= 21 and seed <= 30) {
-          healVraga = 145;manaVraga = 0;lvlVraga = 3;silaVraga = 11;lovkVraga = 3;luckVraga = 4;mozgVraga = 0;
+          healVraga = 145;manaVraga = 0;lvlVraga = 3;silaVraga = 13;lovkVraga = 3;luckVraga = 4;mozgVraga = 0;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Na puti stoit Skelet 3 lvl, chto delat?");
@@ -1024,7 +1017,7 @@ String save = "";
           }
         }
         else if (seed >= 41 and seed <= 50) {
-          healVraga = 270; manaVraga = 200;lvlVraga = 5;silaVraga = 19;lovkVraga = 5;luckVraga = 5;mozgVraga = 1;castVraga[0] = 7;
+          healVraga = 270; manaVraga = 200;lvlVraga = 5;silaVraga = 40;lovkVraga = 5;luckVraga = 5;mozgVraga = 1;castVraga[0] = 7;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Pregradil put Skelet-Mag 5 lvl, chto delat?");
@@ -1038,7 +1031,7 @@ String save = "";
           }
         }
         else if (seed >= 51 and seed <= 60) {
-          healVraga = 375; manaVraga = 450;lvlVraga = 6;silaVraga = 25;lovkVraga = 6;luckVraga = 6;mozgVraga = 1;castVraga[0] = 8;castVraga[2] = 11;
+          healVraga = 375; manaVraga = 450;lvlVraga = 6;silaVraga = 50;lovkVraga = 6;luckVraga = 6;mozgVraga = 1;castVraga[0] = 8;castVraga[2] = 11;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Pregradil put Lich 6 lvl, chto delat?");
@@ -1052,7 +1045,7 @@ String save = "";
           }
         }
         else if (seed >= 61 and seed <= 70) {
-          healVraga = 545; manaVraga = 700;lvlVraga = 7;silaVraga = 25;lovkVraga = 7;luckVraga = 7;mozgVraga = 1;castVraga[0] = 9;castVraga[2] = 11;
+          healVraga = 545; manaVraga = 700;lvlVraga = 7;silaVraga = 60;lovkVraga = 7;luckVraga = 7;mozgVraga = 1;castVraga[0] = 9;castVraga[2] = 11;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Pregradil put Knyaz Tmi 7 lvl, chto delat?");
@@ -1094,7 +1087,7 @@ String save = "";
           }
         }
         else if (seed >= 91 and seed <= 100) {
-          healVraga = 170;manaVraga = 150;lvlVraga = 3;silaVraga = 15;lovkVraga = 3;luckVraga = 4;mozgVraga = 0;castVraga[0] = 6;
+          healVraga = 170;manaVraga = 150;lvlVraga = 3;silaVraga = 20;lovkVraga = 3;luckVraga = 4;mozgVraga = 0;castVraga[0] = 6;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Na puti stoit Goblin-Mag 3 lvl, chto delat?");
@@ -1108,7 +1101,7 @@ String save = "";
           }
         }
         else if (seed >= 101 and seed <= 110) {
-          healVraga = 225;manaVraga = 200;lvlVraga = 4;silaVraga = 19;lovkVraga = 5;luckVraga = 6;mozgVraga = 0;castVraga[0] = 7;
+          healVraga = 225;manaVraga = 200;lvlVraga = 4;silaVraga = 25;lovkVraga = 5;luckVraga = 6;mozgVraga = 0;castVraga[0] = 7;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Stoit Goblin-Charodey 4 lvl, chto delat?");
@@ -1122,7 +1115,7 @@ String save = "";
           }
         }
         else if (seed >= 121 and seed <= 130) {
-          healVraga = 250;manaVraga = 0;lvlVraga = 4;silaVraga = 24;lovkVraga = 5;luckVraga = 6;mozgVraga = 0;
+          healVraga = 250;manaVraga = 0;lvlVraga = 4;silaVraga = 30;lovkVraga = 5;luckVraga = 6;mozgVraga = 0;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Na pyti stoit Goblin 4 lvl, chto delat?");
@@ -1136,7 +1129,7 @@ String save = "";
           }
         }
         else if (seed >= 131 and seed <= 140) {
-          healVraga = 310;manaVraga = 0;lvlVraga = 5;silaVraga = 29;lovkVraga = 5;luckVraga = 10;mozgVraga = 0;
+          healVraga = 310;manaVraga = 0;lvlVraga = 5;silaVraga = 35;lovkVraga = 5;luckVraga = 10;mozgVraga = 0;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Na pyti stoit Goblin 5 lvl, chto delat?");
@@ -1150,7 +1143,7 @@ String save = "";
           }
         }
         else if (seed >= 141 and seed <= 150) {
-          healVraga = 370;manaVraga = 0;lvlVraga = 5;silaVraga = 29;lovkVraga = 3;luckVraga = 3;mozgVraga = 0;
+          healVraga = 370;manaVraga = 0;lvlVraga = 5;silaVraga = 42;lovkVraga = 3;luckVraga = 3;mozgVraga = 0;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Na pyti stoit Ogr 5 lvl, chto delat?");
@@ -1164,7 +1157,7 @@ String save = "";
           }
         }
         else if (seed >= 151 and seed <= 160) {
-          healVraga = 470;manaVraga = 0;lvlVraga = 6;silaVraga = 35;lovkVraga = 3;luckVraga = 4;mozgVraga = 0;
+          healVraga = 470;manaVraga = 0;lvlVraga = 6;silaVraga = 55;lovkVraga = 3;luckVraga = 4;mozgVraga = 0;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Na pyti stoit Ogr 6 lvl, chto delat?");
@@ -1178,7 +1171,7 @@ String save = "";
           }
         }
         else if (seed >= 161 and seed <= 170) {
-          healVraga = 575;manaVraga = 0;lvlVraga = 7;silaVraga = 45;lovkVraga = 5;luckVraga = 6;mozgVraga = 0;
+          healVraga = 575;manaVraga = 0;lvlVraga = 7;silaVraga = 68;lovkVraga = 5;luckVraga = 6;mozgVraga = 0;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Na pyti stoit Ogr 7 lvl, chto delat?");
@@ -1192,7 +1185,7 @@ String save = "";
           }
         }
         else if (seed >= 171 and seed <= 180) {
-          healVraga = 145;manaVraga = 0;lvlVraga = 2;silaVraga = 17;lovkVraga = 1;luckVraga = 3;mozgVraga = 0;
+          healVraga = 145;manaVraga = 0;lvlVraga = 2;silaVraga = 24;lovkVraga = 1;luckVraga = 3;mozgVraga = 0;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Na puti stoit Ork 2 lvl, chto delat?");
@@ -1206,7 +1199,7 @@ String save = "";
           }
         }
         else if (seed >= 181 and seed <= 190) {
-          healVraga = 280;manaVraga = 0;lvlVraga = 4;silaVraga = 28;lovkVraga = 2;luckVraga = 5;mozgVraga = 0;
+          healVraga = 280;manaVraga = 0;lvlVraga = 4;silaVraga = 36;lovkVraga = 2;luckVraga = 5;mozgVraga = 0;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Na puti stoit Ork 4 lvl, chto delat?");
@@ -1220,7 +1213,7 @@ String save = "";
           }
         }
         else if (seed >= 191 and seed <= 200) {
-          healVraga = 500;manaVraga = 0;lvlVraga = 6;silaVraga = 34;lovkVraga = 4;luckVraga = 7;mozgVraga = 0;
+          healVraga = 500;manaVraga = 0;lvlVraga = 6;silaVraga = 55;lovkVraga = 4;luckVraga = 7;mozgVraga = 0;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Na puti stoit Ork 6 lvl, chto delat?");
@@ -1234,7 +1227,7 @@ String save = "";
           }
         }
         else if (seed >= 201 and seed <= 210) {
-          healVraga = 900;manaVraga = 0;lvlVraga = 9;silaVraga = 64;lovkVraga = 8;luckVraga = 12;mozgVraga = 0;
+          healVraga = 900;manaVraga = 0;lvlVraga = 9;silaVraga = 84;lovkVraga = 8;luckVraga = 12;mozgVraga = 0;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Na puti stoit Ork 9 lvl, chto delat?");
@@ -1248,7 +1241,7 @@ String save = "";
           }
         }
         else if (seed >= 211 and seed <= 220) {
-          healVraga = 300;manaVraga = 250;lvlVraga = 5;silaVraga = 29;lovkVraga = 6;luckVraga = 8;mozgVraga = 0;castVraga[0] = 7;
+          healVraga = 300;manaVraga = 250;lvlVraga = 5;silaVraga = 39;lovkVraga = 6;luckVraga = 8;mozgVraga = 0;castVraga[0] = 7;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Stoit Nekromant 5 lvl, chto delat?");
@@ -1262,7 +1255,7 @@ String save = "";
           }
         }
         else if (seed >= 221 and seed <= 230) {
-          healVraga = 350;manaVraga = 400;lvlVraga = 6;silaVraga = 36;lovkVraga = 7;luckVraga = 12;mozgVraga = 0;castVraga[0] = 8;
+          healVraga = 350;manaVraga = 400;lvlVraga = 6;silaVraga = 49;lovkVraga = 7;luckVraga = 12;mozgVraga = 0;castVraga[0] = 8;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Stoit Nekromant 6 lvl, chto delat?");
@@ -1276,7 +1269,7 @@ String save = "";
           }
         }
         else if (seed >= 231 and seed <= 240) {
-          healVraga = 1250;manaVraga = 0;lvlVraga = 9;silaVraga = 79;lovkVraga = 20;luckVraga = 20;mozgVraga = 0;
+          healVraga = 1250;manaVraga = 0;lvlVraga = 9;silaVraga = 99;lovkVraga = 20;luckVraga = 20;mozgVraga = 0;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Na puti stoit Dushekrad 9 lvl, chto delat?");
@@ -1290,7 +1283,7 @@ String save = "";
           }
         }
         else if (seed >= 241 and seed <= 250) {
-          healVraga = 765;manaVraga = 250;lvlVraga = 8;silaVraga = 58;lovkVraga = 8;luckVraga = 12;mozgVraga = 0;castVraga[2] = 11;
+          healVraga = 765;manaVraga = 250;lvlVraga = 8;silaVraga = 79;lovkVraga = 7;luckVraga = 12;mozgVraga = 0;castVraga[2] = 11;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Na puti stoit Strannik 8 lvl, chto delat?");
@@ -1304,7 +1297,7 @@ String save = "";
           }
         }
         else if (seed >= 251 and seed <= 260) {
-          healVraga = 900;manaVraga = 850;lvlVraga = 9;silaVraga = 55;lovkVraga = 10;luckVraga = 20;mozgVraga = 0;castVraga[2] = 11;castVraga[0] = 8;
+          healVraga = 900;manaVraga = 850;lvlVraga = 9;silaVraga = 84;lovkVraga = 10;luckVraga = 20;mozgVraga = 0;castVraga[2] = 11;castVraga[0] = 9;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Stoit Ork-Shaman 9 lvl, chto delat?");
@@ -1318,7 +1311,7 @@ String save = "";
           }
         }
         else if (seed >= 261 and seed <= 270) {
-          healVraga = 145;manaVraga = 0;lvlVraga = 3;silaVraga = 17;lovkVraga = 3;luckVraga = 3;mozgVraga = 0;
+          healVraga = 145;manaVraga = 0;lvlVraga = 3;silaVraga = 23;lovkVraga = 3;luckVraga = 3;mozgVraga = 0;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Na puti stoit Pauk 3 lvl, chto delat?");
@@ -1346,7 +1339,7 @@ String save = "";
           }
         }
         else if (seed >= 281 and seed <= 290) {
-          healVraga = 365;manaVraga = 500;lvlVraga = 7;silaVraga = 60;lovkVraga = 8;luckVraga = 13;mozgVraga = 0;castVraga[0] = 8;
+          healVraga = 365;manaVraga = 500;lvlVraga = 7;silaVraga = 69;lovkVraga = 8;luckVraga = 13;mozgVraga = 0;castVraga[0] = 8;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Stoit Sykkub 7 lvl, chto delat?");
@@ -1360,7 +1353,7 @@ String save = "";
           }
         }
         else if (seed >= 291 and seed <= 300) {
-          healVraga = 425;manaVraga = 800;lvlVraga = 8;silaVraga = 70;lovkVraga = 10;luckVraga = 16;mozgVraga = 0;castVraga[0] = 9;
+          healVraga = 425;manaVraga = 800;lvlVraga = 8;silaVraga = 87;lovkVraga = 10;luckVraga = 16;mozgVraga = 0;castVraga[0] = 9;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Stoit Sykkub 8 lvl, chto delat?");
@@ -1374,21 +1367,21 @@ String save = "";
           }
         }
         else if (seed >= 301 and seed <= 310) {
-          healVraga = 590;manaVraga = 0;lvlVraga = 7;silaVraga = 55;lovkVraga = 4;luckVraga = 1;mozgVraga = 0;
+          healVraga = 590;manaVraga = 0;lvlVraga = 7;silaVraga = 80;lovkVraga = 4;luckVraga = 1;mozgVraga = 0;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Na puti stoit Vurdalak 7 lvl, chto delat?");
             tft.println("Y-boy, D-dogovoritsa, G-bejat");
-            stroki=stroki+3;gameCurrent=3;warning = 30;tmpHP = healVraga;
+            stroki=stroki+2;gameCurrent=3;warning = 30;tmpHP = healVraga;
           }else{
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=stroki+3;warning = 0;
+            stroki=stroki+2;warning = 0;
           }
         }
         else if (seed >= 311 and seed <= 320) {
-          healVraga = 795;manaVraga = 0;lvlVraga = 8;silaVraga = 75;lovkVraga = 10;luckVraga = 10;mozgVraga = 0;
+          healVraga = 795;manaVraga = 0;lvlVraga = 8;silaVraga = 90;lovkVraga = 10;luckVraga = 10;mozgVraga = 0;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Stoit Vampir 8 lvl, chto delat?");
@@ -1398,11 +1391,11 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=stroki+3;warning = 0;
+            stroki=stroki+2;warning = 0;
           }
         }
         else if (seed >= 321 and seed <= 330) {
-          healVraga = 525;manaVraga = 800;lvlVraga = 8;silaVraga = 60;lovkVraga = 10;luckVraga = 16;mozgVraga = 0;castVraga[0] = 9;castVraga[2] = 11;
+          healVraga = 525;manaVraga = 800;lvlVraga = 8;silaVraga = 72;lovkVraga = 10;luckVraga = 16;mozgVraga = 0;castVraga[0] = 9;castVraga[2] = 11;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Stoit Nekromant 8 lvl, chto delat?");
@@ -1412,11 +1405,11 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=stroki+3;warning = 0;
+            stroki=stroki+2;warning = 0;
           }
         }
         else if (seed >= 331 and seed <= 340) {
-          healVraga = 1000;manaVraga = 0;lvlVraga = 9;silaVraga = 84;lovkVraga = 15;luckVraga = 12;mozgVraga = 0;
+          healVraga = 1000;manaVraga = 0;lvlVraga = 9;silaVraga = 94;lovkVraga = 15;luckVraga = 12;mozgVraga = 0;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Na puti stoit Cerber 9 lvl, chto delat?");
@@ -1426,11 +1419,11 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=stroki+3;warning = 0;
+            stroki=stroki+2;warning = 0;
           }
         }
         else if (seed >= 341 and seed <= 350) {
-          healVraga = 1500;manaVraga = 0;lvlVraga = 10;silaVraga = 100;lovkVraga = 25;luckVraga = 25;mozgVraga = 0;
+          healVraga = 1500;manaVraga = 0;lvlVraga = 10;silaVraga = 120;lovkVraga = 25;luckVraga = 25;mozgVraga = 0;
           if (lvl >= lvlVraga) {
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Na puti stoit Dragon 10 lvl, chto delat?");
@@ -1440,7 +1433,7 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=stroki+3;warning = 0;
+            stroki=stroki+2;warning = 0;
           }
         }
         else if (seed >= 351 and seed <= 360) {  
@@ -1454,7 +1447,148 @@ String save = "";
             tft.setTextColor(TFT_RED, TFT_BLACK);
             tft.println("Promelknula yjasnaya ten");
             tft.println("vi bejite so vseh nog");
-            stroki=stroki+3;warning = 0;
+            stroki=stroki+2;warning = 0;
+          }
+        }
+        else if (seed >= 361 and seed <= 370) {  
+          healVraga = 90;manaVraga = 0;lvlVraga = 1;silaVraga = 12;lovkVraga = 2;luckVraga = 2;mozgVraga = 0;
+          if (lvl >= lvlVraga) {
+            tft.setTextColor(TFT_RED, TFT_BLACK);
+            tft.println("Na puti stoit Morlok 1 lvl, chto delat?");
+            tft.println("Y-boy, D-dogovoritsa, G-bejat");
+            stroki=stroki+2;gameCurrent=3;warning = 35;tmpHP = healVraga;
+          }else{
+            tft.setTextColor(TFT_RED, TFT_BLACK);
+            tft.println("Promelknula yjasnaya ten");
+            tft.println("vi bejite so vseh nog");
+            stroki=stroki+2;warning = 0;
+          }
+        }
+        else if (seed >= 371 and seed <= 380) {  
+          healVraga = 190;manaVraga = 0;lvlVraga = 3;silaVraga = 32;lovkVraga = 4;luckVraga = 5;mozgVraga = 0;
+          if (lvl >= lvlVraga) {
+            tft.setTextColor(TFT_RED, TFT_BLACK);
+            tft.println("Na puti stoit Morlok 3 lvl, chto delat?");
+            tft.println("Y-boy, D-dogovoritsa, G-bejat");
+            stroki=stroki+2;gameCurrent=3;warning = 36;tmpHP = healVraga;
+          }else{
+            tft.setTextColor(TFT_RED, TFT_BLACK);
+            tft.println("Promelknula yjasnaya ten");
+            tft.println("vi bejite so vseh nog");
+            stroki=stroki+2;warning = 0;
+          }
+        }
+        else if (seed >= 381 and seed <= 390) {  
+          healVraga = 125;manaVraga = 0;lvlVraga = 2;silaVraga = 22;lovkVraga = 2;luckVraga = 2;mozgVraga = 0;
+          if (lvl >= lvlVraga) {
+            tft.setTextColor(TFT_RED, TFT_BLACK);
+            tft.println("Na puti stoit Morlok 2 lvl, chto delat?");
+            tft.println("Y-boy, D-dogovoritsa, G-bejat");
+            stroki=stroki+2;gameCurrent=3;warning = 37;tmpHP = healVraga;
+          }else{
+            tft.setTextColor(TFT_RED, TFT_BLACK);
+            tft.println("Promelknula yjasnaya ten");
+            tft.println("vi bejite so vseh nog");
+            stroki=stroki+2;warning = 0;
+          }
+        }
+        else if (seed >= 391 and seed <= 395) {
+          tft.setTextColor(TFT_YELLOW, TFT_BLACK);
+          tft.println("Vi zametili ten monstra, hotite");
+          tft.println("nabrositsya na nego?");
+          tft.println("Eto mojet bit kto ugodno!");
+          tft.println("Y - DA, N - NET");
+          int randomWarning = random(36)+1;
+          if (randomWarning == 1){healVraga = 40;manaVraga = 0;lvlVraga = 1;silaVraga = 5;lovkVraga = 1;luckVraga = 1;mozgVraga = 0;}
+          else if (randomWarning == 2){healVraga = 80;manaVraga = 0;lvlVraga = 2;silaVraga = 10;lovkVraga = 2;luckVraga = 2;mozgVraga = 0;}
+          else if (randomWarning == 3){healVraga = 145;manaVraga = 0;lvlVraga = 3;silaVraga = 13;lovkVraga = 3;luckVraga = 4;mozgVraga = 0;}
+          else if (randomWarning == 4){healVraga = 200; manaVraga = 90;lvlVraga = 4;silaVraga = 11;lovkVraga = 5;luckVraga = 5;mozgVraga = 1;castVraga[0] = 6;}
+          else if (randomWarning == 5){healVraga = 270; manaVraga = 200;lvlVraga = 5;silaVraga = 40;lovkVraga = 5;luckVraga = 5;mozgVraga = 1;castVraga[0] = 7;}
+          else if (randomWarning == 6){healVraga = 375; manaVraga = 450;lvlVraga = 6;silaVraga = 50;lovkVraga = 6;luckVraga = 6;mozgVraga = 1;castVraga[0] = 8;castVraga[2] = 11;}
+          else if (randomWarning == 7){healVraga = 545; manaVraga = 700;lvlVraga = 7;silaVraga = 60;lovkVraga = 7;luckVraga = 7;mozgVraga = 1;castVraga[0] = 9;castVraga[2] = 11;}
+          else if (randomWarning == 8){healVraga = 545; manaVraga = 700;lvlVraga = 7;silaVraga = 60;lovkVraga = 7;luckVraga = 7;mozgVraga = 1;castVraga[0] = 9;castVraga[2] = 11;}
+          else if (randomWarning == 9){healVraga = 130;manaVraga = 90;lvlVraga = 2;silaVraga = 15;lovkVraga = 1;luckVraga = 3;mozgVraga = 0;castVraga[0] = 6;}
+          else if (randomWarning == 10){healVraga = 170;manaVraga = 150;lvlVraga = 3;silaVraga = 20;lovkVraga = 3;luckVraga = 4;mozgVraga = 0;castVraga[0] = 6;}
+          else if (randomWarning == 11){healVraga = 225;manaVraga = 200;lvlVraga = 4;silaVraga = 25;lovkVraga = 5;luckVraga = 6;mozgVraga = 0;castVraga[0] = 7;}
+          else if (randomWarning == 12){healVraga = 250;manaVraga = 0;lvlVraga = 4;silaVraga = 30;lovkVraga = 5;luckVraga = 6;mozgVraga = 0;}
+          else if (randomWarning == 13){healVraga = 310;manaVraga = 0;lvlVraga = 5;silaVraga = 35;lovkVraga = 5;luckVraga = 10;mozgVraga = 0;}
+          else if (randomWarning == 14){healVraga = 370;manaVraga = 0;lvlVraga = 5;silaVraga = 42;lovkVraga = 3;luckVraga = 3;mozgVraga = 0;}
+          else if (randomWarning == 15){healVraga = 470;manaVraga = 0;lvlVraga = 6;silaVraga = 55;lovkVraga = 3;luckVraga = 4;mozgVraga = 0;}
+          else if (randomWarning == 16){healVraga = 575;manaVraga = 0;lvlVraga = 7;silaVraga = 68;lovkVraga = 5;luckVraga = 6;mozgVraga = 0;}
+          else if (randomWarning == 17){healVraga = 145;manaVraga = 0;lvlVraga = 2;silaVraga = 24;lovkVraga = 1;luckVraga = 3;mozgVraga = 0;}
+          else if (randomWarning == 18){healVraga = 280;manaVraga = 0;lvlVraga = 4;silaVraga = 36;lovkVraga = 2;luckVraga = 5;mozgVraga = 0;}
+          else if (randomWarning == 19){healVraga = 500;manaVraga = 0;lvlVraga = 6;silaVraga = 55;lovkVraga = 4;luckVraga = 7;mozgVraga = 0;}
+          else if (randomWarning == 20){healVraga = 900;manaVraga = 0;lvlVraga = 9;silaVraga = 84;lovkVraga = 8;luckVraga = 12;mozgVraga = 0;}
+          else if (randomWarning == 21){healVraga = 300;manaVraga = 250;lvlVraga = 5;silaVraga = 39;lovkVraga = 6;luckVraga = 8;mozgVraga = 0;castVraga[0] = 7;}
+          else if (randomWarning == 22){healVraga = 350;manaVraga = 400;lvlVraga = 6;silaVraga = 49;lovkVraga = 7;luckVraga = 12;mozgVraga = 0;castVraga[0] = 8;}
+          else if (randomWarning == 23){healVraga = 1250;manaVraga = 0;lvlVraga = 9;silaVraga = 99;lovkVraga = 20;luckVraga = 20;mozgVraga = 0;}
+          else if (randomWarning == 24){healVraga = 765;manaVraga = 250;lvlVraga = 8;silaVraga = 79;lovkVraga = 7;luckVraga = 12;mozgVraga = 0;castVraga[2] = 11;}
+          else if (randomWarning == 25){healVraga = 900;manaVraga = 850;lvlVraga = 9;silaVraga = 84;lovkVraga = 10;luckVraga = 20;mozgVraga = 0;castVraga[2] = 11;castVraga[0] = 9;}
+          else if (randomWarning == 26){healVraga = 145;manaVraga = 0;lvlVraga = 3;silaVraga = 23;lovkVraga = 3;luckVraga = 3;mozgVraga = 0;}
+          else if (randomWarning == 27){healVraga = 345;manaVraga = 0;lvlVraga = 6;silaVraga = 42;lovkVraga = 6;luckVraga = 6;mozgVraga = 0;}
+          else if (randomWarning == 28){healVraga = 365;manaVraga = 500;lvlVraga = 7;silaVraga = 69;lovkVraga = 8;luckVraga = 13;mozgVraga = 0;castVraga[0] = 8;}
+          else if (randomWarning == 29){healVraga = 425;manaVraga = 800;lvlVraga = 8;silaVraga = 87;lovkVraga = 10;luckVraga = 16;mozgVraga = 0;castVraga[0] = 9;}
+          else if (randomWarning == 30){healVraga = 590;manaVraga = 0;lvlVraga = 7;silaVraga = 80;lovkVraga = 4;luckVraga = 1;mozgVraga = 0;}
+          else if (randomWarning == 31){healVraga = 795;manaVraga = 0;lvlVraga = 8;silaVraga = 90;lovkVraga = 10;luckVraga = 10;mozgVraga = 0;}
+          else if (randomWarning == 32){healVraga = 525;manaVraga = 800;lvlVraga = 8;silaVraga = 72;lovkVraga = 10;luckVraga = 16;mozgVraga = 0;castVraga[0] = 9;castVraga[2] = 11;}
+          else if (randomWarning == 33){healVraga = 1000;manaVraga = 0;lvlVraga = 9;silaVraga = 94;lovkVraga = 15;luckVraga = 12;mozgVraga = 0;}
+          else if (randomWarning == 34){healVraga = 1500;manaVraga = 0;lvlVraga = 10;silaVraga = 120;lovkVraga = 25;luckVraga = 25;mozgVraga = 0;}
+          else if (randomWarning == 35){healVraga = 90;manaVraga = 0;lvlVraga = 1;silaVraga = 12;lovkVraga = 2;luckVraga = 2;mozgVraga = 0;}
+          else if (randomWarning == 36){healVraga = 190;manaVraga = 0;lvlVraga = 3;silaVraga = 32;lovkVraga = 4;luckVraga = 5;mozgVraga = 0;}
+          else if (randomWarning == 37){healVraga = 125;manaVraga = 0;lvlVraga = 2;silaVraga = 22;lovkVraga = 2;luckVraga = 2;mozgVraga = 0;}
+          warning = randomWarning;
+          stroki = stroki +4;
+          gameCurrent = 7;
+          tft.setTextColor(TFT_GREEN, TFT_BLACK);
+        }
+        else if (seed >= 396 and seed <= 400) {
+          if (lvl <= 5){
+            tft.setTextColor(TFT_YELLOW, TFT_BLACK);
+            tft.println("Strannik upal k vashim nogam i stal");
+            tft.println("Slezno molit o pomochi. Monstr ukral");
+            tft.println("Ego sunduk s dragocennostami, za to");
+            tft.println("Chto vi srazites s nim i vernete sunduk");
+            tft.println("Strannik obeshaet 500 GOLD. Srazites?");
+            tft.println("Y - DA, N - NET");
+            int randomWarning = random(37);
+            if (randomWarning == 4){healVraga = 200; manaVraga = 90;lvlVraga = 4;silaVraga = 11;lovkVraga = 5;luckVraga = 5;mozgVraga = 1;castVraga[0] = 6;strannik = 1;}
+            else if (randomWarning == 5){healVraga = 270; manaVraga = 200;lvlVraga = 5;silaVraga = 40;lovkVraga = 5;luckVraga = 5;mozgVraga = 1;castVraga[0] = 7;strannik = 1;}
+            else if (randomWarning == 6){healVraga = 375; manaVraga = 450;lvlVraga = 6;silaVraga = 50;lovkVraga = 6;luckVraga = 6;mozgVraga = 1;castVraga[0] = 8;castVraga[2] = 11;strannik = 1;}
+            else if (randomWarning == 7){healVraga = 545; manaVraga = 700;lvlVraga = 7;silaVraga = 60;lovkVraga = 7;luckVraga = 7;mozgVraga = 1;castVraga[0] = 9;castVraga[2] = 11;strannik = 1;}
+            else if (randomWarning == 8){healVraga = 545; manaVraga = 700;lvlVraga = 7;silaVraga = 60;lovkVraga = 7;luckVraga = 7;mozgVraga = 1;castVraga[0] = 9;castVraga[2] = 11;strannik = 1;}
+            else if (randomWarning == 9){healVraga = 130;manaVraga = 90;lvlVraga = 2;silaVraga = 15;lovkVraga = 1;luckVraga = 3;mozgVraga = 0;castVraga[0] = 6;strannik = 1;}
+            else if (randomWarning == 10){healVraga = 170;manaVraga = 150;lvlVraga = 3;silaVraga = 20;lovkVraga = 3;luckVraga = 4;mozgVraga = 0;castVraga[0] = 6;strannik = 1;}
+            else if (randomWarning == 11){healVraga = 225;manaVraga = 200;lvlVraga = 4;silaVraga = 25;lovkVraga = 5;luckVraga = 6;mozgVraga = 0;castVraga[0] = 7;strannik = 1;}
+            else if (randomWarning == 12){healVraga = 250;manaVraga = 0;lvlVraga = 4;silaVraga = 30;lovkVraga = 5;luckVraga = 6;mozgVraga = 0;strannik = 1;}
+            else if (randomWarning == 13){healVraga = 310;manaVraga = 0;lvlVraga = 5;silaVraga = 35;lovkVraga = 5;luckVraga = 10;mozgVraga = 0;strannik = 1;}
+            else if (randomWarning == 14){healVraga = 370;manaVraga = 0;lvlVraga = 5;silaVraga = 42;lovkVraga = 3;luckVraga = 3;mozgVraga = 0;strannik = 1;}
+            else if (randomWarning == 15){healVraga = 470;manaVraga = 0;lvlVraga = 6;silaVraga = 55;lovkVraga = 3;luckVraga = 4;mozgVraga = 0;strannik = 1;}
+            else if (randomWarning == 16){healVraga = 575;manaVraga = 0;lvlVraga = 7;silaVraga = 68;lovkVraga = 5;luckVraga = 6;mozgVraga = 0;strannik = 1;}
+            else if (randomWarning == 17){healVraga = 145;manaVraga = 0;lvlVraga = 2;silaVraga = 24;lovkVraga = 1;luckVraga = 3;mozgVraga = 0;strannik = 1;}
+            else if (randomWarning == 18){healVraga = 280;manaVraga = 0;lvlVraga = 4;silaVraga = 36;lovkVraga = 2;luckVraga = 5;mozgVraga = 0;strannik = 1;}
+            else if (randomWarning == 19){healVraga = 500;manaVraga = 0;lvlVraga = 6;silaVraga = 55;lovkVraga = 4;luckVraga = 7;mozgVraga = 0;strannik = 1;}
+            else if (randomWarning == 20){healVraga = 900;manaVraga = 0;lvlVraga = 9;silaVraga = 84;lovkVraga = 8;luckVraga = 12;mozgVraga = 0;strannik = 1;}
+            else if (randomWarning == 21){healVraga = 300;manaVraga = 250;lvlVraga = 5;silaVraga = 39;lovkVraga = 6;luckVraga = 8;mozgVraga = 0;castVraga[0] = 7;strannik = 1;}
+            else if (randomWarning == 22){healVraga = 350;manaVraga = 400;lvlVraga = 6;silaVraga = 49;lovkVraga = 7;luckVraga = 12;mozgVraga = 0;castVraga[0] = 8;strannik = 1;}
+            else if (randomWarning == 23){healVraga = 1250;manaVraga = 0;lvlVraga = 9;silaVraga = 99;lovkVraga = 20;luckVraga = 20;mozgVraga = 0;strannik = 1;}
+            else if (randomWarning == 24){healVraga = 765;manaVraga = 250;lvlVraga = 8;silaVraga = 79;lovkVraga = 7;luckVraga = 12;mozgVraga = 0;castVraga[2] = 11;strannik = 1;}
+            else if (randomWarning == 25){healVraga = 900;manaVraga = 850;lvlVraga = 9;silaVraga = 84;lovkVraga = 10;luckVraga = 20;mozgVraga = 0;castVraga[2] = 11;castVraga[0] = 9;strannik = 1;}
+            else if (randomWarning == 27){healVraga = 345;manaVraga = 0;lvlVraga = 6;silaVraga = 42;lovkVraga = 6;luckVraga = 6;mozgVraga = 0;strannik = 1;}
+            else if (randomWarning == 28){healVraga = 365;manaVraga = 500;lvlVraga = 7;silaVraga = 69;lovkVraga = 8;luckVraga = 13;mozgVraga = 0;castVraga[0] = 8;strannik = 1;}
+            else if (randomWarning == 29){healVraga = 425;manaVraga = 800;lvlVraga = 8;silaVraga = 87;lovkVraga = 10;luckVraga = 16;mozgVraga = 0;castVraga[0] = 9;strannik = 1;}
+            else if (randomWarning == 30){healVraga = 590;manaVraga = 0;lvlVraga = 7;silaVraga = 80;lovkVraga = 4;luckVraga = 1;mozgVraga = 0;strannik = 1;}
+            else if (randomWarning == 31){healVraga = 795;manaVraga = 0;lvlVraga = 8;silaVraga = 90;lovkVraga = 10;luckVraga = 10;mozgVraga = 0;strannik = 1;}
+            else if (randomWarning == 32){healVraga = 525;manaVraga = 800;lvlVraga = 8;silaVraga = 72;lovkVraga = 10;luckVraga = 16;mozgVraga = 0;castVraga[0] = 9;castVraga[2] = 11;strannik = 1;}
+            else if (randomWarning == 33){healVraga = 1000;manaVraga = 0;lvlVraga = 9;silaVraga = 94;lovkVraga = 15;luckVraga = 12;mozgVraga = 0;strannik = 1;}
+            else if (randomWarning == 34){healVraga = 1500;manaVraga = 0;lvlVraga = 10;silaVraga = 120;lovkVraga = 25;luckVraga = 25;mozgVraga = 0;strannik = 1;}
+            else if (randomWarning == 36){healVraga = 190;manaVraga = 0;lvlVraga = 3;silaVraga = 32;lovkVraga = 4;luckVraga = 5;mozgVraga = 0;strannik = 1;}
+            else if (randomWarning == 37){healVraga = 125;manaVraga = 0;lvlVraga = 2;silaVraga = 22;lovkVraga = 2;luckVraga = 2;mozgVraga = 0;strannik = 1;}
+            else {randomWarning=18;healVraga = 280;manaVraga = 0;lvlVraga = 4;silaVraga = 36;lovkVraga = 2;luckVraga = 5;mozgVraga = 0;strannik = 1;}
+            warning = randomWarning;
+            stroki = stroki +6;
+            gameCurrent = 7;
+            dobicha = 500;
+            tft.setTextColor(TFT_GREEN, TFT_BLACK);
           }
         }
         else {
@@ -1473,7 +1607,7 @@ String save = "";
         if (warning >=1 and warning <= 7){
           tft.setTextColor(TFT_GREEN, TFT_BLACK);
           tft.println("Dogovoritsya ne vishlo, suchestvo yvlaetsa nejitiy");
-          tft.println("Y-boy, D-dogovoritsa, G-bejat");
+          tft.println("Y-boy, D-dogovoritsa, f-bejat");
           stroki = stroki + 2;
         }
       }
@@ -1739,7 +1873,7 @@ String save = "";
     if (key.key == 'k') {
       delay(1);
     }
-    if (key.key == 'g') {
+    if (key.key == 'f') {
       if (gameCurrent == 3){
         tft.setTextColor(TFT_GREEN, TFT_BLACK);
         if (lovkScore >= lovkVraga or luckScore >= luckVraga){
@@ -1774,7 +1908,7 @@ String save = "";
          tft.setTextColor(TFT_GREEN, TFT_BLACK);
          tft.setTextSize(1);
       }
-      if (gameCurrent == 3 or gameCurrent == 4){
+      if (gameCurrent == 3 or gameCurrent == 4 or gameCurrent == 7){
         gameCurrent = 4;
         stroki+= 4;
         tft.fillScreen(TFT_BLACK);
@@ -1816,6 +1950,9 @@ String save = "";
         else if (warning == 32){tft.println("Nekromant 8yp.");}
         else if (warning == 33){tft.println("Cerber 9yp.");}
         else if (warning == 34){tft.println("DRAGON 10 LVL.");}
+        else if (warning == 35){tft.println("Morlok 1yp.");}
+        else if (warning == 36){tft.println("Morlok 3yp.");}
+        else if (warning == 37){tft.println("Morlok 2yp.");}
         tft.print("Zdorovie: ");
         tft.println(healVraga);
         tft.print("Mana: ");
@@ -1830,7 +1967,7 @@ String save = "";
       }
     }
     if (key.key == 'n') {
-      delay(1);
+      if (gameCurrent == 7){gameCurrent = 2;tft.println("Vi rechili ne sviazivatsya s etim");strannik=0;}
     }
     if (key.key == 'm') {
      if (gameCurrent == 2 or gameCurrent == 4){ 
@@ -2090,11 +2227,21 @@ String save = "";
           return;
         }
         if (healVraga <= 0){
+          if (strannik == 1){
+            strannik = 500;
+            gold = gold + strannik;
+            tft.setTextColor(TFT_GOLD, TFT_BLACK);
+            tft.print("Nagrada strannika: ");
+            tft.print(dobicha);
+            tft.println(" GOLD");
+            tft.setTextColor(TFT_GREEN, TFT_BLACK);\
+            strannik = 0;
+          }
           if (warning > 5){
-            dobicha = 10 * lvlVraga + warning;
+            dobicha = 10 * lvlVraga + random(25);
             gold = gold + dobicha;
             tft.setTextColor(TFT_GOLD, TFT_BLACK);
-            tft.print("Nagrada: ");
+            tft.print("Dobicha: ");
             tft.print(dobicha);
             tft.println(" GOLD");
             tft.setTextColor(TFT_GREEN, TFT_BLACK);
@@ -2104,7 +2251,7 @@ String save = "";
           stroki++;
           hp = hp + tmpHP;
           tft.setTextColor(TFT_YELLOW, TFT_BLACK);
-          tft.println("Pobeda!");
+          tft.println("YOU WIN!");
           gameCurrent = 2;
           tmpHP=0;
           heal = 100 + (healScore * 25);
