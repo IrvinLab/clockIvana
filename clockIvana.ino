@@ -461,7 +461,7 @@ void dragon(){
 // 21 - Некромант 5 ур., 22 - Некромант 6 ур., 23 - Душекрад 9 ур., 24 - Странник 8 ур., 25 - Орк-шаман 9 ур.,
 // 26 - Паук 3 ур., 27 - Паук 6 ур., 28 - Суккуб 7 ур., 29 - Суккуб 8 ур., 30 - Вурдалак 7 ур., 31 - Вампир 8 ур.,
 // 32 - Некромант 8 ур., 33 - Цербер 9 ур., 34 - Дракон 10 ур
- int test = 1;
+ int test = 0;
  int rnd = random(99);
  int heal = 100;
  int mana = 0;
@@ -803,7 +803,7 @@ String save = "";
           }
           stroki++;
           hp = hp + tmpHP;
-          int dropWeapon = random(14);
+          int dropWeapon = random(11);
           if (lvl == lvlVraga and dropWeapon == 7 and lvl != 9 and lvl != 10){
             tft.setTextColor(TFT_YELLOW, TFT_BLACK);
             int rndWpn = (lvl*10) - random(10);
@@ -2133,35 +2133,45 @@ String save = "";
     int gameButton = 0;
     if (key.key == '1') {
       if (gameCurrent == 5){gameButton = 1;}
+      if (gameCurrent == 6){gameButton = 1;}
     }
     if (key.key == '2') {
       if (gameCurrent == 5){gameButton = 2;}
+       if (gameCurrent == 6){gameButton = 2;}
     }
     if (key.key == '3') {
       if (gameCurrent == 5){gameButton = 3;}
+       if (gameCurrent == 6){gameButton = 3;}
     } 
     if (key.key == '4') {
       if (gameCurrent == 5){gameButton = 4;}
+       if (gameCurrent == 6){gameButton = 4;}
     }
     if (key.key == '5') {
       if (gameCurrent == 5){gameButton = 5;}
+       if (gameCurrent == 6){gameButton = 5;}
     }
     if (key.key == '6') {
       if (gameCurrent == 5){gameButton = 6;}
+       if (gameCurrent == 6){gameButton = 6;}
     }
     if (key.key == '7') {
       if (gameCurrent == 5){gameButton = 7;}
+       if (gameCurrent == 6){gameButton = 7;}
     }
     if (key.key == '8') {
       if (gameCurrent == 5){gameButton = 8;}
+       if (gameCurrent == 6){gameButton = 8;}
     }
     if (key.key == '9') {
       if (gameCurrent == 5){gameButton = 9;}
+       if (gameCurrent == 6){gameButton = 9;}
     }
     if (key.key == '0') {
       if (gameCurrent == 5){gameButton = 10;}
+       if (gameCurrent == 6){gameButton = 10;}
     }
-    if (gameCurrent == 5){
+    if (gameCurrent == 5){  // Покупка Заклинаний
       int buyCast = 0;
       if (gameButton == 10){
         gameCurrent = 2;
@@ -2226,6 +2236,53 @@ String save = "";
       gameCurrent = 2;
       tft.setTextColor(TFT_GREEN, TFT_BLACK);
     }
+    else if (gameCurrent == 6){  // Покупка Оружия
+      int buyWeapon = 0;
+      if (gameButton == 10){
+        gameCurrent = 2;
+      }
+      if (gameButton == 1){
+          if (gold >= 245){gold = gold - 245;buyWeapon = 9;tft.println("Done");}else{tft.println("Nehvataet Zolota");}
+      }
+      else if (gameButton == 2){
+          if (gold >= 900){gold = gold - 900;buyWeapon = 17;tft.println("Done");}else{tft.println("Nehvataet Zolota");}
+      }
+      else if (gameButton == 3){
+          if (gold >= 1350){gold = gold - 1350;buyWeapon = 25;tft.println("Done");}else{tft.println("Nehvataet Zolota");}
+      }
+      else if (gameButton == 4){
+          if (gold >= 3000){gold = gold - 3000;buyWeapon = 38;tft.println("Done");}else{tft.println("Nehvataet Zolota");}
+      }
+      else if (gameButton == 5){
+          if (gold >= 5250){gold = gold - 5250;buyWeapon = 47;tft.println("Done");}else{tft.println("Nehvataet Zolota");}
+      }
+      else if (gameButton == 6){
+          if (gold >= 2900){gold = gold - 2900;buyWeapon = 52;tft.println("Done");}else{tft.println("Nehvataet Zolota");}
+      }
+      else if (gameButton == 7){
+          if (gold >= 7000){gold = gold - 7000;buyWeapon = 66;tft.println("Done");}else{tft.println("Nehvataet Zolota");}
+      }
+      else if (gameButton == 8){
+          if (gold >= 8200){gold = gold - 8200;buyWeapon = 85;tft.println("Done");}else{tft.println("Nehvataet Zolota");}
+      }
+      else if (gameButton == 9){
+          if (gold >= 14500){gold = gold - 14500;buyWeapon = 87;tft.println("Done");}else{tft.println("Nehvataet Zolota");}
+      }
+      if (weapon[0] == 0){weapon[0] = buyWeapon;}
+      else if (weapon[1] == 0){weapon[1] = buyWeapon;}
+      else if (weapon[2] == 0){weapon[2] = buyWeapon;}
+      else if (weapon[3] == 0){weapon[3] = buyWeapon;}
+      else if (weapon[4] == 0){weapon[4] = buyWeapon;}
+      else if (weapon[5] == 0){weapon[5] = buyWeapon;}
+      else if (weapon[6] == 0){weapon[6] = buyWeapon;}
+      else if (weapon[7] == 0){weapon[7] = buyWeapon;}
+      else if (weapon[8] == 0){weapon[8] = buyWeapon;}
+      else if (weapon[9] == 0){weapon[9] = buyWeapon;}
+      gameButton = 0;
+      
+      gameCurrent = 2;
+      tft.setTextColor(TFT_GREEN, TFT_BLACK);
+    }
     if (key.key == ' ') {
       delay(1);
     }
@@ -2237,15 +2294,35 @@ String save = "";
         tft.setTextColor(TFT_GOLD, TFT_BLACK);
         tft.setTextSize(1);
         tft.println("Viberi zaklinanie dlya pokupki");
-        tft.println("1. Lechenie 2yp. (+40HP/50MN)-150G");
-        tft.println("2. Lechenie 3yp. (+80HP/100MN)-450G");
-        tft.println("3. Lechenie 4yp. (+160HP/200MN)-1250G");
-        tft.println("4. Lechenie 5yp. (+320HP/400MN)-2700G");
-        tft.println("5. Fire Ball 1yp. (-20HP/30MN)-100G");
-        tft.println("6. Fire Ball 2yp. (-40HP/50MN)-300G");
-        tft.println("7. Fire Ball 3yp. (-80HP/100MN)-900G");
+        tft.println("1. Lechenie 2yp.     (+40HP/50MN)-150G");
+        tft.println("2. Lechenie 3yp.    (+80HP/100MN)-450G");
+        tft.println("3. Lechenie 4yp.  (+160HP/200MN)-1250G");
+        tft.println("4. Lechenie 5yp.  (+320HP/400MN)-2700G");
+        tft.println("5. Fire Ball 1yp.    (-20HP/30MN)-100G");
+        tft.println("6. Fire Ball 2yp.    (-40HP/50MN)-300G");
+        tft.println("7. Fire Ball 3yp.   (-80HP/100MN)-900G");
         tft.println("8. Fire Ball 4yp. (-160HP/200MN)-1800G");
         tft.println("9. Fire Ball 5yp. (-320HP/400MN)-5000G");
+        tft.println("0. Exit");
+      }
+    }
+    if (key.key == 'v'){
+      if (gameCurrent == 2){
+        gameCurrent = 6;
+        tft.fillScreen(TFT_BLACK);
+        tft.setCursor(0, 0, 1);
+        tft.setTextColor(TFT_ORANGE, TFT_BLACK);
+        tft.setTextSize(1);
+        tft.println("Viberi Orujie dlya pokupki");
+        tft.println("1. Mech 1yp.               +9 dmg/245G");
+        tft.println("2. Posoh Charodeya 2yp.  +17 Mdmg/900G");
+        tft.println("3. Tesak Boli 3yp.       +25 dmg/1350G");
+        tft.println("4. Posoh Kolduna 4yp.   +38 Mdmg/3000G");
+        tft.println("5. Posoh Nekromanta 5yp.+47 Mdmg/5250G");
+        tft.println("6. Mech 6yp.             +52 dmg/2900G");
+        tft.println("7. Posoh Voli 7yp.      +66 Mdmg/7000G");
+        tft.println("8. Bulava 9yp.           +85 dmg/8200G");
+        tft.println("9. Posoh Bogov 9yp.    +87 Mdmg/14500G");
         tft.println("0. Exit");
       }
     }
@@ -2366,12 +2443,6 @@ String save = "";
       }
       if (weapon[currentWeapon] == 34){
         tft.println("Topor Dush 4yp. (+34 dmg)");
-      }
-      if (weapon[currentWeapon] == 35){
-        tft.println("Bulava 4yp. (+35 dmg)");
-      }
-      if (weapon[currentWeapon] == 36){
-        tft.println("Rapira 4yp. (+36 dmg)");
       }
       if (weapon[currentWeapon] == 35){
         tft.println("Bulava 4yp. (+35 dmg)");
