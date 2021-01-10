@@ -1591,6 +1591,8 @@ String save = "";
           }
         }
         else if (seed >= 401 and seed <= 410) {
+          delay(1);
+        }
         else {
           tft.print("Nichego ne proishodit ");
           tft.println(seed);
