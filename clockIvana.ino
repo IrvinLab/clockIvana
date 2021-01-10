@@ -1542,7 +1542,7 @@ String save = "";
           tft.setTextColor(TFT_GREEN, TFT_BLACK);
         }
         else if (seed >= 396 and seed <= 400) {
-          if (lvl <= 5){
+          if (lvl >= 5 and lvl <= 7){
             tft.setTextColor(TFT_YELLOW, TFT_BLACK);
             tft.println("Strannik upal k vashim nogam i stal");
             tft.println("Slezno molit o pomochi. Monstr ukral");
@@ -1571,7 +1571,6 @@ String save = "";
             else if (randomWarning == 21){healVraga = 300;manaVraga = 250;lvlVraga = 5;silaVraga = 39;lovkVraga = 6;luckVraga = 8;mozgVraga = 0;castVraga[0] = 7;strannik = 1;}
             else if (randomWarning == 22){healVraga = 350;manaVraga = 400;lvlVraga = 6;silaVraga = 49;lovkVraga = 7;luckVraga = 12;mozgVraga = 0;castVraga[0] = 8;strannik = 1;}
             else if (randomWarning == 23){healVraga = 1250;manaVraga = 0;lvlVraga = 9;silaVraga = 99;lovkVraga = 20;luckVraga = 20;mozgVraga = 0;strannik = 1;}
-            else if (randomWarning == 24){healVraga = 765;manaVraga = 250;lvlVraga = 8;silaVraga = 79;lovkVraga = 7;luckVraga = 12;mozgVraga = 0;castVraga[2] = 11;strannik = 1;}
             else if (randomWarning == 25){healVraga = 900;manaVraga = 850;lvlVraga = 9;silaVraga = 84;lovkVraga = 10;luckVraga = 20;mozgVraga = 0;castVraga[2] = 11;castVraga[0] = 9;strannik = 1;}
             else if (randomWarning == 27){healVraga = 345;manaVraga = 0;lvlVraga = 6;silaVraga = 42;lovkVraga = 6;luckVraga = 6;mozgVraga = 0;strannik = 1;}
             else if (randomWarning == 28){healVraga = 365;manaVraga = 500;lvlVraga = 7;silaVraga = 69;lovkVraga = 8;luckVraga = 13;mozgVraga = 0;castVraga[0] = 8;strannik = 1;}
@@ -1591,6 +1590,7 @@ String save = "";
             tft.setTextColor(TFT_GREEN, TFT_BLACK);
           }
         }
+        else if (seed >= 401 and seed <= 410) {
         else {
           tft.print("Nichego ne proishodit ");
           tft.println(seed);
@@ -2267,7 +2267,29 @@ String save = "";
      }
     }
     if (key.key == 'p') {
-      delay(1);
+      readPCF8563();
+      tft.println("");
+      tft.print(days[dayOfWeek]); 
+      tft.print(" "); 
+      tft.print(dayOfMonth, DEC);
+      tft.print("/");
+      tft.print(month, DEC);
+      tft.print("/20");
+      tft.print(year, DEC);
+      tft.print(" - ");
+      tft.print(hour, DEC);
+      tft.print(":");
+      if (minute < 10)
+      {
+       tft.print("0");
+      }
+      tft.print(minute, DEC);
+      tft.print(":"); 
+      if (second < 10)
+      {
+       tft.print("0");
+      } 
+      tft.println(second, DEC); 
     }
     if (key.key == 'C') {
       tft.fillScreen(TFT_BLACK);
