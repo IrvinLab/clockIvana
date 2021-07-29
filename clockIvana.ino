@@ -3195,9 +3195,42 @@ void exe(const char * s) {
    else if (s[0] == 'd' and s[1] == 'r' and s[2] == 'a' and s[3] == 'g' and s[4] == 'o' and s[5] == 'n'){
      dragon();
    }
-   
    else if (s[0] == '+' or s[0] == '-' or s[0] == '\'' or s[0] == '\"' or s[0] == '.' or s[0] == ',' or s[0] == '(' or s[0] == ')') {
     brainfuck(); 
+   }
+   else if (s[0] == 'b' and s[1] == 'f' and s[2] == ' '){   // Закинуть фаил в интерпретатор BRAINFUCK
+     if (s[2] == ' ' and s[3] == '\"'){
+       int n = 4;
+       int m = 4;
+       unsigned char* buf = new unsigned char[100]; 
+       String tempName = "";
+       while (s[n] != '\"'){
+         if (s[n] != '\"'){
+           n++;   
+         }
+       while(m != n){         
+         tempName = tempName + s[m];
+         m++;
+       } 
+       }
+       tempName = pwd + tempName;
+       tempName.getBytes(buf, 100, 0);
+       const char *str2 = (const char*)buf;  
+       Serial.println(str2);
+       readBF(SD, str2);
+     }
+     else{tft.println("\nSyntax Error");}
+   }
+   else if (s[0] == 'b' and s[1] == 'f' and s[2] == 'h' and s[3] == 'e' and s[4] == 'l' and s[5] == 'p'){
+    tft.println("\n\" - next cell");
+    tft.println("\' - prev. cell");
+    tft.println("+ - increase cell value ");
+    tft.println("- - decrease cell value ");
+    tft.println(". - print cell");
+    tft.println(": - println cell");
+    tft.println("? - write a random number into a cell");
+    tft.println("( - start of cycle");
+    tft.println(") - stop of cycle");
    }
    else if (s[0] == 'h' and s[1] == 'e' and s[2] == 'l' and s[3] == 'p'){
     tft.println("\nCD - change directory");
@@ -3215,6 +3248,8 @@ void exe(const char * s) {
     tft.println("MKDIR - create directory");
     tft.println("RMDIR - remove directory");
     tft.println("REBOOT - restart computer");
+    tft.println("BF - open file in interpreter brainfuck");
+    tft.println("BFHELP - list of brainfuck commands");
    }
    else {
      tft.println("\nUnknown command " + String(s));
@@ -3340,6 +3375,29 @@ void readFile(fs::FS &fs, const char * path){
     }
     file.close();
     tft.println("");
+    
+}
+void readBF(fs::FS &fs, const char * path){ // Прочитать фаил и закинуть в brainfuck
+    char tempChr;
+    tempFile = "";
+    cmd = "";
+    Serial.printf("Reading file: %s\n", path);
+    File file = fs.open(path);
+    if(!file){
+        tft.println("\nFailed to open file for reading");
+        return;
+    }
+
+    tft.println("");
+    while(file.available()){
+        tempChr = char(file.read());
+        //tft.print(tempChr);
+        //tempFile = tempFile + &tempChr;
+        cmd = cmd + tempChr;
+    }
+    file.close();
+    Serial.println(cmd);
+    brainfuck();
     
 }
 
