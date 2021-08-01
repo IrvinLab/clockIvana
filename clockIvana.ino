@@ -150,14 +150,14 @@ void setup()
    keyboard.attachInterrupt(interruptPin, KeyIsr);
    keyboard.setBacklight(0.5f);
 
-//   second = 0;  установка даты и времени
-//   minute = 10;
-//   hour = 13;
-//   dayOfWeek = 0;
-//   dayOfMonth = 6;
-//   month = 12;
-//   year = 20;
-//   setPCF8563();
+   second = 0; // установка даты и времени
+   minute = 26;
+   hour = 12;
+   dayOfWeek = 5;
+   dayOfMonth = 30;
+   month = 07;
+   year = 21;
+   setPCF8563();
 
    Serial.printf("Starting OS\n\t");
    tft.init();
@@ -201,6 +201,7 @@ void setup()
         Serial.println("UNKNOWN");
         tft.println("UNKNOWN");
     }
+
 
     uint64_t cardSize = SD.cardSize() / (1024 * 1024);
     Serial.printf("SD Card Size: %lluMB\n", cardSize);
@@ -281,6 +282,37 @@ String keyInput(){
 delay(1);
 }
 
+String utf8rus(String source)
+  {
+    int i,k;
+    String target;
+    unsigned char n;
+    char m[2] = { '0', '\0' };
+    k = source.length(); i = 0;
+    while (i < k) {
+      n = source[i]; i++;
+   
+      if (n >= 0xC0) {
+        switch (n) {
+          case 0xD0: {
+            n = source[i]; i++;
+            if (n == 0x81) { n = 0xA8; break; }
+            if (n >= 0x90 && n <= 0xBF) n = n + 0x30;
+            break;
+          }
+          case 0xD1: {
+            n = source[i]; i++;
+            if (n == 0x91) { n = 0xB8; break; }
+            if (n >= 0x80 && n <= 0x8F) n = n + 0x70;
+            break;
+          }
+        }
+      }
+      m[0] = n; target = target + String(m);
+    }
+  return target;
+  }
+
 void brainfuck(){ // Интерпретатор BRAINFUCK. Берём код из cmd
     char memory[1000];
     int a = 0;
@@ -298,6 +330,47 @@ void brainfuck(){ // Интерпретатор BRAINFUCK. Берём код и�
     {
       switch (cmd[i])
       {
+        case '*':
+          memory[ptr] = memory[ptr] * 2;
+          break;
+        case '/':
+          if (memory[ptr]%2 == 0){
+            memory[ptr] = memory[ptr] / 2;
+          }
+          else {
+            memory[ptr] = char(int(memory[ptr] / 2));
+          }
+          break;  
+        case '0':
+          memory[ptr] = 0;
+          break;
+        case '1':
+          memory[ptr] = 1;
+          break;
+        case '2':
+          memory[ptr] = 2;
+          break;
+        case '3':
+          memory[ptr] = 3;
+          break;
+        case '4':
+          memory[ptr] = 4;
+          break;
+        case '5':
+          memory[ptr] = 5;
+          break;
+        case '6':
+          memory[ptr] = 6;
+          break;
+        case '7':
+          memory[ptr] = 7;
+          break;
+        case '8':
+          memory[ptr] = 8;
+          break;
+        case '9':
+          memory[ptr] = 9;
+          break;       
         case '+':
           memory[ptr]++;
           break;
@@ -307,17 +380,17 @@ void brainfuck(){ // Интерпретатор BRAINFUCK. Берём код и�
         case '\'':
           ptr--;
           break;
-        case '\"':
+        case '@':
           ptr++;
           break;
         case '?':
           memory[ptr] = int(random(255));
           break;  
         case ':':
-          tft.println(int(memory[ptr]));
+          tft.print(int(memory[ptr]));
           break;
         case '.':
-          tft.print(int(memory[ptr]));
+          tft.print(char(memory[ptr]));
           break;  
         case '(':
           lvl = 1;
@@ -3022,6 +3095,11 @@ void exe(const char * s) {
        tft.println("");
        tft.println("/");      
      }
+     else if (s[2] == ' ' and s[3] == '.' and s[4] == '.'){
+       pwd = "/";
+       tft.println("");
+       tft.println("/");      
+     }
      else{tft.println("\nSyntax Error");}
    }
    else if (s[0] == 'p' and s[1] == 'w' and s[2] == 'd'){
@@ -3195,7 +3273,7 @@ void exe(const char * s) {
    else if (s[0] == 'd' and s[1] == 'r' and s[2] == 'a' and s[3] == 'g' and s[4] == 'o' and s[5] == 'n'){
      dragon();
    }
-   else if (s[0] == '+' or s[0] == '-' or s[0] == '\'' or s[0] == '\"' or s[0] == '.' or s[0] == ',' or s[0] == '(' or s[0] == ')') {
+   else if (s[0] == '/' or s[0] == '*' or s[0] == '@' or s[0] == '?' or s[0] == '+' or s[0] == '-' or s[0] == '\'' or s[0] == '\"' or s[0] == '.' or s[0] == ',' or s[0] == '(' or s[0] == ')') {
     brainfuck(); 
    }
    else if (s[0] == 'b' and s[1] == 'f' and s[2] == ' '){   // Закинуть фаил в интерпретатор BRAINFUCK
@@ -3222,15 +3300,18 @@ void exe(const char * s) {
      else{tft.println("\nSyntax Error");}
    }
    else if (s[0] == 'b' and s[1] == 'f' and s[2] == 'h' and s[3] == 'e' and s[4] == 'l' and s[5] == 'p'){
-    tft.println("\n\" - next cell");
+    tft.println("\n@ - next cell");
     tft.println("\' - prev. cell");
     tft.println("+ - increase cell value ");
     tft.println("- - decrease cell value ");
     tft.println(". - print cell");
     tft.println(": - println cell");
     tft.println("? - write a random number into a cell");
-    tft.println("( - start of cycle");
+    tft.println("( - start of cycle (while n == 0)");
     tft.println(") - stop of cycle");
+    tft.println("0-9 - current cell = n");
+    tft.println("* - current cell * 2");
+    tft.println("/ - current cell / 2");
    }
    else if (s[0] == 'h' and s[1] == 'e' and s[2] == 'l' and s[3] == 'p'){
     tft.println("\nCD - change directory");
