@@ -3299,6 +3299,36 @@ void exe(const char * s) {
      }
      else{tft.println("\nSyntax Error");}
    }
+   else if (s[0] == 'a' and s[1] == 's' and s[2] == 'c' and s[3] == 'i' and s[4] == 'i'){
+    tft.println("\n32 -   59 - ; 86 - V  113 - q");
+    tft.println("33 - ! 60 - < 87 - W  114 - r");
+    tft.println("34 - \" 61 - = 88 - X  115 - s");
+    tft.println("35 - # 62 - > 89 - Y  116 - t");
+    tft.println("36 - $ 63 - ? 90 - Z  117 - u");
+    tft.println("37 - % 64 - @ 91 - [  118 - v");
+    tft.println("38 - & 65 - A 92 -    119 - w");
+    tft.println("39 - \' 66 - B 93 - ]  120 - x");
+    tft.println("40 - ( 67 - C 94 - ^  121 - y");
+    tft.println("41 - ) 68 - D 95 - _  122 - z");
+    tft.println("42 - * 69 - E 96 - `  123 - {");
+    tft.println("43 - + 70 - F 97 - a  124 - |");
+    tft.println("44 - , 71 - G 98 - b  125 - }");
+    tft.println("45 - - 72 - H 99 - c  126 - ~");
+    tft.println("46 - . 73 - I 100 - d");
+    tft.println("47 - / 74 - J 101 - e");
+    tft.println("48 - 0 75 - K 102 - f");
+    tft.println("49 - 1 76 - L 103 - g");
+    tft.println("50 - 2 77 - M 104 - h");
+    tft.println("51 - 3 78 - N 105 - i");
+    tft.println("52 - 4 79 - O 106 - j");
+    tft.println("53 - 5 80 - P 107 - k");
+    tft.println("54 - 6 81 - Q 108 - l");
+    tft.println("55 - 7 82 - R 109 - m");
+    tft.println("56 - 8 83 - S 110 - n");
+    tft.println("57 - 9 84 - T 111 - o");
+    tft.println("58 - : 85 - U 112 - p");
+    
+   }
    else if (s[0] == 'b' and s[1] == 'f' and s[2] == 'h' and s[3] == 'e' and s[4] == 'l' and s[5] == 'p'){
     tft.println("\n@ - next cell");
     tft.println("\' - prev. cell");
